@@ -21,6 +21,7 @@ export const VoteModal = ({
     telefone_votante: '',
     whatsapp_votante: ''
   });
+  const [naoSouCliente, setNaoSouCliente] = useState(false);
   const createVoto = useCreateVoto();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +29,8 @@ export const VoteModal = ({
     try {
       await createVoto.mutateAsync({
         ideia_id: ideia.id,
-        ...formData
+        ...formData,
+        nome_restaurante_votante: naoSouCliente ? "Não sou cliente" : formData.nome_restaurante_votante
       });
 
       // Reset form and close modal
@@ -37,12 +39,13 @@ export const VoteModal = ({
         telefone_votante: '',
         whatsapp_votante: ''
       });
+      setNaoSouCliente(false);
       onOpenChange(false);
     } catch (error) {
       // Error is handled by the hook
     }
   };
-  const isValid = formData.nome_restaurante_votante.trim() && formData.telefone_votante.trim() && formData.whatsapp_votante.trim();
+  const isValid = (naoSouCliente || formData.nome_restaurante_votante.trim()) && formData.telefone_votante.trim() && formData.whatsapp_votante.trim();
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -72,19 +75,9 @@ export const VoteModal = ({
             <div className="flex items-center space-x-2">
               <Checkbox 
                 id="nao-cliente" 
-                checked={formData.nome_restaurante_votante === "Não sou cliente"}
+                checked={naoSouCliente}
                 onCheckedChange={(checked) => {
-                  if (checked) {
-                    setFormData(prev => ({
-                      ...prev,
-                      nome_restaurante_votante: "Não sou cliente"
-                    }));
-                  } else {
-                    setFormData(prev => ({
-                      ...prev,
-                      nome_restaurante_votante: ""
-                    }));
-                  }
+                  setNaoSouCliente(checked as boolean);
                 }}
               />
               <Label htmlFor="nao-cliente" className="text-sm font-normal">
@@ -94,8 +87,17 @@ export const VoteModal = ({
           </div>
 
           <div className="space-y-2">
-            
-            
+            <Label htmlFor="telefone">Telefone</Label>
+            <Input 
+              id="telefone" 
+              value={formData.telefone_votante} 
+              onChange={e => setFormData(prev => ({
+                ...prev,
+                telefone_votante: e.target.value
+              }))} 
+              placeholder="(11) 99999-9999" 
+              required 
+            />
           </div>
 
           <div className="space-y-2">
