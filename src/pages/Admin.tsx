@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
 import { LogOut, Plus, Edit, Trash2, Download, BarChart } from 'lucide-react';
@@ -24,23 +25,23 @@ const Admin = () => {
   const [ideaForm, setIdeaForm] = useState<{
     titulo: string;
     descricao: string;
-    complexidade: '1h30' | '3h' | '1turno' | 'complexa';
-    status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
-    criado_por: string;
-    desenvolvedor: string;
-    nome_restaurante: string;
-    whatsapp_criador: string;
+    nome_id_saipos_cnpj: string;
+    nao_sou_cliente: boolean;
+    whatsapp: string;
+    nome: string;
+    complexidade: '1h30' | '3h' | '1turno' | 'caixinha';
     observacao: string;
+    jira: string;
   }>({
     titulo: '',
     descricao: '',
+    nome_id_saipos_cnpj: '',
+    nao_sou_cliente: false,
+    whatsapp: '',
+    nome: '',
     complexidade: '1h30',
-    status: 'caixinha',
-    criado_por: '',
-    desenvolvedor: '',
-    nome_restaurante: '',
-    whatsapp_criador: '',
-    observacao: ''
+    observacao: '',
+    jira: ''
   });
   const [editingIdea, setEditingIdea] = useState<Ideia | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -128,42 +129,61 @@ const Admin = () => {
   const handleSubmitIdea = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Map new form fields to old structure
+    const ideaData = {
+      titulo: ideaForm.titulo,
+      descricao: ideaForm.descricao,
+      complexidade: ideaForm.complexidade === 'caixinha' ? 'complexa' as const : ideaForm.complexidade,
+      status: 'caixinha' as const,
+      criado_por: ideaForm.nome,
+      nome_restaurante: ideaForm.nao_sou_cliente ? 'Não é cliente' : ideaForm.nome_id_saipos_cnpj,
+      whatsapp_criador: ideaForm.whatsapp,
+      desenvolvedor: '',
+      observacao: ideaForm.observacao + (ideaForm.jira ? ` | Jira: ${ideaForm.jira}` : '')
+    };
+    
     if (editingIdea) {
       await updateIdeia.mutateAsync({
         id: editingIdea.id,
-        updates: ideaForm
+        updates: ideaData
       });
     } else {
-      await createIdeia.mutateAsync(ideaForm);
+      await createIdeia.mutateAsync(ideaData);
     }
     
     // Reset form
     setIdeaForm({
       titulo: '',
       descricao: '',
+      nome_id_saipos_cnpj: '',
+      nao_sou_cliente: false,
+      whatsapp: '',
+      nome: '',
       complexidade: '1h30',
-      status: 'caixinha',
-      criado_por: '',
-      desenvolvedor: '',
-      nome_restaurante: '',
-      whatsapp_criador: '',
-      observacao: ''
+      observacao: '',
+      jira: ''
     });
     setEditingIdea(null);
     setIsFormOpen(false);
   };
 
   const handleEdit = (ideia: Ideia) => {
+    // Extract jira from observacao if present
+    const obs = ideia.observacao || '';
+    const jiraMatch = obs.match(/\| Jira: (.+)/);
+    const jira = jiraMatch ? jiraMatch[1] : '';
+    const observacao = jiraMatch ? obs.replace(/\| Jira: .+/, '').trim() : obs;
+    
     setIdeaForm({
       titulo: ideia.titulo,
       descricao: ideia.descricao || '',
-      complexidade: ideia.complexidade,
-      status: ideia.status,
-      criado_por: ideia.criado_por,
-      desenvolvedor: ideia.desenvolvedor || '',
-      nome_restaurante: ideia.nome_restaurante || '',
-      whatsapp_criador: ideia.whatsapp_criador || '',
-      observacao: ideia.observacao || ''
+      nome_id_saipos_cnpj: ideia.nome_restaurante === 'Não é cliente' ? '' : ideia.nome_restaurante || '',
+      nao_sou_cliente: ideia.nome_restaurante === 'Não é cliente',
+      whatsapp: ideia.whatsapp_criador || '',
+      nome: ideia.criado_por,
+      complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
+      observacao: observacao,
+      jira: jira
     });
     setEditingIdea(ideia);
     setIsFormOpen(true);
@@ -258,13 +278,13 @@ const Admin = () => {
               setIdeaForm({
                 titulo: '',
                 descricao: '',
+                nome_id_saipos_cnpj: '',
+                nao_sou_cliente: false,
+                whatsapp: '',
+                nome: '',
                 complexidade: '1h30',
-                status: 'caixinha',
-                criado_por: '',
-                desenvolvedor: '',
-                nome_restaurante: '',
-                whatsapp_criador: '',
-                observacao: ''
+                observacao: '',
+                jira: ''
               });
               setIsFormOpen(true);
             }}
@@ -380,94 +400,86 @@ const Admin = () => {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmitIdea} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="titulo">Título *</Label>
-                  <Input
-                    id="titulo"
-                    value={ideaForm.titulo}
-                    onChange={(e) => setIdeaForm(prev => ({ ...prev, titulo: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="criado_por">Criado por *</Label>
-                  <Input
-                    id="criado_por"
-                    value={ideaForm.criado_por}
-                    onChange={(e) => setIdeaForm(prev => ({ ...prev, criado_por: e.target.value }))}
-                    required
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="titulo">Título *</Label>
+                <Input
+                  id="titulo"
+                  value={ideaForm.titulo}
+                  onChange={(e) => setIdeaForm(prev => ({ ...prev, titulo: e.target.value }))}
+                  required
+                />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição</Label>
+                <Label htmlFor="descricao">Descrição *</Label>
                 <Textarea
                   id="descricao"
                   value={ideaForm.descricao}
                   onChange={(e) => setIdeaForm(prev => ({ ...prev, descricao: e.target.value }))}
                   rows={3}
+                  required
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="complexidade">Complexidade *</Label>
-                  <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'complexa') => setIdeaForm(prev => ({ ...prev, complexidade: value }))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1h30">1h30</SelectItem>
-                      <SelectItem value="3h">3h</SelectItem>
-                      <SelectItem value="1turno">1 Turno</SelectItem>
-                      <SelectItem value="complexa">Complexa</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status *</Label>
-                  <Select value={ideaForm.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => setIdeaForm(prev => ({ ...prev, status: value }))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="caixinha">Na Caixinha</SelectItem>
-                      <SelectItem value="votacao">Em Votação</SelectItem>
-                      <SelectItem value="desenvolvimento">Em Desenvolvimento</SelectItem>
-                      <SelectItem value="finalizada">Finalizada</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nome_restaurante">Nome do Restaurante</Label>
-                  <Input
-                    id="nome_restaurante"
-                    value={ideaForm.nome_restaurante}
-                    onChange={(e) => setIdeaForm(prev => ({ ...prev, nome_restaurante: e.target.value }))}
+              <div className="space-y-2">
+                <Label htmlFor="nome_id_saipos_cnpj">Nome/ID Saipos/CNPJ</Label>
+                <Input
+                  id="nome_id_saipos_cnpj"
+                  value={ideaForm.nome_id_saipos_cnpj}
+                  onChange={(e) => setIdeaForm(prev => ({ ...prev, nome_id_saipos_cnpj: e.target.value }))}
+                  disabled={ideaForm.nao_sou_cliente}
+                  placeholder={ideaForm.nao_sou_cliente ? "Não aplicável" : "Digite seu ID Saipos, CNPJ ou nome"}
+                />
+                <div className="flex items-center space-x-2 mt-2">
+                  <Checkbox
+                    id="nao_sou_cliente"
+                    checked={ideaForm.nao_sou_cliente}
+                    onCheckedChange={(checked) => {
+                      setIdeaForm(prev => ({ 
+                        ...prev, 
+                        nao_sou_cliente: checked as boolean,
+                        nome_id_saipos_cnpj: checked ? '' : prev.nome_id_saipos_cnpj
+                      }))
+                    }}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp_criador">WhatsApp do Criador</Label>
-                  <Input
-                    id="whatsapp_criador"
-                    value={ideaForm.whatsapp_criador}
-                    onChange={(e) => setIdeaForm(prev => ({ ...prev, whatsapp_criador: e.target.value }))}
-                  />
+                  <Label htmlFor="nao_sou_cliente" className="text-sm">Não sou cliente</Label>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="desenvolvedor">Desenvolvedor</Label>
+                <Label htmlFor="whatsapp">WhatsApp *</Label>
                 <Input
-                  id="desenvolvedor"
-                  value={ideaForm.desenvolvedor}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, desenvolvedor: e.target.value }))}
+                  id="whatsapp"
+                  value={ideaForm.whatsapp}
+                  onChange={(e) => setIdeaForm(prev => ({ ...prev, whatsapp: e.target.value }))}
+                  placeholder="(11) 99999-9999"
+                  required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="nome">Nome *</Label>
+                <Input
+                  id="nome"
+                  value={ideaForm.nome}
+                  onChange={(e) => setIdeaForm(prev => ({ ...prev, nome: e.target.value }))}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="complexidade">Complexidade *</Label>
+                <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'caixinha') => setIdeaForm(prev => ({ ...prev, complexidade: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="1h30">⚡ 1h30</SelectItem>
+                    <SelectItem value="3h">🕒 3h</SelectItem>
+                    <SelectItem value="1turno">🌙 1 turno</SelectItem>
+                    <SelectItem value="caixinha">📦 Caixinha</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -477,6 +489,17 @@ const Admin = () => {
                   value={ideaForm.observacao}
                   onChange={(e) => setIdeaForm(prev => ({ ...prev, observacao: e.target.value }))}
                   rows={2}
+                  placeholder="Campo opcional"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="jira">Jira</Label>
+                <Input
+                  id="jira"
+                  value={ideaForm.jira}
+                  onChange={(e) => setIdeaForm(prev => ({ ...prev, jira: e.target.value }))}
+                  placeholder="Campo opcional"
                 />
               </div>
 
