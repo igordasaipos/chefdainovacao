@@ -58,10 +58,16 @@ export const VoteModal = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="nome_restaurante">Nome da loja/ID Saipos/ CNPJ </Label>
-            <Input id="nome_restaurante" value={formData.nome_restaurante_votante} onChange={e => setFormData(prev => ({
-            ...prev,
-            nome_restaurante_votante: e.target.value
-          }))} placeholder="Ex: Burger King Centro" required />
+            <Input 
+              id="nome_restaurante" 
+              value={formData.nome_restaurante_votante} 
+              onChange={e => setFormData(prev => ({
+                ...prev,
+                nome_restaurante_votante: e.target.value
+              }))} 
+              placeholder="Digite o nome da loja/ID Saipos/CNPJ" 
+              required 
+            />
           </div>
 
           <div className="space-y-2">
