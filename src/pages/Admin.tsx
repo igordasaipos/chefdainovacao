@@ -524,7 +524,7 @@ const Admin = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="nome_id_saipos_cnpj">Nome/ID Saipos/CNPJ</Label>
+                <Label htmlFor="nome_id_saipos_cnpj">Nome da loja/ID Saipos/CNPJ</Label>
                 <Input id="nome_id_saipos_cnpj" value={ideaForm.nome_id_saipos_cnpj} onChange={e => setIdeaForm(prev => ({
                 ...prev,
                 nome_id_saipos_cnpj: e.target.value
