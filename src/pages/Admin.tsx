@@ -528,7 +528,7 @@ const Admin = () => {
                 <Input id="nome_id_saipos_cnpj" value={ideaForm.nome_id_saipos_cnpj} onChange={e => setIdeaForm(prev => ({
                 ...prev,
                 nome_id_saipos_cnpj: e.target.value
-              }))} disabled={ideaForm.nao_sou_cliente} placeholder={ideaForm.nao_sou_cliente ? "Não aplicável" : "Digite seu ID Saipos, CNPJ ou nome"} />
+              }))} placeholder="Digite seu ID Saipos, CNPJ ou nome" />
                 <div className="flex items-center space-x-2 mt-2">
                   <Checkbox id="nao_sou_cliente" checked={ideaForm.nao_sou_cliente} onCheckedChange={checked => {
                   setIdeaForm(prev => ({

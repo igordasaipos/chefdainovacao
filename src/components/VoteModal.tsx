@@ -68,7 +68,6 @@ export const VoteModal = ({
               }))} 
               placeholder="Digite o nome da loja/ID Saipos/CNPJ" 
               required 
-              disabled={formData.nome_restaurante_votante === "Não sou cliente"}
             />
             <div className="flex items-center space-x-2">
               <Checkbox 
