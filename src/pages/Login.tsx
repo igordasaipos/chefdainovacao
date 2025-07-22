@@ -48,18 +48,6 @@ const Login = () => {
               {loading ? 'Verificando...' : 'Acessar Sistema'}
             </Button>
           </form>
-          
-          <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-            <p className="text-sm text-muted-foreground font-medium mb-2">Emails Autorizados:</p>
-            <div className="space-y-1 text-xs">
-              <p><strong>Admin:</strong> admin.saipos@ifoodmove.com</p>
-              <p><strong>Tech:</strong> tech.saipos@ifoodmove.com</p>
-              <p><strong>Manager:</strong> manager.saipos@ifoodmove.com</p>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              * Digite seu email autorizado para acessar o sistema
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>;
