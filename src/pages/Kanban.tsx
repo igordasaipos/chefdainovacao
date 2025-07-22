@@ -137,7 +137,7 @@ const Kanban = () => {
         {/* Info Footer */}
         <div className="text-center mt-12 space-y-2">
           <p className="text-sm text-muted-foreground">
-            Atualizações em tempo real • Saipos Innovation Week 2024
+            Atualizações em tempo real • Saipos Innovation Week 2025
           </p>
           <div className="flex justify-center gap-4 text-xs text-muted-foreground">
             <span>🔵 Votação da equipe aberta</span>

@@ -34,7 +34,7 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            iFood Move 2024
+            iFood Move 2025
           </CardTitle>
           <CardDescription>Sistema Administrador Saipos</CardDescription>
         </CardHeader>

@@ -18,7 +18,7 @@ export function Navbar() {
       <div className="container flex h-14 items-center">
         <div className="mr-8">
           <h1 className="text-xl font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            iFood Move 2024
+            iFood Move 2025
           </h1>
         </div>
         <NavigationMenu>

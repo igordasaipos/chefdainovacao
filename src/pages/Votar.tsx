@@ -111,7 +111,7 @@ const Votar = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>iFood Move 2024 - Sistema Saipos de Votação</p>
+          <p>iFood Move 2025 - Sistema Saipos de Votação</p>
           <p className="mt-2">
             Cada número de telefone pode votar uma vez por funcionalidade
           </p>
