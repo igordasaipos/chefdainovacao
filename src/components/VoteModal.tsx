@@ -5,128 +5,90 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCreateVoto } from '@/hooks/useVotos';
 import { Ideia } from '@/hooks/useIdeias';
-
 interface VoteModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   ideia: Ideia | null;
 }
-
-export const VoteModal = ({ open, onOpenChange, ideia }: VoteModalProps) => {
+export const VoteModal = ({
+  open,
+  onOpenChange,
+  ideia
+}: VoteModalProps) => {
   const [formData, setFormData] = useState({
     nome_restaurante_votante: '',
     telefone_votante: '',
-    whatsapp_votante: '',
+    whatsapp_votante: ''
   });
-
   const createVoto = useCreateVoto();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!ideia) return;
-
     try {
       await createVoto.mutateAsync({
         ideia_id: ideia.id,
-        ...formData,
+        ...formData
       });
-      
+
       // Reset form and close modal
       setFormData({
         nome_restaurante_votante: '',
         telefone_votante: '',
-        whatsapp_votante: '',
+        whatsapp_votante: ''
       });
       onOpenChange(false);
     } catch (error) {
       // Error is handled by the hook
     }
   };
-
-  const isValid = formData.nome_restaurante_votante.trim() && 
-                  formData.telefone_votante.trim() && 
-                  formData.whatsapp_votante.trim();
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+  const isValid = formData.nome_restaurante_votante.trim() && formData.telefone_votante.trim() && formData.whatsapp_votante.trim();
+  return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Confirmar seu voto</DialogTitle>
         </DialogHeader>
         
-        {ideia && (
-          <div className="mb-4 p-3 bg-muted rounded-lg">
+        {ideia && <div className="mb-4 p-3 bg-muted rounded-lg">
             <h3 className="font-semibold text-sm">{ideia.titulo}</h3>
             <p className="text-xs text-muted-foreground mt-1">
               {ideia.descricao}
             </p>
-          </div>
-        )}
+          </div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="nome_restaurante">Nome/ID do Restaurante</Label>
-            <Input
-              id="nome_restaurante"
-              value={formData.nome_restaurante_votante}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                nome_restaurante_votante: e.target.value
-              }))}
-              placeholder="Ex: Burger King Centro"
-              required
-            />
+            <Label htmlFor="nome_restaurante">Nome da loja/ID Saipos/ CNPJ </Label>
+            <Input id="nome_restaurante" value={formData.nome_restaurante_votante} onChange={e => setFormData(prev => ({
+            ...prev,
+            nome_restaurante_votante: e.target.value
+          }))} placeholder="Ex: Burger King Centro" required />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="telefone">Telefone</Label>
-            <Input
-              id="telefone"
-              type="tel"
-              value={formData.telefone_votante}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                telefone_votante: e.target.value
-              }))}
-              placeholder="(11) 99999-9999"
-              required
-            />
+            <Input id="telefone" type="tel" value={formData.telefone_votante} onChange={e => setFormData(prev => ({
+            ...prev,
+            telefone_votante: e.target.value
+          }))} placeholder="(11) 99999-9999" required />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="whatsapp">WhatsApp</Label>
-            <Input
-              id="whatsapp"
-              value={formData.whatsapp_votante}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                whatsapp_votante: e.target.value
-              }))}
-              placeholder="(11) 99999-9999"
-              required
-            />
+            <Input id="whatsapp" value={formData.whatsapp_votante} onChange={e => setFormData(prev => ({
+            ...prev,
+            whatsapp_votante: e.target.value
+          }))} placeholder="(11) 99999-9999" required />
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isValid || createVoto.isPending}
-              className="flex-1"
-            >
+            <Button type="submit" disabled={!isValid || createVoto.isPending} className="flex-1">
               {createVoto.isPending ? 'Votando...' : 'Confirmar Voto'}
             </Button>
           </div>
         </form>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
