@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
-import { LogOut, Plus, Edit, Trash2, Download, BarChart } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, Download, BarChart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 const Admin = () => {
   const {
@@ -477,10 +477,10 @@ const Admin = () => {
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm">
-                            Visualizar
+                            <Edit2 className="h-4 w-4" />
                           </Button>
                           <Button onClick={() => handleDelete(ideia.id)} variant="destructive" size="sm">
-                            Excluir
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </td>
