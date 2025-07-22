@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QrCode, Users, BarChart3, Settings } from 'lucide-react';
@@ -10,10 +11,10 @@ const Index = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-primary mb-4">
-            iFood Move - Gestão de Ideias
+            Saipos Innovation Lab
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Ferramenta de gestão colaborativa para coleta, votação e desenvolvimento de ideias durante o evento iFood Move.
+            Plataforma colaborativa para coleta, votação e desenvolvimento de ideias inovadoras para o ecossistema Saipos PDV.
           </p>
         </div>
 
@@ -29,7 +30,7 @@ const Index = () => {
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <p className="text-sm text-muted-foreground">
-                Acesso restrito para cadastro, edição e gerenciamento de ideias
+                Acesso restrito para cadastro, edição e gerenciamento de funcionalidades
               </p>
               <Link to="/admin">
                 <Button className="w-full">
@@ -45,11 +46,11 @@ const Index = () => {
               <div className="mx-auto mb-4 w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                 <Users className="h-8 w-8 text-primary" />
               </div>
-              <CardTitle>Votação Pública</CardTitle>
+              <CardTitle>Votação da Equipe</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <p className="text-sm text-muted-foreground">
-                Vote nas melhores ideias e acompanhe o ranking em tempo real
+                Vote nas melhores funcionalidades e acompanhe o ranking em tempo real
               </p>
               <Link to="/votar">
                 <Button className="w-full" variant="secondary">
@@ -69,7 +70,7 @@ const Index = () => {
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <p className="text-sm text-muted-foreground">
-                Visualize o progresso das ideias em desenvolvimento
+                Visualize o progresso das funcionalidades em desenvolvimento
               </p>
               <Link to="/kanban">
                 <Button className="w-full" variant="outline">
@@ -85,7 +86,7 @@ const Index = () => {
           <QrCode className="h-12 w-12 text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-semibold mb-4">Acesso via QR Code</h2>
           <p className="text-muted-foreground mb-6">
-            Durante o evento, os participantes podem acessar diretamente as páginas de votação e acompanhamento através de QR Codes específicos.
+            Durante o evento Saipos Innovation Week, os participantes podem acessar diretamente as páginas de votação e acompanhamento através de QR Codes específicos.
           </p>
           <div className="grid md:grid-cols-2 gap-4 max-w-md mx-auto">
             <div className="p-4 bg-muted rounded-lg">
@@ -101,7 +102,7 @@ const Index = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>iFood Move 2024 - Ferramenta de Gestão de Ideias</p>
+          <p>Saipos Innovation Week 2024 - Plataforma de Gestão de Funcionalidades</p>
         </div>
       </div>
     </div>

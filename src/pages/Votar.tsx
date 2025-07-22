@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -45,17 +46,17 @@ const Votar = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-primary mb-4">
-            Votação de Ideias
+            Votação de Funcionalidades
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Vote nas melhores ideias e acompanhe o ranking em tempo real
+            Vote nas melhores funcionalidades para o Saipos PDV e acompanhe o ranking em tempo real
           </p>
           
           {/* Stats */}
           <div className="flex justify-center gap-6 mb-6">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
-              <span className="font-semibold">{ideias?.length || 0} ideias</span>
+              <span className="font-semibold">{ideias?.length || 0} funcionalidades</span>
             </div>
             <div className="flex items-center gap-2">
               <Heart className="h-5 w-5 text-primary" />
@@ -70,7 +71,7 @@ const Votar = () => {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
                 <Trophy className="h-6 w-6 text-primary" />
-                Ranking das Ideias
+                Ranking das Funcionalidades
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -99,9 +100,9 @@ const Votar = () => {
           <Card className="text-center py-12">
             <CardContent>
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Nenhuma ideia em votação</h3>
+              <h3 className="text-lg font-semibold mb-2">Nenhuma funcionalidade em votação</h3>
               <p className="text-muted-foreground">
-                No momento não há ideias disponíveis para votação.
+                No momento não há funcionalidades disponíveis para votação.
               </p>
             </CardContent>
           </Card>
@@ -109,9 +110,9 @@ const Votar = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>iFood Move 2024 - Sistema de Votação</p>
+          <p>Saipos Innovation Week 2024 - Sistema de Votação</p>
           <p className="mt-2">
-            Cada número de telefone pode votar uma vez por ideia
+            Cada número de telefone pode votar uma vez por funcionalidade
           </p>
         </div>
 

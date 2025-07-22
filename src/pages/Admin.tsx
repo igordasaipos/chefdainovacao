@@ -69,6 +69,110 @@ const Admin = () => {
     };
   }, [isAdmin, refetchIdeias]);
 
+  // Add example ideas on first load
+  useEffect(() => {
+    if (isAdmin && ideias && ideias.length === 0) {
+      addExampleIdeas();
+    }
+  }, [isAdmin, ideias]);
+
+  const addExampleIdeas = async () => {
+    const exampleIdeas = [
+      {
+        titulo: "Dashboard de Análise de Vendas em Tempo Real",
+        descricao: "Sistema de dashboard interativo que mostra vendas em tempo real, com gráficos de performance, produtos mais vendidos e análise de faturamento por período.",
+        complexidade: "1turno" as const,
+        status: "votacao" as const,
+        criado_por: "Maria Silva - Gerente de Produto",
+        nome_restaurante: "Restaurante Sabor Brasileiro",
+        whatsapp_criador: "(11) 99999-1234",
+        desenvolvedor: "",
+        observacao: "Integração com API de vendas existente necessária"
+      },
+      {
+        titulo: "Integração com WhatsApp Business para Pedidos",
+        descricao: "Funcionalidade que permite receber pedidos diretamente pelo WhatsApp Business, com integração automática ao sistema PDV.",
+        complexidade: "3h" as const,
+        status: "votacao" as const,
+        criado_por: "João Santos - Atendimento",
+        nome_restaurante: "Pizzaria Bella Vista",
+        whatsapp_criador: "(11) 98888-5678",
+        desenvolvedor: "",
+        observacao: "Necessário estudo de viabilidade técnica"
+      },
+      {
+        titulo: "Sistema de Fidelidade para Clientes",
+        descricao: "Programa de pontos e recompensas para clientes fiéis, com acúmulo de pontos por compra e troca por descontos ou pratos gratuitos.",
+        complexidade: "complexa" as const,
+        status: "votacao" as const,
+        criado_por: "Ana Costa - Marketing",
+        nome_restaurante: "Café & Cia",
+        whatsapp_criador: "(11) 97777-9012",
+        desenvolvedor: "",
+        observacao: "Requer integração com sistema de CRM"
+      },
+      {
+        titulo: "App Mobile para Comandas Digitais",
+        descricao: "Aplicativo mobile para garçons registrarem pedidos diretamente no smartphone/tablet, eliminando comandas de papel.",
+        complexidade: "complexa" as const,
+        status: "desenvolvimento" as const,
+        criado_por: "Carlos Mendes - Operações",
+        nome_restaurante: "Bistrô do Centro",
+        whatsapp_criador: "(11) 96666-3456",
+        desenvolvedor: "Rafael Tech - Squad Mobile",
+        observacao: "MVP em desenvolvimento, previsão 2 semanas"
+      },
+      {
+        titulo: "Integração com PIX para Pagamentos",
+        descricao: "Implementação do PIX como forma de pagamento no PDV, com geração automática de QR Code e confirmação instantânea.",
+        complexidade: "1turno" as const,
+        status: "desenvolvimento" as const,
+        criado_por: "Fernanda Lima - Financeiro",
+        nome_restaurante: "Lanchonete Quick Food",
+        whatsapp_criador: "(11) 95555-7890",
+        desenvolvedor: "Lucas Backend - Squad Payments",
+        observacao: "Aguardando homologação do Banco Central"
+      },
+      {
+        titulo: "Backup Automático na Nuvem",
+        descricao: "Sistema de backup automático diário de todos os dados do PDV para armazenamento seguro em nuvem.",
+        complexidade: "3h" as const,
+        status: "finalizada" as const,
+        criado_por: "Ricardo IT - TI",
+        nome_restaurante: "Hamburgueria Top Burger",
+        whatsapp_criador: "(11) 94444-1122",
+        desenvolvedor: "Marina Cloud - Squad Infrastructure",
+        observacao: "Implementado com sucesso, rodando em produção"
+      },
+      {
+        titulo: "Relatório de Performance por Garçom",
+        descricao: "Relatório detalhado mostrando performance individual de cada garçom: vendas, tempo médio de atendimento, satisfação do cliente.",
+        complexidade: "1h30" as const,
+        status: "votacao" as const,
+        criado_por: "Patrícia RH - Recursos Humanos",
+        nome_restaurante: "Restaurante Famiglia",
+        whatsapp_criador: "(11) 93333-4455",
+        desenvolvedor: "",
+        observacao: "Importante para gestão de equipe"
+      },
+      {
+        titulo: "Impressão de Cupons Personalizados",
+        descricao: "Funcionalidade para personalizar cupons fiscais com logo do restaurante, promoções e mensagens especiais.",
+        complexidade: "1h30" as const,
+        status: "finalizada" as const,
+        criado_por: "Gustavo Design - UX/UI",
+        nome_restaurante: "Sorveteria Gelato Premium",
+        whatsapp_criador: "(11) 92222-6677",
+        desenvolvedor: "Amanda Frontend - Squad UX",
+        observacao: "Implementado e disponível na versão 2.1"
+      }
+    ];
+
+    for (const idea of exampleIdeas) {
+      await createIdeia.mutateAsync(idea);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     await signIn(loginForm.email, loginForm.password);
@@ -119,7 +223,7 @@ const Admin = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja excluir esta ideia?')) {
+    if (confirm('Tem certeza que deseja excluir esta funcionalidade?')) {
       await deleteIdeia.mutateAsync(id);
     }
   };
@@ -216,7 +320,7 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Painel Administrativo</h1>
+          <h1 className="text-3xl font-bold">Painel Administrativo - Saipos</h1>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
               Olá, {user.email}
@@ -281,13 +385,13 @@ const Admin = () => {
                 });
               }}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nova Ideia
+                Nova Funcionalidade
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
-                  {editingIdea ? 'Editar Ideia' : 'Nova Ideia'}
+                  {editingIdea ? 'Editar Funcionalidade' : 'Nova Funcionalidade'}
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmitIdea} className="space-y-4">
@@ -508,9 +612,14 @@ const Admin = () => {
 
         {filteredIdeias.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Nenhuma ideia encontrada com os filtros aplicados.</p>
+            <p className="text-muted-foreground">Nenhuma funcionalidade encontrada com os filtros aplicados.</p>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="text-center mt-12 text-sm text-muted-foreground">
+          <p>Saipos Innovation Week 2024 - Plataforma de Gestão de Funcionalidades</p>
+        </div>
       </div>
     </div>
   );

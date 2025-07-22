@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useIdeias } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -67,7 +68,7 @@ const Kanban = () => {
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <Icon className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">Nenhuma ideia nesta etapa</p>
+              <p className="text-sm">Nenhuma funcionalidade nesta etapa</p>
             </div>
           )}
         </CardContent>
@@ -81,17 +82,17 @@ const Kanban = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-primary mb-4">
-            Acompanhamento de Ideias
+            Acompanhamento de Funcionalidades
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Visualize o progresso das ideias em tempo real
+            Visualize o progresso das funcionalidades do Saipos PDV em tempo real
           </p>
 
           {/* Overview Stats */}
           <div className="flex justify-center gap-6 mb-8">
             <div className="flex items-center gap-2">
               <BarChart className="h-5 w-5 text-primary" />
-              <span className="font-semibold">{ideias?.length || 0} ideias totais</span>
+              <span className="font-semibold">{ideias?.length || 0} funcionalidades totais</span>
             </div>
             <div className="flex items-center gap-2">
               <Vote className="h-5 w-5 text-blue-600" />
@@ -138,10 +139,10 @@ const Kanban = () => {
         {/* Info Footer */}
         <div className="text-center mt-12 space-y-2">
           <p className="text-sm text-muted-foreground">
-            Atualizações em tempo real • iFood Move 2024
+            Atualizações em tempo real • Saipos Innovation Week 2024
           </p>
           <div className="flex justify-center gap-4 text-xs text-muted-foreground">
-            <span>🔵 Votação pública aberta</span>
+            <span>🔵 Votação da equipe aberta</span>
             <span>🟠 Desenvolvimento ativo</span>
             <span>🟢 Implementação concluída</span>
           </div>
