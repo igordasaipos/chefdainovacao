@@ -42,7 +42,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email Administrador</Label>
-              <Input id="email" type="email" placeholder="admin.saipos@ifoodmove.com" value={email} onChange={e => setEmail(e.target.value)} required />
+              <Input id="email" type="email" placeholder="" value={email} onChange={e => setEmail(e.target.value)} required />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Verificando...' : 'Acessar Sistema'}
