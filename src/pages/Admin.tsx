@@ -254,6 +254,7 @@ const Admin = () => {
   }) || [];
   const stats = {
     total: ideias?.length || 0,
+    avaliar: ideias?.filter(i => i.status === 'avaliar').length || 0,
     caixinha: ideias?.filter(i => i.status === 'caixinha').length || 0,
     votacao: ideias?.filter(i => i.status === 'votacao').length || 0,
     desenvolvimento: ideias?.filter(i => i.status === 'desenvolvimento').length || 0,
@@ -313,7 +314,7 @@ const Admin = () => {
         </div>
 
         {/* Stats Dashboard */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-6 gap-4 mb-8">
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold text-gray-900 mb-1">{stats.total}</div>
@@ -322,8 +323,20 @@ const Admin = () => {
           </Card>
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.avaliar}</div>
+              <div className="text-sm text-gray-600">Avaliar</div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white">
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.caixinha}</div>
+              <div className="text-sm text-gray-600">Caixinha</div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white">
+            <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold text-gray-900 mb-1">{stats.votacao}</div>
-              <div className="text-sm text-gray-600">Em Votação</div>
+              <div className="text-sm text-gray-600">Votação</div>
             </CardContent>
           </Card>
           <Card className="bg-white">
@@ -335,7 +348,7 @@ const Admin = () => {
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold text-gray-900 mb-1">{stats.finalizada}</div>
-              <div className="text-sm text-gray-600">Finalizadas</div>
+              <div className="text-sm text-gray-600">Finalizado</div>
             </CardContent>
           </Card>
         </div>
@@ -356,10 +369,11 @@ const Admin = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
                     <SelectItem value="todos">Todos</SelectItem>
+                    <SelectItem value="avaliar">Avaliar</SelectItem>
                     <SelectItem value="caixinha">Caixinha</SelectItem>
                     <SelectItem value="votacao">Votação</SelectItem>
                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                    <SelectItem value="finalizada">Finalizada</SelectItem>
+                    <SelectItem value="finalizada">Finalizado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -472,10 +486,11 @@ const Admin = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="bg-white z-50">
+                            <SelectItem value="avaliar">Avaliar</SelectItem>
                             <SelectItem value="caixinha">Caixinha</SelectItem>
                             <SelectItem value="votacao">Votação</SelectItem>
                             <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                            <SelectItem value="finalizada">Finalizada</SelectItem>
+                            <SelectItem value="finalizada">Finalizado</SelectItem>
                           </SelectContent>
                         </Select>
                       </td>

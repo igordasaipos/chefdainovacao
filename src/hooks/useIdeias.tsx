@@ -7,7 +7,7 @@ export interface Ideia {
   titulo: string;
   descricao: string | null;
   complexidade: '1h30' | '3h' | '1turno' | 'complexa';
-  status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
+  status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
   votos: number;
   criado_em: string;
   criado_por: string;

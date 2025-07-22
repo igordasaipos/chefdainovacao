@@ -1,33 +1,39 @@
 import { Badge } from '@/components/ui/badge';
 
 interface StatusBadgeProps {
-  status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
+  status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusConfig = (status: string) => {
     switch (status) {
+      case 'avaliar':
+        return { 
+          label: 'Avaliar', 
+          variant: 'outline' as const,
+          className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+        };
       case 'caixinha':
         return { 
-          label: 'Na Caixinha', 
+          label: 'Caixinha', 
           variant: 'secondary' as const,
           className: 'bg-muted text-muted-foreground'
         };
       case 'votacao':
         return { 
-          label: 'Em Votação', 
+          label: 'Votação', 
           variant: 'default' as const,
           className: 'bg-primary text-primary-foreground'
         };
       case 'desenvolvimento':
         return { 
-          label: 'Em Desenvolvimento', 
+          label: 'Desenvolvimento', 
           variant: 'secondary' as const,
           className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
         };
       case 'finalizada':
         return { 
-          label: 'Finalizada', 
+          label: 'Finalizado', 
           variant: 'secondary' as const,
           className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
         };
