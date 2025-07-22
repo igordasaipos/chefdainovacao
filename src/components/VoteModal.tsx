@@ -66,7 +66,7 @@ export const VoteModal = ({
                 ...prev,
                 nome_restaurante_votante: e.target.value
               }))} 
-              placeholder="Digite o nome da loja/ID Saipos/CNPJ" 
+              placeholder="Digite seu ID Saipos, CNPJ ou nome" 
               required 
             />
             <div className="flex items-center space-x-2">
