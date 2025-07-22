@@ -76,99 +76,142 @@ const Admin = () => {
 
   const addExampleIdeas = async () => {
     const exampleIdeas = [
+      // Ideias na Caixinha (4)
       {
-        titulo: "Dashboard de Análise de Vendas em Tempo Real",
-        descricao: "Sistema de dashboard interativo que mostra vendas em tempo real, com gráficos de performance, produtos mais vendidos e análise de faturamento por período.",
+        titulo: "Sistema de Fidelidade com Pontos e Recompensas",
+        descricao: "Programa completo de fidelidade onde clientes acumulam pontos a cada compra e podem trocar por descontos, pratos gratuitos ou brindes exclusivos. Inclui sistema de níveis (Bronze, Prata, Ouro) com benefícios crescentes.",
+        complexidade: "complexa" as const,
+        status: "caixinha" as const,
+        criado_por: "Ana Marketing - Pizzaria Bella Napoli",
+        nome_restaurante: "Pizzaria Bella Napoli",
+        whatsapp_criador: "(11) 99123-4567",
+        desenvolvedor: "",
+        observacao: "Integração com sistema de CRM necessária. Analisar impacto nos custos operacionais."
+      },
+      {
+        titulo: "App para Pedidos Antecipados com Agendamento",
+        descricao: "Aplicativo mobile que permite aos clientes fazer pedidos com antecedência, escolher horário de retirada e receber notificações quando o pedido estiver pronto.",
+        complexidade: "1turno" as const,
+        status: "caixinha" as const,
+        criado_por: "Carlos Operações - Lanchonete Fast Food",
+        nome_restaurante: "Lanchonete Fast Food Express",
+        whatsapp_criador: "(11) 98234-5678",
+        desenvolvedor: "",
+        observacao: "Pode reduzir filas e melhorar experiência do cliente"
+      },
+      {
+        titulo: "Integração com Plataforma de Delivery Própria",
+        descricao: "Sistema de delivery próprio integrado ao PDV, com rastreamento em tempo real, cálculo automático de taxa de entrega por distância e gestão de entregadores.",
+        complexidade: "complexa" as const,
+        status: "caixinha" as const,
+        criado_por: "Roberto CEO - Hamburgueria Premium",
+        nome_restaurante: "Burger King Premium",
+        whatsapp_criador: "(11) 97345-6789",
+        desenvolvedor: "",
+        observacao: "Concorrer com iFood e Uber Eats. Analisar viabilidade financeira."
+      },
+      {
+        titulo: "Sistema de Feedback Automatizado pós-Compra",
+        descricao: "Envio automático de pesquisa de satisfação via WhatsApp ou SMS após cada venda, com dashboard para análise dos feedbacks e identificação de pontos de melhoria.",
+        complexidade: "3h" as const,
+        status: "caixinha" as const,
+        criado_por: "Marina Qualidade - Restaurante Família",
+        nome_restaurante: "Restaurante Família Tradicional",
+        whatsapp_criador: "(11) 96456-7890",
+        desenvolvedor: "",
+        observacao: "Importante para melhoria contínua do atendimento"
+      },
+
+      // Ideias em Votação (3)
+      {
+        titulo: "Cardápio Digital com QR Code Interativo",
+        descricao: "Sistema de cardápio digital acessível via QR Code na mesa, com fotos dos pratos, informações nutricionais, avaliações de outros clientes e possibilidade de fazer pedidos direto pelo celular.",
         complexidade: "1turno" as const,
         status: "votacao" as const,
-        criado_por: "Maria Silva - Gerente de Produto",
-        nome_restaurante: "Restaurante Sabor Brasileiro",
-        whatsapp_criador: "(11) 99999-1234",
+        criado_por: "Paula UX - Bistrô Gourmet",
+        nome_restaurante: "Bistrô Gourmet & Wine",
+        whatsapp_criador: "(11) 95567-8901",
         desenvolvedor: "",
-        observacao: "Integração com API de vendas existente necessária"
+        observacao: "Reduz custos de impressão e melhora experiência do cliente"
       },
       {
-        titulo: "Integração com WhatsApp Business para Pedidos",
-        descricao: "Funcionalidade que permite receber pedidos diretamente pelo WhatsApp Business, com integração automática ao sistema PDV.",
+        titulo: "Sistema de Reservas Online com Gestão de Mesas",
+        descricao: "Plataforma web para reservas online com visualização da disponibilidade em tempo real, confirmação automática via WhatsApp e sistema de gestão de mesas para otimizar ocupação.",
+        complexidade: "1turno" as const,
+        status: "votacao" as const,
+        criado_por: "Diego Gerente - Restaurante Vista Mar",
+        nome_restaurante: "Restaurante Vista Mar",
+        whatsapp_criador: "(11) 94678-9012",
+        desenvolvedor: "",
+        observacao: "Especialmente útil para fins de semana e datas comemorativas"
+      },
+      {
+        titulo: "Programa de Cashback Personalizado",
+        descricao: "Sistema de cashback que oferece porcentagem de volta diferenciada baseada no perfil do cliente, frequência de visitas e valor gasto, com créditos que podem ser usados em compras futuras.",
         complexidade: "3h" as const,
         status: "votacao" as const,
-        criado_por: "João Santos - Atendimento",
-        nome_restaurante: "Pizzaria Bella Vista",
-        whatsapp_criador: "(11) 98888-5678",
+        criado_por: "Fernanda Financeiro - Café Central",
+        nome_restaurante: "Café Central Downtown",
+        whatsapp_criador: "(11) 93789-0123",
         desenvolvedor: "",
-        observacao: "Necessário estudo de viabilidade técnica"
+        observacao: "Aumenta fidelização e ticket médio"
       },
+
+      // Ideias em Desenvolvimento (2)
       {
-        titulo: "Sistema de Fidelidade para Clientes",
-        descricao: "Programa de pontos e recompensas para clientes fiéis, com acúmulo de pontos por compra e troca por descontos ou pratos gratuitos.",
-        complexidade: "complexa" as const,
-        status: "votacao" as const,
-        criado_por: "Ana Costa - Marketing",
-        nome_restaurante: "Café & Cia",
-        whatsapp_criador: "(11) 97777-9012",
-        desenvolvedor: "",
-        observacao: "Requer integração com sistema de CRM"
-      },
-      {
-        titulo: "App Mobile para Comandas Digitais",
-        descricao: "Aplicativo mobile para garçons registrarem pedidos diretamente no smartphone/tablet, eliminando comandas de papel.",
-        complexidade: "complexa" as const,
-        status: "desenvolvimento" as const,
-        criado_por: "Carlos Mendes - Operações",
-        nome_restaurante: "Bistrô do Centro",
-        whatsapp_criador: "(11) 96666-3456",
-        desenvolvedor: "Rafael Tech - Squad Mobile",
-        observacao: "MVP em desenvolvimento, previsão 2 semanas"
-      },
-      {
-        titulo: "Integração com PIX para Pagamentos",
-        descricao: "Implementação do PIX como forma de pagamento no PDV, com geração automática de QR Code e confirmação instantânea.",
+        titulo: "Dashboard Avançado de Métricas de Vendas",
+        descricao: "Painel gerencial com métricas em tempo real: vendas por período, produtos mais vendidos, análise de lucratividade, comparativos mensais, previsão de demanda e alertas de performance.",
         complexidade: "1turno" as const,
         status: "desenvolvimento" as const,
-        criado_por: "Fernanda Lima - Financeiro",
-        nome_restaurante: "Lanchonete Quick Food",
-        whatsapp_criador: "(11) 95555-7890",
-        desenvolvedor: "Lucas Backend - Squad Payments",
-        observacao: "Aguardando homologação do Banco Central"
+        criado_por: "Alexandre BI - Rede FastMeal",
+        nome_restaurante: "Rede FastMeal (5 unidades)",
+        whatsapp_criador: "(11) 92890-1234",
+        desenvolvedor: "Equipe Data Analytics - Squad BI",
+        observacao: "MVP 80% completo. Faltam apenas os alertas automatizados."
       },
       {
-        titulo: "Backup Automático na Nuvem",
-        descricao: "Sistema de backup automático diário de todos os dados do PDV para armazenamento seguro em nuvem.",
-        complexidade: "3h" as const,
+        titulo: "Sistema de Gestão de Estoque Inteligente",
+        descricao: "Controle automatizado de estoque com alertas de produtos em baixa, sugestões de compra baseadas no histórico de vendas, integração com fornecedores e controle de validade.",
+        complexidade: "complexa" as const,
+        status: "desenvolvimento" as const,
+        criado_por: "Lucia Compras - Supermercado Bom Preço",
+        nome_restaurante: "Supermercado Bom Preço",
+        whatsapp_criador: "(11) 91901-2345",
+        desenvolvedor: "Time Backend - Squad Inventory",
+        observacao: "Primeira fase: alertas básicos. Segunda fase: IA para predição de demanda."
+      },
+
+      // Ideias Finalizadas (1)
+      {
+        titulo: "Integração Completa com WhatsApp Business API",
+        descricao: "Sistema completo de atendimento via WhatsApp Business com chatbot para primeiros atendimentos, integração com cardápio, recebimento de pedidos, confirmação de pagamento e notificações de status.",
+        complexidade: "1turno" as const,
         status: "finalizada" as const,
-        criado_por: "Ricardo IT - TI",
-        nome_restaurante: "Hamburgueria Top Burger",
-        whatsapp_criador: "(11) 94444-1122",
-        desenvolvedor: "Marina Cloud - Squad Infrastructure",
-        observacao: "Implementado com sucesso, rodando em produção"
-      },
-      {
-        titulo: "Relatório de Performance por Garçom",
-        descricao: "Relatório detalhado mostrando performance individual de cada garçom: vendas, tempo médio de atendimento, satisfação do cliente.",
-        complexidade: "1h30" as const,
-        status: "votacao" as const,
-        criado_por: "Patrícia RH - Recursos Humanos",
-        nome_restaurante: "Restaurante Famiglia",
-        whatsapp_criador: "(11) 93333-4455",
-        desenvolvedor: "",
-        observacao: "Importante para gestão de equipe"
-      },
-      {
-        titulo: "Impressão de Cupons Personalizados",
-        descricao: "Funcionalidade para personalizar cupons fiscais com logo do restaurante, promoções e mensagens especiais.",
-        complexidade: "1h30" as const,
-        status: "finalizada" as const,
-        criado_por: "Gustavo Design - UX/UI",
-        nome_restaurante: "Sorveteria Gelato Premium",
-        whatsapp_criador: "(11) 92222-6677",
-        desenvolvedor: "Amanda Frontend - Squad UX",
-        observacao: "Implementado e disponível na versão 2.1"
+        criado_por: "Ricardo TI - Pizzaria do Bairro",
+        nome_restaurante: "Pizzaria do Bairro",
+        whatsapp_criador: "(11) 90012-3456",
+        desenvolvedor: "Sarah WhatsApp Specialist - Squad Integrations",
+        observacao: "Implementado com sucesso! Aumento de 40% nos pedidos via WhatsApp."
       }
     ];
 
-    for (const idea of exampleIdeas) {
-      await createIdeia.mutateAsync(idea);
+    // Adicionar votos aleatórios para ideias em votação
+    const ideiasComVotos = exampleIdeas.map(idea => {
+      if (idea.status === 'votacao') {
+        return { ...idea, votos: Math.floor(Math.random() * 50) + 10 };
+      }
+      return idea;
+    });
+
+    console.log('Criando ideias de exemplo...');
+    for (const idea of ideiasComVotos) {
+      try {
+        await createIdeia.mutateAsync(idea);
+      } catch (error) {
+        console.error('Erro ao criar ideia:', idea.titulo, error);
+      }
     }
+    console.log('Ideias de exemplo criadas com sucesso!');
   };
 
   const handleSubmitIdea = async (e: React.FormEvent) => {
@@ -487,6 +530,10 @@ const Admin = () => {
               </form>
             </DialogContent>
           </Dialog>
+          <Button variant="outline" onClick={addExampleIdeas}>
+            <Plus className="h-4 w-4 mr-2" />
+            Adicionar Exemplos
+          </Button>
         </div>
 
         {/* Filters */}
@@ -565,6 +612,7 @@ const Admin = () => {
                       <div><strong>Criado por:</strong> {ideia.criado_por}</div>
                       {ideia.nome_restaurante && <div><strong>Restaurante:</strong> {ideia.nome_restaurante}</div>}
                       {ideia.desenvolvedor && <div><strong>Desenvolvedor:</strong> {ideia.desenvolvedor}</div>}
+                      {ideia.observacao && <div><strong>Observação:</strong> {ideia.observacao}</div>}
                       <div><strong>Criado em:</strong> {new Date(ideia.criado_em).toLocaleString('pt-BR')}</div>
                     </div>
                   </div>
