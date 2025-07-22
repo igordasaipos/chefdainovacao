@@ -48,8 +48,8 @@ const Admin = () => {
   const [editingIdea, setEditingIdea] = useState<Ideia | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [filters, setFilters] = useState({
-    status: '',
-    complexidade: '',
+    status: 'todos',
+    complexidade: 'todas',
     criador: ''
   });
   const [sortBy, setSortBy] = useState<'votos' | 'criado_em'>('criado_em');
@@ -240,8 +240,8 @@ const Admin = () => {
 
   const filteredAndSortedIdeias = ideias
     ?.filter(ideia => {
-      return (!filters.status || filters.status === 'todos' || ideia.status === filters.status) &&
-             (!filters.complexidade || filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
+      return (filters.status === 'todos' || ideia.status === filters.status) &&
+             (filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
              (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
     })
     ?.sort((a, b) => {
@@ -365,7 +365,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="todos">Todos</SelectItem>
                     <SelectItem value="caixinha">Caixinha</SelectItem>
                     <SelectItem value="votacao">Votação</SelectItem>
                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
@@ -382,7 +382,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todas complexidades" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="todas">Todas</SelectItem>
                     <SelectItem value="1h30">⚡ 1h30</SelectItem>
                     <SelectItem value="3h">🕒 3h</SelectItem>
                     <SelectItem value="1turno">🌙 1 turno</SelectItem>
