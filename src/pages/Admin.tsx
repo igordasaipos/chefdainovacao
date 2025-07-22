@@ -52,6 +52,8 @@ const Admin = () => {
     complexidade: '',
     criador: ''
   });
+  const [sortBy, setSortBy] = useState<'votos' | 'criado_em'>('criado_em');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   // Real-time subscription
   useEffect(() => {
@@ -222,11 +224,35 @@ const Admin = () => {
     }
   };
 
-  const filteredIdeias = ideias?.filter(ideia => {
-    return (!filters.status || filters.status === 'todos' || ideia.status === filters.status) &&
-           (!filters.complexidade || filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
-           (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
-  }) || [];
+  const handleUpdateComplexity = async (ideiaId: string, newComplexity: '1h30' | '3h' | '1turno' | 'complexa') => {
+    await updateIdeia.mutateAsync({
+      id: ideiaId,
+      updates: { complexidade: newComplexity }
+    });
+  };
+
+  const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => {
+    await updateIdeia.mutateAsync({
+      id: ideiaId,
+      updates: { status: newStatus }
+    });
+  };
+
+  const filteredAndSortedIdeias = ideias
+    ?.filter(ideia => {
+      return (!filters.status || filters.status === 'todos' || ideia.status === filters.status) &&
+             (!filters.complexidade || filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
+             (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
+    })
+    ?.sort((a, b) => {
+      if (sortBy === 'votos') {
+        return sortOrder === 'asc' ? a.votos - b.votos : b.votos - a.votos;
+      } else {
+        const dateA = new Date(a.criado_em).getTime();
+        const dateB = new Date(b.criado_em).getTime();
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      }
+    }) || [];
 
   const stats = {
     total: ideias?.length || 0,
@@ -327,13 +353,89 @@ const Admin = () => {
           </Card>
         </div>
 
+        {/* Filters and Controls */}
+        <Card className="bg-white mb-6">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Status Filter */}
+              <div className="space-y-2">
+                <Label>Filtrar por Status</Label>
+                <Select value={filters.status} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todos os status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="caixinha">Caixinha</SelectItem>
+                    <SelectItem value="votacao">Votação</SelectItem>
+                    <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
+                    <SelectItem value="finalizada">Finalizada</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Complexity Filter */}
+              <div className="space-y-2">
+                <Label>Filtrar por Complexidade</Label>
+                <Select value={filters.complexidade} onValueChange={(value) => setFilters(prev => ({ ...prev, complexidade: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todas complexidades" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="1h30">⚡ 1h30</SelectItem>
+                    <SelectItem value="3h">🕒 3h</SelectItem>
+                    <SelectItem value="1turno">🌙 1 turno</SelectItem>
+                    <SelectItem value="complexa">📦 Complexa</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Creator Filter */}
+              <div className="space-y-2">
+                <Label>Filtrar por Criador</Label>
+                <Input
+                  placeholder="Digite o nome do criador"
+                  value={filters.criador}
+                  onChange={(e) => setFilters(prev => ({ ...prev, criador: e.target.value }))}
+                />
+              </div>
+
+              {/* Sort Controls */}
+              <div className="space-y-2">
+                <Label>Ordenar por</Label>
+                <div className="flex gap-2">
+                  <Select value={sortBy} onValueChange={(value: 'votos' | 'criado_em') => setSortBy(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white z-50">
+                      <SelectItem value="criado_em">Data/Hora</SelectItem>
+                      <SelectItem value="votos">Votos</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                  >
+                    {sortOrder === 'asc' ? '↑' : '↓'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Ideias List */}
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle className="text-lg font-medium text-gray-900">Todas as Ideias</CardTitle>
+            <CardTitle className="text-lg font-medium text-gray-900">
+              Todas as Ideias ({filteredAndSortedIdeias.length})
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-hidden">
+            <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
@@ -346,11 +448,14 @@ const Admin = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Votos
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => setSortBy('votos')}>
+                      Votos {sortBy === 'votos' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Desenvolvedor
+                      Criado por
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => setSortBy('criado_em')}>
+                      Data/Hora {sortBy === 'criado_em' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Ações
@@ -358,35 +463,74 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredIdeias.map((ideia) => (
+                  {filteredAndSortedIdeias.map((ideia) => (
                     <tr key={ideia.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{ideia.titulo}</div>
-                          <div className="text-sm text-gray-500">{ideia.descricao}</div>
+                          <div className="text-xs text-gray-500 mt-1">{ideia.descricao}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <ComplexityBadge complexity={ideia.complexidade} />
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={ideia.status} />
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-gray-900">{ideia.votos} votos</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-gray-900">{ideia.desenvolvedor || 'Nome do dev'}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Button
-                          onClick={() => handleDelete(ideia.id)}
-                          variant="destructive"
-                          size="sm"
-                          className="bg-red-600 hover:bg-red-700 text-white"
+                        <Select
+                          value={ideia.complexidade}
+                          onValueChange={(value: '1h30' | '3h' | '1turno' | 'complexa') => handleUpdateComplexity(ideia.id, value)}
                         >
-                          Excluir
-                        </Button>
+                          <SelectTrigger className="w-auto">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white z-50">
+                            <SelectItem value="1h30">⚡ 1h30</SelectItem>
+                            <SelectItem value="3h">🕒 3h</SelectItem>
+                            <SelectItem value="1turno">🌙 1 turno</SelectItem>
+                            <SelectItem value="complexa">📦 Complexa</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Select
+                          value={ideia.status}
+                          onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => handleUpdateStatus(ideia.id, value)}
+                        >
+                          <SelectTrigger className="w-auto">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white z-50">
+                            <SelectItem value="caixinha">Caixinha</SelectItem>
+                            <SelectItem value="votacao">Votação</SelectItem>
+                            <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
+                            <SelectItem value="finalizada">Finalizada</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm font-medium text-gray-900">{ideia.votos}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-gray-900">{adminEmail}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-xs text-gray-500">
+                          {new Date(ideia.criado_em).toLocaleString('pt-BR')}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => handleEdit(ideia)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            Visualizar
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(ideia.id)}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            Excluir
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
