@@ -245,8 +245,8 @@ const Admin = () => {
   };
 
   const filteredIdeias = ideias?.filter(ideia => {
-    return (!filters.status || ideia.status === filters.status) &&
-           (!filters.complexidade || ideia.complexidade === filters.complexidade) &&
+    return (!filters.status || filters.status === 'todos' || ideia.status === filters.status) &&
+           (!filters.complexidade || filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
            (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
   }) || [];
 
@@ -500,7 +500,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="todos">Todos</SelectItem>
                     <SelectItem value="caixinha">Na Caixinha</SelectItem>
                     <SelectItem value="votacao">Em Votação</SelectItem>
                     <SelectItem value="desenvolvimento">Em Desenvolvimento</SelectItem>
@@ -515,7 +515,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todas as complexidades" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="todas">Todas</SelectItem>
                     <SelectItem value="1h30">1h30</SelectItem>
                     <SelectItem value="3h">3h</SelectItem>
                     <SelectItem value="1turno">1 Turno</SelectItem>
