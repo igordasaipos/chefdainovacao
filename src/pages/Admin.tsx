@@ -14,14 +14,20 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
 import { LogOut, Plus, Edit, Trash2, Download, BarChart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-
 const Admin = () => {
-  const { adminEmail, isAdmin, signOut, loading } = useAuth();
-  const { data: ideias, refetch: refetchIdeias } = useIdeias();
+  const {
+    adminEmail,
+    isAdmin,
+    signOut,
+    loading
+  } = useAuth();
+  const {
+    data: ideias,
+    refetch: refetchIdeias
+  } = useIdeias();
   const createIdeia = useCreateIdeia();
   const updateIdeia = useUpdateIdeia();
   const deleteIdeia = useDeleteIdeia();
-
   const [ideaForm, setIdeaForm] = useState<{
     titulo: string;
     descricao: string;
@@ -58,15 +64,11 @@ const Admin = () => {
   // Real-time subscription
   useEffect(() => {
     if (!isAdmin) return;
-
-    const channel = supabase
-      .channel('admin-ideias')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'ideias' },
-        () => refetchIdeias()
-      )
-      .subscribe();
-
+    const channel = supabase.channel('admin-ideias').on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'ideias'
+    }, () => refetchIdeias()).subscribe();
     return () => {
       supabase.removeChannel(channel);
     };
@@ -78,49 +80,42 @@ const Admin = () => {
       addExampleIdeas();
     }
   }, [isAdmin, ideias]);
-
   const addExampleIdeas = async () => {
-    const exampleIdeas = [
-      {
-        titulo: "Melhorar filtros de busca",
-        descricao: "Adicionar mais opções de filtro para facilitar a busca de restaurantes",
-        complexidade: "1h30" as const,
-        status: "votacao" as const,
-        criado_por: "João Silva",
-        nome_restaurante: "Pizzaria Central",
-        whatsapp_criador: "(11) 99999-9999",
-        desenvolvedor: "",
-        observacao: ""
-      },
-      {
-        titulo: "Sistema de avaliações detalhadas",
-        descricao: "Permitir avaliações mais específicas dos pratos e serviços",
-        complexidade: "3h" as const,
-        status: "votacao" as const,
-        criado_por: "Nome do dev",
-        nome_restaurante: "Restaurante ABC",
-        whatsapp_criador: "(11) 88888-8888",
-        desenvolvedor: "",
-        observacao: ""
-      },
-      {
-        titulo: "Chat em tempo real com restaurante",
-        descricao: "Sistema de mensagens diretas entre cliente e restaurante",
-        complexidade: "1turno" as const,
-        status: "desenvolvimento" as const,
-        criado_por: "Maria Santos",
-        nome_restaurante: "Bistro Gourmet",
-        whatsapp_criador: "(11) 77777-7777",
-        desenvolvedor: "",
-        observacao: ""
-      }
-    ];
-
+    const exampleIdeas = [{
+      titulo: "Melhorar filtros de busca",
+      descricao: "Adicionar mais opções de filtro para facilitar a busca de restaurantes",
+      complexidade: "1h30" as const,
+      status: "votacao" as const,
+      criado_por: "João Silva",
+      nome_restaurante: "Pizzaria Central",
+      whatsapp_criador: "(11) 99999-9999",
+      desenvolvedor: "",
+      observacao: ""
+    }, {
+      titulo: "Sistema de avaliações detalhadas",
+      descricao: "Permitir avaliações mais específicas dos pratos e serviços",
+      complexidade: "3h" as const,
+      status: "votacao" as const,
+      criado_por: "Nome do dev",
+      nome_restaurante: "Restaurante ABC",
+      whatsapp_criador: "(11) 88888-8888",
+      desenvolvedor: "",
+      observacao: ""
+    }, {
+      titulo: "Chat em tempo real com restaurante",
+      descricao: "Sistema de mensagens diretas entre cliente e restaurante",
+      complexidade: "1turno" as const,
+      status: "desenvolvimento" as const,
+      criado_por: "Maria Santos",
+      nome_restaurante: "Bistro Gourmet",
+      whatsapp_criador: "(11) 77777-7777",
+      desenvolvedor: "",
+      observacao: ""
+    }];
     const ideiasComVotos = exampleIdeas.map((idea, index) => ({
       ...idea,
       votos: [5, 3, 8][index] // Votos específicos para cada ideia
     }));
-
     for (const idea of ideiasComVotos) {
       try {
         await createIdeia.mutateAsync(idea);
@@ -129,10 +124,9 @@ const Admin = () => {
       }
     }
   };
-
   const handleSubmitIdea = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Map new form fields to old structure
     const ideaData = {
       titulo: ideaForm.titulo,
@@ -145,7 +139,6 @@ const Admin = () => {
       desenvolvedor: '',
       observacao: ideaForm.observacao + (ideaForm.jira ? ` | Jira: ${ideaForm.jira}` : '')
     };
-    
     if (editingIdea) {
       await updateIdeia.mutateAsync({
         id: editingIdea.id,
@@ -154,7 +147,7 @@ const Admin = () => {
     } else {
       await createIdeia.mutateAsync(ideaData);
     }
-    
+
     // Reset form
     setIdeaForm({
       titulo: '',
@@ -171,14 +164,12 @@ const Admin = () => {
     setEditingIdea(null);
     setIsFormOpen(false);
   };
-
   const handleEdit = (ideia: Ideia) => {
     // Extract jira from observacao if present
     const obs = ideia.observacao || '';
     const jiraMatch = obs.match(/\| Jira: (.+)/);
     const jira = jiraMatch ? jiraMatch[1] : '';
     const observacao = jiraMatch ? obs.replace(/\| Jira: .+/, '').trim() : obs;
-    
     setIdeaForm({
       titulo: ideia.titulo,
       descricao: ideia.descricao || '',
@@ -194,28 +185,20 @@ const Admin = () => {
     setEditingIdea(ideia);
     setIsFormOpen(true);
   };
-
   const handleDelete = async (id: string) => {
     if (confirm('Tem certeza que deseja excluir esta funcionalidade?')) {
       await deleteIdeia.mutateAsync(id);
     }
   };
-
   const handleExportVotes = async (ideiaId: string) => {
-    const { data: votos } = await supabase
-      .from('votos')
-      .select('*')
-      .eq('ideia_id', ideiaId);
-
+    const {
+      data: votos
+    } = await supabase.from('votos').select('*').eq('ideia_id', ideiaId);
     if (votos && votos.length > 0) {
-      const csv = [
-        'Nome Restaurante,Telefone,WhatsApp,Data',
-        ...votos.map(voto => 
-          `${voto.nome_restaurante_votante},${voto.telefone_votante},${voto.whatsapp_votante},${new Date(voto.created_at).toLocaleString('pt-BR')}`
-        )
-      ].join('\n');
-
-      const blob = new Blob([csv], { type: 'text/csv' });
+      const csv = ['Nome Restaurante,Telefone,WhatsApp,Data', ...votos.map(voto => `${voto.nome_restaurante_votante},${voto.telefone_votante},${voto.whatsapp_votante},${new Date(voto.created_at).toLocaleString('pt-BR')}`)].join('\n');
+      const blob = new Blob([csv], {
+        type: 'text/csv'
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -223,59 +206,50 @@ const Admin = () => {
       a.click();
     }
   };
-
   const handleUpdateComplexity = async (ideiaId: string, newComplexity: '1h30' | '3h' | '1turno' | 'complexa') => {
     await updateIdeia.mutateAsync({
       id: ideiaId,
-      updates: { complexidade: newComplexity }
+      updates: {
+        complexidade: newComplexity
+      }
     });
   };
-
   const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => {
     await updateIdeia.mutateAsync({
       id: ideiaId,
-      updates: { status: newStatus }
+      updates: {
+        status: newStatus
+      }
     });
   };
-
-  const filteredAndSortedIdeias = ideias
-    ?.filter(ideia => {
-      return (filters.status === 'todos' || ideia.status === filters.status) &&
-             (filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) &&
-             (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
-    })
-    ?.sort((a, b) => {
-      if (sortBy === 'votos') {
-        return sortOrder === 'asc' ? a.votos - b.votos : b.votos - a.votos;
-      } else {
-        const dateA = new Date(a.criado_em).getTime();
-        const dateB = new Date(b.criado_em).getTime();
-        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-      }
-    }) || [];
-
+  const filteredAndSortedIdeias = ideias?.filter(ideia => {
+    return (filters.status === 'todos' || ideia.status === filters.status) && (filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) && (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
+  })?.sort((a, b) => {
+    if (sortBy === 'votos') {
+      return sortOrder === 'asc' ? a.votos - b.votos : b.votos - a.votos;
+    } else {
+      const dateA = new Date(a.criado_em).getTime();
+      const dateB = new Date(b.criado_em).getTime();
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    }
+  }) || [];
   const stats = {
     total: ideias?.length || 0,
     caixinha: ideias?.filter(i => i.status === 'caixinha').length || 0,
     votacao: ideias?.filter(i => i.status === 'votacao').length || 0,
     desenvolvimento: ideias?.filter(i => i.status === 'desenvolvimento').length || 0,
-    finalizada: ideias?.filter(i => i.status === 'finalizada').length || 0,
+    finalizada: ideias?.filter(i => i.status === 'finalizada').length || 0
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p>Carregando...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!adminEmail || !isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-center">Acesso Restrito</CardTitle>
@@ -289,12 +263,9 @@ const Admin = () => {
             </Button>
           </CardContent>
         </Card>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
+  return <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -302,25 +273,22 @@ const Admin = () => {
             <h1 className="text-2xl font-semibold text-gray-900">Painel Administrativo</h1>
             <p className="text-gray-600">Gerencie as ideias coletadas no evento</p>
           </div>
-          <Button 
-            onClick={() => {
-              setEditingIdea(null);
-              setIdeaForm({
-                titulo: '',
-                descricao: '',
-                nome_id_saipos_cnpj: '',
-                nao_sou_cliente: false,
-                whatsapp: '',
-                nome: '',
-                complexidade: '1h30',
-                status: 'avaliar',
-                observacao: '',
-                jira: ''
-              });
-              setIsFormOpen(true);
-            }}
-            className="bg-black text-white hover:bg-gray-800"
-          >
+          <Button onClick={() => {
+          setEditingIdea(null);
+          setIdeaForm({
+            titulo: '',
+            descricao: '',
+            nome_id_saipos_cnpj: '',
+            nao_sou_cliente: false,
+            whatsapp: '',
+            nome: '',
+            complexidade: '1h30',
+            status: 'avaliar',
+            observacao: '',
+            jira: ''
+          });
+          setIsFormOpen(true);
+        }} className="bg-black text-white hover:bg-gray-800">
             + Nova Ideia
           </Button>
         </div>
@@ -360,7 +328,10 @@ const Admin = () => {
               {/* Status Filter */}
               <div className="space-y-2">
                 <Label>Filtrar por Status</Label>
-                <Select value={filters.status} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}>
+                <Select value={filters.status} onValueChange={value => setFilters(prev => ({
+                ...prev,
+                status: value
+              }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
@@ -377,7 +348,10 @@ const Admin = () => {
               {/* Complexity Filter */}
               <div className="space-y-2">
                 <Label>Filtrar por Complexidade</Label>
-                <Select value={filters.complexidade} onValueChange={(value) => setFilters(prev => ({ ...prev, complexidade: value }))}>
+                <Select value={filters.complexidade} onValueChange={value => setFilters(prev => ({
+                ...prev,
+                complexidade: value
+              }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas complexidades" />
                   </SelectTrigger>
@@ -394,11 +368,10 @@ const Admin = () => {
               {/* Creator Filter */}
               <div className="space-y-2">
                 <Label>Filtrar por Criador</Label>
-                <Input
-                  placeholder="Digite o nome do criador"
-                  value={filters.criador}
-                  onChange={(e) => setFilters(prev => ({ ...prev, criador: e.target.value }))}
-                />
+                <Input placeholder="Digite o nome do criador" value={filters.criador} onChange={e => setFilters(prev => ({
+                ...prev,
+                criador: e.target.value
+              }))} />
               </div>
 
               {/* Sort Controls */}
@@ -414,13 +387,7 @@ const Admin = () => {
                       <SelectItem value="votos">Votos</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                  >
-                    {sortOrder === 'asc' ? '↑' : '↓'}
-                  </Button>
+                  
                 </div>
               </div>
             </div>
@@ -463,8 +430,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredAndSortedIdeias.map((ideia) => (
-                    <tr key={ideia.id} className="hover:bg-gray-50">
+                  {filteredAndSortedIdeias.map(ideia => <tr key={ideia.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{ideia.titulo}</div>
@@ -472,10 +438,7 @@ const Admin = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Select
-                          value={ideia.complexidade}
-                          onValueChange={(value: '1h30' | '3h' | '1turno' | 'complexa') => handleUpdateComplexity(ideia.id, value)}
-                        >
+                        <Select value={ideia.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'complexa') => handleUpdateComplexity(ideia.id, value)}>
                           <SelectTrigger className="w-auto">
                             <SelectValue />
                           </SelectTrigger>
@@ -488,10 +451,7 @@ const Admin = () => {
                         </Select>
                       </td>
                       <td className="px-6 py-4">
-                        <Select
-                          value={ideia.status}
-                          onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => handleUpdateStatus(ideia.id, value)}
-                        >
+                        <Select value={ideia.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => handleUpdateStatus(ideia.id, value)}>
                           <SelectTrigger className="w-auto">
                             <SelectValue />
                           </SelectTrigger>
@@ -516,24 +476,15 @@ const Admin = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
-                          <Button
-                            onClick={() => handleEdit(ideia)}
-                            variant="outline"
-                            size="sm"
-                          >
+                          <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm">
                             Visualizar
                           </Button>
-                          <Button
-                            onClick={() => handleDelete(ideia.id)}
-                            variant="destructive"
-                            size="sm"
-                          >
+                          <Button onClick={() => handleDelete(ideia.id)} variant="destructive" size="sm">
                             Excluir
                           </Button>
                         </div>
                       </td>
-                    </tr>
-                  ))}
+                    </tr>)}
                 </tbody>
               </table>
             </div>
@@ -551,74 +502,60 @@ const Admin = () => {
             <form onSubmit={handleSubmitIdea} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="titulo">Título *</Label>
-                <Input
-                  id="titulo"
-                  value={ideaForm.titulo}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, titulo: e.target.value }))}
-                  required
-                />
+                <Input id="titulo" value={ideaForm.titulo} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                titulo: e.target.value
+              }))} required />
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="descricao">Descrição *</Label>
-                <Textarea
-                  id="descricao"
-                  value={ideaForm.descricao}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, descricao: e.target.value }))}
-                  rows={3}
-                  required
-                />
+                <Textarea id="descricao" value={ideaForm.descricao} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                descricao: e.target.value
+              }))} rows={3} required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="nome_id_saipos_cnpj">Nome/ID Saipos/CNPJ</Label>
-                <Input
-                  id="nome_id_saipos_cnpj"
-                  value={ideaForm.nome_id_saipos_cnpj}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, nome_id_saipos_cnpj: e.target.value }))}
-                  disabled={ideaForm.nao_sou_cliente}
-                  placeholder={ideaForm.nao_sou_cliente ? "Não aplicável" : "Digite seu ID Saipos, CNPJ ou nome"}
-                />
+                <Input id="nome_id_saipos_cnpj" value={ideaForm.nome_id_saipos_cnpj} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                nome_id_saipos_cnpj: e.target.value
+              }))} disabled={ideaForm.nao_sou_cliente} placeholder={ideaForm.nao_sou_cliente ? "Não aplicável" : "Digite seu ID Saipos, CNPJ ou nome"} />
                 <div className="flex items-center space-x-2 mt-2">
-                  <Checkbox
-                    id="nao_sou_cliente"
-                    checked={ideaForm.nao_sou_cliente}
-                    onCheckedChange={(checked) => {
-                      setIdeaForm(prev => ({ 
-                        ...prev, 
-                        nao_sou_cliente: checked as boolean,
-                        nome_id_saipos_cnpj: checked ? '' : prev.nome_id_saipos_cnpj
-                      }))
-                    }}
-                  />
+                  <Checkbox id="nao_sou_cliente" checked={ideaForm.nao_sou_cliente} onCheckedChange={checked => {
+                  setIdeaForm(prev => ({
+                    ...prev,
+                    nao_sou_cliente: checked as boolean,
+                    nome_id_saipos_cnpj: checked ? '' : prev.nome_id_saipos_cnpj
+                  }));
+                }} />
                   <Label htmlFor="nao_sou_cliente" className="text-sm">Não sou cliente</Label>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="whatsapp">WhatsApp *</Label>
-                <Input
-                  id="whatsapp"
-                  value={ideaForm.whatsapp}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, whatsapp: e.target.value }))}
-                  placeholder="(11) 99999-9999"
-                  required
-                />
+                <Input id="whatsapp" value={ideaForm.whatsapp} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                whatsapp: e.target.value
+              }))} placeholder="(11) 99999-9999" required />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="nome">Nome *</Label>
-                <Input
-                  id="nome"
-                  value={ideaForm.nome}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, nome: e.target.value }))}
-                  required
-                />
+                <Input id="nome" value={ideaForm.nome} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                nome: e.target.value
+              }))} required />
               </div>
 
                <div className="space-y-2">
                  <Label htmlFor="complexidade">Complexidade *</Label>
-                 <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'caixinha') => setIdeaForm(prev => ({ ...prev, complexidade: value }))}>
+                 <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'caixinha') => setIdeaForm(prev => ({
+                ...prev,
+                complexidade: value
+              }))}>
                    <SelectTrigger>
                      <SelectValue />
                    </SelectTrigger>
@@ -633,7 +570,10 @@ const Admin = () => {
 
                <div className="space-y-2">
                  <Label htmlFor="status">Status *</Label>
-                 <Select value={ideaForm.status} onValueChange={(value: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => setIdeaForm(prev => ({ ...prev, status: value }))}>
+                 <Select value={ideaForm.status} onValueChange={(value: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => setIdeaForm(prev => ({
+                ...prev,
+                status: value
+              }))}>
                    <SelectTrigger>
                      <SelectValue />
                    </SelectTrigger>
@@ -649,23 +589,18 @@ const Admin = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="observacao">Observação</Label>
-                <Textarea
-                  id="observacao"
-                  value={ideaForm.observacao}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, observacao: e.target.value }))}
-                  rows={2}
-                  placeholder="Campo opcional"
-                />
+                <Textarea id="observacao" value={ideaForm.observacao} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                observacao: e.target.value
+              }))} rows={2} placeholder="Campo opcional" />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="jira">Jira</Label>
-                <Input
-                  id="jira"
-                  value={ideaForm.jira}
-                  onChange={(e) => setIdeaForm(prev => ({ ...prev, jira: e.target.value }))}
-                  placeholder="Campo opcional"
-                />
+                <Input id="jira" value={ideaForm.jira} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                jira: e.target.value
+              }))} placeholder="Campo opcional" />
               </div>
 
               <div className="flex gap-2 pt-4">
@@ -680,8 +615,6 @@ const Admin = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Admin;
