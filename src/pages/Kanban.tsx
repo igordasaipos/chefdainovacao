@@ -27,7 +27,7 @@ const Kanban = () => {
 
   const ideiasVotacao = ideias?.filter(ideia => ideia.status === 'votacao') || [];
   const ideiasDesenvolvimento = ideias?.filter(ideia => ideia.status === 'desenvolvimento') || [];
-  const ideiasFinalizada = ideias?.filter(ideia => ideia.status === 'finalizada') || [];
+  const ideiasFinalizada = ideias?.filter(ideia => ideia.status === 'finalizado') || [];
 
   const KanbanColumn = ({ 
     title, 

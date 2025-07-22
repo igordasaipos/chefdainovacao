@@ -37,7 +37,7 @@ const Admin = () => {
     whatsapp: string;
     nome: string;
     complexidade: '1h30' | '3h' | '1turno' | 'caixinha';
-    status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
+    status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
     observacao: string;
     jira: string;
   }>({
@@ -48,7 +48,7 @@ const Admin = () => {
     whatsapp: '',
     nome: '',
     complexidade: '1h30',
-    status: 'avaliar',
+    status: 'caixinha',
     observacao: '',
     jira: ''
   });
@@ -169,7 +169,7 @@ const Admin = () => {
       whatsapp: '',
       nome: '',
       complexidade: '1h30',
-      status: 'avaliar',
+      status: 'caixinha',
       observacao: '',
       jira: ''
     });
@@ -190,7 +190,7 @@ const Admin = () => {
       whatsapp: ideia.whatsapp_criador || '',
       nome: ideia.criado_por,
       complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
-      status: ideia.status === 'caixinha' ? 'avaliar' : ideia.status,
+      status: ideia.status,
       observacao: observacao,
       jira: jira
     });
@@ -233,7 +233,7 @@ const Admin = () => {
       }
     });
   };
-  const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => {
+  const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => {
     await updateIdeia.mutateAsync({
       id: ideiaId,
       updates: {
@@ -254,11 +254,10 @@ const Admin = () => {
   }) || [];
   const stats = {
     total: ideias?.length || 0,
-    avaliar: ideias?.filter(i => i.status === 'avaliar').length || 0,
     caixinha: ideias?.filter(i => i.status === 'caixinha').length || 0,
     votacao: ideias?.filter(i => i.status === 'votacao').length || 0,
     desenvolvimento: ideias?.filter(i => i.status === 'desenvolvimento').length || 0,
-    finalizada: ideias?.filter(i => i.status === 'finalizada').length || 0
+    finalizado: ideias?.filter(i => i.status === 'finalizado').length || 0
   };
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">
@@ -303,7 +302,7 @@ const Admin = () => {
             whatsapp: '',
             nome: '',
             complexidade: '1h30',
-            status: 'avaliar',
+            status: 'caixinha',
             observacao: '',
             jira: ''
           });
@@ -323,8 +322,8 @@ const Admin = () => {
           </Card>
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.avaliar}</div>
-              <div className="text-sm text-gray-600">Avaliar</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.caixinha}</div>
+              <div className="text-sm text-gray-600">Caixinha</div>
             </CardContent>
           </Card>
           <Card className="bg-white">
@@ -347,7 +346,7 @@ const Admin = () => {
           </Card>
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.finalizada}</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.finalizado}</div>
               <div className="text-sm text-gray-600">Finalizado</div>
             </CardContent>
           </Card>
@@ -369,11 +368,10 @@ const Admin = () => {
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
                     <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="avaliar">Avaliar</SelectItem>
                     <SelectItem value="caixinha">Caixinha</SelectItem>
                     <SelectItem value="votacao">Votação</SelectItem>
                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                    <SelectItem value="finalizada">Finalizado</SelectItem>
+                    <SelectItem value="finalizado">Finalizado</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -481,16 +479,15 @@ const Admin = () => {
                         </Select>
                       </td>
                       <td className="px-6 py-4">
-                        <Select value={ideia.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => handleUpdateStatus(ideia.id, value)}>
+                        <Select value={ideia.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => handleUpdateStatus(ideia.id, value)}>
                           <SelectTrigger className="w-auto">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="bg-white z-50">
-                            <SelectItem value="avaliar">Avaliar</SelectItem>
+                           <SelectContent className="bg-white z-50">
                             <SelectItem value="caixinha">Caixinha</SelectItem>
                             <SelectItem value="votacao">Votação</SelectItem>
                             <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                            <SelectItem value="finalizada">Finalizado</SelectItem>
+                            <SelectItem value="finalizado">Finalizado</SelectItem>
                           </SelectContent>
                         </Select>
                       </td>
@@ -601,7 +598,7 @@ const Admin = () => {
 
                <div className="space-y-2">
                  <Label htmlFor="status">Status *</Label>
-                 <Select value={ideaForm.status} onValueChange={(value: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => setIdeaForm(prev => ({
+                 <Select value={ideaForm.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => setIdeaForm(prev => ({
                 ...prev,
                 status: value
               }))}>
@@ -609,11 +606,10 @@ const Admin = () => {
                      <SelectValue />
                    </SelectTrigger>
                    <SelectContent className="bg-white z-50">
-                     <SelectItem value="avaliar">Avaliar</SelectItem>
-                     <SelectItem value="caixinha">Caixinha</SelectItem>
-                     <SelectItem value="votacao">Votação</SelectItem>
-                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                     <SelectItem value="finalizada">Finalizado</SelectItem>
+                      <SelectItem value="caixinha">Caixinha</SelectItem>
+                      <SelectItem value="votacao">Votação</SelectItem>
+                      <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
+                      <SelectItem value="finalizado">Finalizado</SelectItem>
                    </SelectContent>
                  </Select>
                </div>

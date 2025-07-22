@@ -1,18 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 
 interface StatusBadgeProps {
-  status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
+  status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusConfig = (status: string) => {
     switch (status) {
-      case 'avaliar':
-        return { 
-          label: 'Avaliar', 
-          variant: 'outline' as const,
-          className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-        };
       case 'caixinha':
         return { 
           label: 'Caixinha', 
