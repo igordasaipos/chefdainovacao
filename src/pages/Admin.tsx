@@ -324,7 +324,7 @@ const Admin = () => {
         {/* Filters and Controls */}
         <Card className="bg-white mb-6">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Status Filter */}
               <div className="space-y-2">
                 <Label>Filtrar por Status</Label>
@@ -373,23 +373,6 @@ const Admin = () => {
                 criador: e.target.value
               }))} />
               </div>
-
-              {/* Sort Controls */}
-              <div className="space-y-2">
-                <Label>Ordenar por</Label>
-                <div className="flex gap-2">
-                  <Select value={sortBy} onValueChange={(value: 'votos' | 'criado_em') => setSortBy(value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white z-50">
-                      <SelectItem value="criado_em">Data/Hora</SelectItem>
-                      <SelectItem value="votos">Votos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -415,14 +398,28 @@ const Admin = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => setSortBy('votos')}>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
+                      if (sortBy === 'votos') {
+                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                      } else {
+                        setSortBy('votos');
+                        setSortOrder('desc');
+                      }
+                    }}>
                       Votos {sortBy === 'votos' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Criado por
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => setSortBy('criado_em')}>
-                      Criado em
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
+                      if (sortBy === 'criado_em') {
+                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                      } else {
+                        setSortBy('criado_em');
+                        setSortOrder('desc');
+                      }
+                    }}>
+                      Criado em {sortBy === 'criado_em' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Ações
