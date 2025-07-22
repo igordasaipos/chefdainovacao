@@ -422,7 +422,7 @@ const Admin = () => {
                       Criado por
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => setSortBy('criado_em')}>
-                      Data/Hora {sortBy === 'criado_em' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      Data/Hora
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Ações
