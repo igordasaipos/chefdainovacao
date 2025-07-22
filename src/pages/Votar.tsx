@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useIdeias } from '@/hooks/useIdeias';
+import { useIdeiasVotacao } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,7 @@ import type { Ideia } from '@/hooks/useIdeias';
 import { Navbar } from '@/components/Navbar';
 
 const Votar = () => {
-  const { data: ideias, refetch } = useIdeias();
+  const { data: ideias, refetch } = useIdeiasVotacao();
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
 
