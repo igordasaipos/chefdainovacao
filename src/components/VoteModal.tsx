@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useCreateVoto } from '@/hooks/useVotos';
 import { Ideia } from '@/hooks/useIdeias';
 interface VoteModalProps {
@@ -58,10 +59,39 @@ export const VoteModal = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="nome_restaurante">Nome da loja/ID Saipos/ CNPJ </Label>
-            <Input id="nome_restaurante" value={formData.nome_restaurante_votante} onChange={e => setFormData(prev => ({
-            ...prev,
-            nome_restaurante_votante: e.target.value
-          }))} placeholder="Digite o nome da loja/ID Saipos/CNPJ" required />
+            <Input 
+              id="nome_restaurante" 
+              value={formData.nome_restaurante_votante} 
+              onChange={e => setFormData(prev => ({
+                ...prev,
+                nome_restaurante_votante: e.target.value
+              }))} 
+              placeholder="Digite o nome da loja/ID Saipos/CNPJ" 
+              required 
+              disabled={formData.nome_restaurante_votante === "Não sou cliente"}
+            />
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="nao-cliente" 
+                checked={formData.nome_restaurante_votante === "Não sou cliente"}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setFormData(prev => ({
+                      ...prev,
+                      nome_restaurante_votante: "Não sou cliente"
+                    }));
+                  } else {
+                    setFormData(prev => ({
+                      ...prev,
+                      nome_restaurante_votante: ""
+                    }));
+                  }
+                }}
+              />
+              <Label htmlFor="nao-cliente" className="text-sm font-normal">
+                Não sou cliente
+              </Label>
+            </div>
           </div>
 
           <div className="space-y-2">
