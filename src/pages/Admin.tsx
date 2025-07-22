@@ -30,6 +30,7 @@ const Admin = () => {
     whatsapp: string;
     nome: string;
     complexidade: '1h30' | '3h' | '1turno' | 'caixinha';
+    status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
     observacao: string;
     jira: string;
   }>({
@@ -40,6 +41,7 @@ const Admin = () => {
     whatsapp: '',
     nome: '',
     complexidade: '1h30',
+    status: 'avaliar',
     observacao: '',
     jira: ''
   });
@@ -160,6 +162,7 @@ const Admin = () => {
       whatsapp: '',
       nome: '',
       complexidade: '1h30',
+      status: 'avaliar',
       observacao: '',
       jira: ''
     });
@@ -182,6 +185,7 @@ const Admin = () => {
       whatsapp: ideia.whatsapp_criador || '',
       nome: ideia.criado_por,
       complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
+      status: ideia.status === 'caixinha' ? 'avaliar' : ideia.status,
       observacao: observacao,
       jira: jira
     });
@@ -283,6 +287,7 @@ const Admin = () => {
                 whatsapp: '',
                 nome: '',
                 complexidade: '1h30',
+                status: 'avaliar',
                 observacao: '',
                 jira: ''
               });
@@ -467,20 +472,36 @@ const Admin = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="complexidade">Complexidade *</Label>
-                <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'caixinha') => setIdeaForm(prev => ({ ...prev, complexidade: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white z-50">
-                    <SelectItem value="1h30">⚡ 1h30</SelectItem>
-                    <SelectItem value="3h">🕒 3h</SelectItem>
-                    <SelectItem value="1turno">🌙 1 turno</SelectItem>
-                    <SelectItem value="caixinha">📦 Caixinha</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+               <div className="space-y-2">
+                 <Label htmlFor="complexidade">Complexidade *</Label>
+                 <Select value={ideaForm.complexidade} onValueChange={(value: '1h30' | '3h' | '1turno' | 'caixinha') => setIdeaForm(prev => ({ ...prev, complexidade: value }))}>
+                   <SelectTrigger>
+                     <SelectValue />
+                   </SelectTrigger>
+                   <SelectContent className="bg-white z-50">
+                     <SelectItem value="1h30">⚡ 1h30</SelectItem>
+                     <SelectItem value="3h">🕒 3h</SelectItem>
+                     <SelectItem value="1turno">🌙 1 turno</SelectItem>
+                     <SelectItem value="caixinha">📦 Caixinha</SelectItem>
+                   </SelectContent>
+                 </Select>
+               </div>
+
+               <div className="space-y-2">
+                 <Label htmlFor="status">Status *</Label>
+                 <Select value={ideaForm.status} onValueChange={(value: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada') => setIdeaForm(prev => ({ ...prev, status: value }))}>
+                   <SelectTrigger>
+                     <SelectValue />
+                   </SelectTrigger>
+                   <SelectContent className="bg-white z-50">
+                     <SelectItem value="avaliar">Avaliar</SelectItem>
+                     <SelectItem value="caixinha">Caixinha</SelectItem>
+                     <SelectItem value="votacao">Votação</SelectItem>
+                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
+                     <SelectItem value="finalizada">Finalizado</SelectItem>
+                   </SelectContent>
+                 </Select>
+               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="observacao">Observação</Label>
