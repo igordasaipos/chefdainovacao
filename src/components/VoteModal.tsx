@@ -18,7 +18,6 @@ export const VoteModal = ({
 }: VoteModalProps) => {
   const [formData, setFormData] = useState({
     nome_restaurante_votante: '',
-    telefone_votante: '',
     whatsapp_votante: ''
   });
   const [naoSouCliente, setNaoSouCliente] = useState(false);
@@ -30,13 +29,13 @@ export const VoteModal = ({
       await createVoto.mutateAsync({
         ideia_id: ideia.id,
         ...formData,
+        telefone_votante: '', // Campo removido da UI mas necessário para o banco
         nome_restaurante_votante: naoSouCliente ? "Não sou cliente" : formData.nome_restaurante_votante
       });
 
       // Reset form and close modal
       setFormData({
         nome_restaurante_votante: '',
-        telefone_votante: '',
         whatsapp_votante: ''
       });
       setNaoSouCliente(false);
@@ -45,7 +44,7 @@ export const VoteModal = ({
       // Error is handled by the hook
     }
   };
-  const isValid = (naoSouCliente || formData.nome_restaurante_votante.trim()) && formData.telefone_votante.trim() && formData.whatsapp_votante.trim();
+  const isValid = formData.nome_restaurante_votante.trim() && formData.whatsapp_votante.trim();
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -84,20 +83,6 @@ export const VoteModal = ({
                 Não sou cliente
               </Label>
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="telefone">Telefone</Label>
-            <Input 
-              id="telefone" 
-              value={formData.telefone_votante} 
-              onChange={e => setFormData(prev => ({
-                ...prev,
-                telefone_votante: e.target.value
-              }))} 
-              placeholder="(11) 99999-9999" 
-              required 
-            />
           </div>
 
           <div className="space-y-2">
