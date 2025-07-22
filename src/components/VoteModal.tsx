@@ -58,24 +58,15 @@ export const VoteModal = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="nome_restaurante">Nome da loja/ID Saipos/ CNPJ </Label>
-            <Input 
-              id="nome_restaurante" 
-              value={formData.nome_restaurante_votante} 
-              onChange={e => setFormData(prev => ({
-                ...prev,
-                nome_restaurante_votante: e.target.value
-              }))} 
-              placeholder="Digite o nome da loja/ID Saipos/CNPJ" 
-              required 
-            />
+            <Input id="nome_restaurante" value={formData.nome_restaurante_votante} onChange={e => setFormData(prev => ({
+            ...prev,
+            nome_restaurante_votante: e.target.value
+          }))} placeholder="Digite o nome da loja/ID Saipos/CNPJ" required />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="telefone">Telefone</Label>
-            <Input id="telefone" type="tel" value={formData.telefone_votante} onChange={e => setFormData(prev => ({
-            ...prev,
-            telefone_votante: e.target.value
-          }))} placeholder="(11) 99999-9999" required />
+            
+            
           </div>
 
           <div className="space-y-2">
