@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      ideias: {
+        Row: {
+          complexidade: string
+          criado_em: string
+          criado_por: string
+          descricao: string | null
+          desenvolvedor: string | null
+          id: string
+          nome_restaurante: string | null
+          observacao: string | null
+          status: string
+          titulo: string
+          votos: number
+          whatsapp_criador: string | null
+        }
+        Insert: {
+          complexidade: string
+          criado_em?: string
+          criado_por: string
+          descricao?: string | null
+          desenvolvedor?: string | null
+          id?: string
+          nome_restaurante?: string | null
+          observacao?: string | null
+          status?: string
+          titulo: string
+          votos?: number
+          whatsapp_criador?: string | null
+        }
+        Update: {
+          complexidade?: string
+          criado_em?: string
+          criado_por?: string
+          descricao?: string | null
+          desenvolvedor?: string | null
+          id?: string
+          nome_restaurante?: string | null
+          observacao?: string | null
+          status?: string
+          titulo?: string
+          votos?: number
+          whatsapp_criador?: string | null
+        }
+        Relationships: []
+      }
       kv_store_08b9cd48: {
         Row: {
           key: string
@@ -28,6 +91,41 @@ export type Database = {
           value?: Json
         }
         Relationships: []
+      }
+      votos: {
+        Row: {
+          created_at: string
+          id: string
+          ideia_id: string
+          nome_restaurante_votante: string
+          telefone_votante: string
+          whatsapp_votante: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ideia_id: string
+          nome_restaurante_votante: string
+          telefone_votante: string
+          whatsapp_votante: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ideia_id?: string
+          nome_restaurante_votante?: string
+          telefone_votante?: string
+          whatsapp_votante?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votos_ideia_id_fkey"
+            columns: ["ideia_id"]
+            isOneToOne: false
+            referencedRelation: "ideias"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
