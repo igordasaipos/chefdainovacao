@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -53,6 +54,8 @@ const Admin = () => {
   });
   const [editingIdea, setEditingIdea] = useState<Ideia | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [ideaToDelete, setIdeaToDelete] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     status: 'todos',
     complexidade: 'todas',
@@ -185,9 +188,16 @@ const Admin = () => {
     setEditingIdea(ideia);
     setIsFormOpen(true);
   };
-  const handleDelete = async (id: string) => {
-    if (confirm('Tem certeza que deseja excluir esta funcionalidade?')) {
-      await deleteIdeia.mutateAsync(id);
+  const handleDeleteClick = (id: string) => {
+    setIdeaToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (ideaToDelete) {
+      await deleteIdeia.mutateAsync(ideaToDelete);
+      setDeleteDialogOpen(false);
+      setIdeaToDelete(null);
     }
   };
   const handleExportVotes = async (ideiaId: string) => {
@@ -476,7 +486,7 @@ const Admin = () => {
                           <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm">
                             <Edit2 className="h-4 w-4" />
                           </Button>
-                          <Button onClick={() => handleDelete(ideia.id)} variant="destructive" size="sm">
+                          <Button onClick={() => handleDeleteClick(ideia.id)} variant="destructive" size="sm">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -611,6 +621,26 @@ const Admin = () => {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja excluir esta ideia? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)}>
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>;
 };
