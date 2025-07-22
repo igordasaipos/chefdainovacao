@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from 'react';
-import { useIdeiasVotacao } from '@/hooks/useIdeias';
+import { useIdeias } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +11,7 @@ import type { Ideia } from '@/hooks/useIdeias';
 import { Navbar } from '@/components/Navbar';
 
 const Votar = () => {
-  const { data: ideias, refetch } = useIdeiasVotacao();
+  const { data: ideias, refetch } = useIdeias();
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
 
@@ -38,6 +39,8 @@ const Votar = () => {
     setIsVoteModalOpen(true);
   };
 
+  // Sort ideas by votes (descending) for ranking
+  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
   const totalVotos = ideias?.reduce((sum, ideia) => sum + ideia.votos, 0) || 0;
 
   return (
@@ -64,7 +67,7 @@ const Votar = () => {
         </div>
 
         {/* Ranking Header */}
-        {ideias && ideias.length > 0 && (
+        {sortedIdeias && sortedIdeias.length > 0 && (
           <Card className="mb-8 bg-primary/5 border-primary/20">
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
@@ -81,9 +84,9 @@ const Votar = () => {
         )}
 
         {/* Ideas Grid */}
-        {ideias && ideias.length > 0 ? (
+        {sortedIdeias && sortedIdeias.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {ideias.map((ideia, index) => (
+            {sortedIdeias.map((ideia, index) => (
               <IdeaCard
                 key={ideia.id}
                 ideia={ideia}
@@ -98,7 +101,7 @@ const Votar = () => {
           <Card className="text-center py-12">
             <CardContent>
               <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Nenhuma funcionalidade em votação</h3>
+              <h3 className="text-lg font-semibold mb-2">Nenhuma funcionalidade disponível</h3>
               <p className="text-muted-foreground">
                 No momento não há funcionalidades disponíveis para votação.
               </p>
