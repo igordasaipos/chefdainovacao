@@ -376,7 +376,7 @@ const Admin = () => {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {editingIdea ? 'Editar Funcionalidade' : 'Nova Funcionalidade'}
+                {editingIdea ? 'Editar Ideia' : 'Nova Ideia'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmitIdea} className="space-y-4">
