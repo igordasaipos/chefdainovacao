@@ -320,7 +320,8 @@ const Admin = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Painel Administrativo - Saipos</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">iFood Move 2024</h1>
+          <p className="text-muted-foreground">Sistema Administrativo Saipos</p>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
               Olá, {user.email}

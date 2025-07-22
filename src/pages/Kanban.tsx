@@ -81,11 +81,11 @@ const Kanban = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-4">
-            Acompanhamento de Funcionalidades
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+            iFood Move 2024
           </h1>
-          <p className="text-lg text-muted-foreground mb-6">
-            Visualize o progresso das funcionalidades do Saipos PDV em tempo real
+          <p className="text-lg text-muted-foreground">
+            Acompanhe o status de desenvolvimento das funcionalidades Saipos
           </p>
 
           {/* Overview Stats */}

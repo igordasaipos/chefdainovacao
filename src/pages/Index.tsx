@@ -10,11 +10,11 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-primary mb-4">
-            Saipos Innovation Lab
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-6">
+            iFood Move 2024
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Plataforma colaborativa para coleta, votação e desenvolvimento de ideias inovadoras para o ecossistema Saipos PDV.
+            Plataforma Saipos para coleta e votação de funcionalidades inovadoras
           </p>
         </div>
 
@@ -86,7 +86,7 @@ const Index = () => {
           <QrCode className="h-12 w-12 text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-semibold mb-4">Acesso via QR Code</h2>
           <p className="text-muted-foreground mb-6">
-            Durante o evento Saipos Innovation Week, os participantes podem acessar diretamente as páginas de votação e acompanhamento através de QR Codes específicos.
+            Durante o evento iFood Move, os participantes da Saipos podem acessar diretamente as páginas de votação e acompanhamento através de QR Codes específicos.
           </p>
           <div className="grid md:grid-cols-2 gap-4 max-w-md mx-auto">
             <div className="p-4 bg-muted rounded-lg">
@@ -102,7 +102,7 @@ const Index = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>Saipos Innovation Week 2024 - Plataforma de Gestão de Funcionalidades</p>
+          <p>iFood Move 2024 - Plataforma Saipos de Gestão de Funcionalidades</p>
         </div>
       </div>
     </div>

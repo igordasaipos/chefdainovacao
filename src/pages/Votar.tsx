@@ -45,9 +45,12 @@ const Votar = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-4">
-            Votação de Funcionalidades
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+            iFood Move 2024
           </h1>
+          <p className="text-lg text-muted-foreground">
+            Vote nas funcionalidades que você mais gostaria de ver no Saipos
+          </p>
           <p className="text-lg text-muted-foreground mb-6">
             Vote nas melhores funcionalidades para o Saipos PDV e acompanhe o ranking em tempo real
           </p>
@@ -110,7 +113,7 @@ const Votar = () => {
 
         {/* Footer */}
         <div className="text-center mt-12 text-sm text-muted-foreground">
-          <p>Saipos Innovation Week 2024 - Sistema de Votação</p>
+          <p>iFood Move 2024 - Sistema Saipos de Votação</p>
           <p className="mt-2">
             Cada número de telefone pode votar uma vez por funcionalidade
           </p>
