@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 
 interface StatusBadgeProps {
-  status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizada';
+  status: 'avaliar' | 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
@@ -31,7 +31,7 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           variant: 'secondary' as const,
           className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
         };
-      case 'finalizada':
+      case 'finalizado':
         return { 
           label: 'Finalizado', 
           variant: 'secondary' as const,
