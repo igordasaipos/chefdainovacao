@@ -64,16 +64,25 @@ const Admin = () => {
   const [sortBy, setSortBy] = useState<'votos' | 'criado_em'>('criado_em');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Real-time subscription
+  // Real-time subscription for ideas and votes
   useEffect(() => {
     if (!isAdmin) return;
-    const channel = supabase.channel('admin-ideias').on('postgres_changes', {
+    
+    const ideiasChannel = supabase.channel('admin-ideias').on('postgres_changes', {
       event: '*',
       schema: 'public',
       table: 'ideias'
     }, () => refetchIdeias()).subscribe();
+
+    const votosChannel = supabase.channel('admin-votos').on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'votos'
+    }, () => refetchIdeias()).subscribe();
+    
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(ideiasChannel);
+      supabase.removeChannel(votosChannel);
     };
   }, [isAdmin, refetchIdeias]);
 
