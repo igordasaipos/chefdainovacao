@@ -38,7 +38,7 @@ const Admin = () => {
     whatsapp: string;
     nome: string;
     complexidade: '1h30' | '3h' | '1turno' | 'caixinha';
-    status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
+    status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog';
     observacao: string;
     jira: string;
   }>({
@@ -234,7 +234,7 @@ const Admin = () => {
       }
     });
   };
-  const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => {
+  const handleUpdateStatus = async (ideiaId: string, newStatus: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog') => {
     await updateIdeia.mutateAsync({
       id: ideiaId,
       updates: {
@@ -256,6 +256,7 @@ const Admin = () => {
   const stats = {
     total: ideias?.length || 0,
     caixinha: ideias?.filter(i => i.status === 'caixinha').length || 0,
+    backlog: ideias?.filter(i => i.status === 'backlog').length || 0,
     votacao: ideias?.filter(i => i.status === 'votacao').length || 0,
     desenvolvimento: ideias?.filter(i => i.status === 'desenvolvimento').length || 0,
     finalizado: ideias?.filter(i => i.status === 'finalizado').length || 0
@@ -342,8 +343,8 @@ const Admin = () => {
           </Card>
           <Card className="bg-white">
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.caixinha}</div>
-              <div className="text-sm text-gray-600">Caixinha</div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.backlog}</div>
+              <div className="text-sm text-gray-600">Backlog</div>
             </CardContent>
           </Card>
           <Card className="bg-white">
@@ -383,6 +384,7 @@ const Admin = () => {
                   <SelectContent className="bg-white z-50">
                     <SelectItem value="todos">Todos</SelectItem>
                     <SelectItem value="caixinha">Caixinha</SelectItem>
+                    <SelectItem value="backlog">Backlog</SelectItem>
                     <SelectItem value="votacao">Votação</SelectItem>
                     <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
                     <SelectItem value="finalizado">Finalizado</SelectItem>
@@ -493,12 +495,13 @@ const Admin = () => {
                         </Select>
                       </td>
                       <td className="px-6 py-4">
-                        <Select value={ideia.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => handleUpdateStatus(ideia.id, value)}>
+                        <Select value={ideia.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog') => handleUpdateStatus(ideia.id, value)}>
                           <SelectTrigger className="w-auto">
                             <SelectValue />
                           </SelectTrigger>
                            <SelectContent className="bg-white z-50">
                             <SelectItem value="caixinha">Caixinha</SelectItem>
+                            <SelectItem value="backlog">Backlog</SelectItem>
                             <SelectItem value="votacao">Votação</SelectItem>
                             <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
                             <SelectItem value="finalizado">Finalizado</SelectItem>
@@ -612,7 +615,7 @@ const Admin = () => {
 
                <div className="space-y-2">
                  <Label htmlFor="status">Status *</Label>
-                 <Select value={ideaForm.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado') => setIdeaForm(prev => ({
+                 <Select value={ideaForm.status} onValueChange={(value: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog') => setIdeaForm(prev => ({
                 ...prev,
                 status: value
               }))}>
@@ -621,6 +624,7 @@ const Admin = () => {
                    </SelectTrigger>
                    <SelectContent className="bg-white z-50">
                       <SelectItem value="caixinha">Caixinha</SelectItem>
+                      <SelectItem value="backlog">Backlog</SelectItem>
                       <SelectItem value="votacao">Votação</SelectItem>
                       <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
                       <SelectItem value="finalizado">Finalizado</SelectItem>

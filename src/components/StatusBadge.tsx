@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 
 interface StatusBadgeProps {
-  status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado';
+  status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog';
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
@@ -30,6 +30,12 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           label: 'Finalizado', 
           variant: 'secondary' as const,
           className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+        };
+      case 'backlog':
+        return { 
+          label: 'Backlog', 
+          variant: 'secondary' as const,
+          className: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
         };
       default:
         return { 
