@@ -1,161 +1,125 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  adminEmail: string | null;
   isAdmin: boolean;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  registerAdmin: (email: string, password: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const checkAdminStatus = async (userEmail: string) => {
+  const checkAdminStatus = async (email: string) => {
     try {
-      console.log(`Verificando status de admin para: ${userEmail}`);
+      console.log(`Verificando se ${email} é admin...`);
       const { data, error } = await supabase
         .from('admins')
         .select('email')
-        .eq('email', userEmail)
+        .eq('email', email)
         .single();
       
       if (error) {
-        console.log(`Erro ao verificar admin: ${error.message}`);
-        setIsAdmin(false);
+        console.log(`Email ${email} não encontrado na lista de admins`);
         return false;
       }
       
       const isAdminUser = !!data;
-      console.log(`Usuário ${userEmail} é admin: ${isAdminUser}`);
-      setIsAdmin(isAdminUser);
+      console.log(`Email ${email} é admin: ${isAdminUser}`);
       return isAdminUser;
     } catch (error) {
       console.error('Erro na verificação de admin:', error);
-      setIsAdmin(false);
       return false;
     }
   };
 
   useEffect(() => {
-    console.log('Configurando listener de autenticação...');
-    
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log(`Evento de auth: ${event}`, session?.user?.email);
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Check if user is admin
-        if (session?.user?.email) {
-          await checkAdminStatus(session.user.email);
+    // Verificar se há um email salvo no localStorage
+    const savedEmail = localStorage.getItem('admin_email');
+    if (savedEmail) {
+      console.log(`Email salvo encontrado: ${savedEmail}`);
+      checkAdminStatus(savedEmail).then(isAdminUser => {
+        if (isAdminUser) {
+          setAdminEmail(savedEmail);
+          setIsAdmin(true);
         } else {
-          setIsAdmin(false);
+          // Email não é mais admin, remover do localStorage
+          localStorage.removeItem('admin_email');
         }
-        
         setLoading(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Sessão existente:', session?.user?.email);
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user?.email) {
-        checkAdminStatus(session.user.email);
-      }
-      
+      });
+    } else {
       setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    }
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string) => {
     try {
       console.log(`Tentativa de login para: ${email}`);
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
       
-      if (error) {
-        console.log(`Erro no login: ${error.message}`);
-        toast({
-          title: "Erro no login",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        console.log('Login realizado com sucesso');
-      }
+      const isAdminUser = await checkAdminStatus(email);
       
-      return { error };
-    } catch (error) {
-      console.error('Erro no signIn:', error);
-      return { error };
-    }
-  };
-
-  const registerAdmin = async (email: string, password: string) => {
-    try {
-      console.log(`Tentativa de registro admin para: ${email}`);
-      const { data, error } = await supabase.functions.invoke('register-admin', {
-        body: { email, password }
-      });
-
-      if (error) {
-        console.log(`Erro no registro admin: ${error.message}`);
+      if (!isAdminUser) {
+        const error = { message: "Email não autorizado. Apenas emails da lista de admins podem acessar." };
         toast({
-          title: "Erro no registro",
+          title: "Acesso negado",
           description: error.message,
           variant: "destructive",
         });
         return { error };
       }
 
+      // Salvar email no localStorage e atualizar estado
+      localStorage.setItem('admin_email', email);
+      setAdminEmail(email);
+      setIsAdmin(true);
+      
+      console.log('Login realizado com sucesso');
       toast({
-        title: "Sucesso",
-        description: "Usuário admin registrado com sucesso. Você pode fazer login agora.",
+        title: "Acesso autorizado",
+        description: `Bem-vindo, ${email}!`,
       });
-
+      
       return { error: null };
     } catch (error) {
-      console.error('Erro no registerAdmin:', error);
+      console.error('Erro no signIn:', error);
+      toast({
+        title: "Erro no login",
+        description: "Erro interno do sistema",
+        variant: "destructive",
+      });
       return { error };
     }
   };
 
   const signOut = async () => {
     console.log('Fazendo logout...');
-    await supabase.auth.signOut();
+    localStorage.removeItem('admin_email');
+    setAdminEmail(null);
     setIsAdmin(false);
+    
+    toast({
+      title: "Logout realizado",
+      description: "Você foi desconectado com sucesso",
+    });
   };
 
   return (
     <AuthContext.Provider value={{
-      user,
-      session,
+      adminEmail,
       isAdmin,
       loading,
       signIn,
-      signOut,
-      registerAdmin
+      signOut
     }}>
       {children}
     </AuthContext.Provider>

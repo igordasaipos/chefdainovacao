@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useIdeias, useCreateIdeia, useUpdateIdeia, useDeleteIdeia, Ideia } from '@/hooks/useIdeias';
-import { useVotos } from '@/hooks/useVotos';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,13 +15,12 @@ import { LogOut, Plus, Edit, Trash2, Download, BarChart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const Admin = () => {
-  const { user, isAdmin, signIn, signOut, loading } = useAuth();
+  const { adminEmail, isAdmin, signOut, loading } = useAuth();
   const { data: ideias, refetch: refetchIdeias } = useIdeias();
   const createIdeia = useCreateIdeia();
   const updateIdeia = useUpdateIdeia();
   const deleteIdeia = useDeleteIdeia();
 
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [ideaForm, setIdeaForm] = useState<{
     titulo: string;
     descricao: string;
@@ -173,11 +171,6 @@ const Admin = () => {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await signIn(loginForm.email, loginForm.password);
-  };
-
   const handleSubmitIdea = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -276,39 +269,20 @@ const Admin = () => {
     );
   }
 
-  if (!user || !isAdmin) {
+  if (!adminEmail || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-center">Login Administrativo</CardTitle>
+            <CardTitle className="text-center">Acesso Restrito</CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={loginForm.email}
-                  onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={loginForm.password}
-                  onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Entrar
-              </Button>
-            </form>
+          <CardContent className="text-center">
+            <p className="text-muted-foreground mb-4">
+              Você precisa estar logado como admin para acessar esta página.
+            </p>
+            <Button onClick={() => window.location.href = '/login'}>
+              Fazer Login
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -324,7 +298,7 @@ const Admin = () => {
           <p className="text-muted-foreground">Sistema Administrativo Saipos</p>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
-              Olá, {user.email}
+              Olá, {adminEmail}
             </span>
             <Button variant="outline" onClick={signOut} size="sm">
               <LogOut className="h-4 w-4 mr-2" />
