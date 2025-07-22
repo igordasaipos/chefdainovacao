@@ -291,25 +291,37 @@ const Admin = () => {
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">Painel Administrativo</h1>
             <p className="text-gray-600">Gerencie as ideias coletadas no evento</p>
+            <p className="text-sm text-gray-500">Logado como: {adminEmail}</p>
           </div>
-          <Button onClick={() => {
-          setEditingIdea(null);
-          setIdeaForm({
-            titulo: '',
-            descricao: '',
-            nome_id_saipos_cnpj: '',
-            nao_sou_cliente: false,
-            whatsapp: '',
-            nome: '',
-            complexidade: '1h30',
-            status: 'caixinha',
-            observacao: '',
-            jira: ''
-          });
-          setIsFormOpen(true);
-        }} className="bg-black text-white hover:bg-gray-800">
-            + Nova Ideia
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => {
+            setEditingIdea(null);
+            setIdeaForm({
+              titulo: '',
+              descricao: '',
+              nome_id_saipos_cnpj: '',
+              nao_sou_cliente: false,
+              whatsapp: '',
+              nome: '',
+              complexidade: '1h30',
+              status: 'caixinha',
+              observacao: '',
+              jira: ''
+            });
+            setIsFormOpen(true);
+          }} className="bg-black text-white hover:bg-gray-800">
+              <Plus className="h-4 w-4 mr-2" />
+              Nova Ideia
+            </Button>
+            <Button 
+              onClick={signOut}
+              variant="outline"
+              className="text-gray-700 border-gray-300 hover:bg-gray-50"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sair
+            </Button>
+          </div>
         </div>
 
         {/* Stats Dashboard */}
