@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -8,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Trophy, Users, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Ideia } from '@/hooks/useIdeias';
+import { Navbar } from '@/components/Navbar';
 
 const Votar = () => {
   const { data: ideias, refetch } = useIdeiasVotacao();
@@ -42,15 +42,10 @@ const Votar = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-vote-bg to-background">
+      <Navbar />
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
-            iFood Move 2024
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Vote nas funcionalidades que você mais gostaria de ver no Saipos
-          </p>
           <p className="text-lg text-muted-foreground mb-6">
             Vote nas melhores funcionalidades para o Saipos PDV e acompanhe o ranking em tempo real
           </p>

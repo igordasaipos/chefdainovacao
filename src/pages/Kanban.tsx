@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useIdeias } from '@/hooks/useIdeias';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -6,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Vote, Code, CheckCircle, BarChart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { Navbar } from '@/components/Navbar';
 
 const Kanban = () => {
   const { data: ideias, refetch } = useIdeias();
@@ -78,12 +78,10 @@ const Kanban = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-kanban-bg">
+      <Navbar />
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
-            iFood Move 2024
-          </h1>
           <p className="text-lg text-muted-foreground">
             Acompanhe o status de desenvolvimento das funcionalidades Saipos
           </p>
