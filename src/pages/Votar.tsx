@@ -48,44 +48,44 @@ const Votar = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
-        <div className="text-center mb-8">
-          <p className="text-lg text-muted-foreground mb-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 px-2">
             Vote nas melhores funcionalidades para o Saipos PDV e acompanhe o ranking em tempo real
           </p>
           
-          {/* Stats */}
-          <div className="flex justify-center gap-6 mb-6">
-            <div className="flex items-center gap-2">
+          {/* Stats - Mobile Optimized */}
+          <div className="grid grid-cols-2 gap-4 mb-6 max-w-md mx-auto sm:max-w-none sm:flex sm:justify-center sm:gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-0 bg-background/50 rounded-lg sm:bg-transparent">
               <Users className="h-5 w-5 text-primary" />
-              <span className="font-semibold">{ideias?.length || 0} funcionalidades</span>
+              <span className="font-semibold text-sm sm:text-base">{ideias?.length || 0} funcionalidades</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-0 bg-background/50 rounded-lg sm:bg-transparent">
               <Heart className="h-5 w-5 text-primary" />
-              <span className="font-semibold">{totalVotos} votos</span>
+              <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
             </div>
           </div>
         </div>
 
         {/* Ranking Header */}
         {sortedIdeias && sortedIdeias.length > 0 && (
-          <Card className="mb-8 bg-primary/5 border-primary/20">
-            <CardHeader className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2">
-                <Trophy className="h-6 w-6 text-primary" />
+          <Card className="mb-6 sm:mb-8 bg-primary/5 border-primary/20">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="flex items-center justify-center gap-2 text-lg sm:text-xl">
+                <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 Ranking das Funcionalidades
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center text-sm text-muted-foreground">
+              <div className="text-center text-xs sm:text-sm text-muted-foreground">
                 Ranking atualizado em tempo real • Clique em "Votar" para participar
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Ideas Grid */}
+        {/* Ideas Grid - Mobile Optimized */}
         {sortedIdeias && sortedIdeias.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {sortedIdeias.map((ideia, index) => (
               <IdeaCard
                 key={ideia.id}
@@ -98,11 +98,11 @@ const Votar = () => {
             ))}
           </div>
         ) : (
-          <Card className="text-center py-12">
+          <Card className="text-center py-8 sm:py-12">
             <CardContent>
-              <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Nenhuma funcionalidade disponível</h3>
-              <p className="text-muted-foreground">
+              <Users className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Nenhuma funcionalidade disponível</h3>
+              <p className="text-sm sm:text-base text-muted-foreground px-4">
                 No momento não há funcionalidades disponíveis para votação.
               </p>
             </CardContent>
@@ -110,9 +110,9 @@ const Votar = () => {
         )}
 
         {/* Footer */}
-        <div className="text-center mt-12 text-sm text-muted-foreground">
+        <div className="text-center mt-8 sm:mt-12 text-xs sm:text-sm text-muted-foreground space-y-2 px-4">
           <p>iFood Move 2025 - Sistema Saipos de Votação</p>
-          <p className="mt-2">
+          <p>
             Cada número de telefone pode votar uma vez por funcionalidade
           </p>
         </div>

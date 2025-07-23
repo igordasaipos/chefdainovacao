@@ -22,20 +22,20 @@ export const IdeaCard = ({
   showPosition = false 
 }: IdeaCardProps) => {
   return (
-    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-      <CardContent className="p-6">
+    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+      <CardContent className="p-4 sm:p-6">
         {/* Header with title and vote count */}
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 leading-tight mb-3">
+        <div className="flex justify-between items-start mb-3 sm:mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight mb-2 sm:mb-3 pr-2">
               {ideia.titulo}
             </h3>
             
             {/* Tags row */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
               <ComplexityBadge complexity={ideia.complexidade} />
               {showPosition && position && (
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
                   #{position}
                 </Badge>
               )}
@@ -43,11 +43,11 @@ export const IdeaCard = ({
           </div>
           
           {/* Vote count */}
-          <div className="text-right ml-4">
-            <div className="text-2xl font-bold text-gray-900">
+          <div className="text-right ml-3 sm:ml-4 flex-shrink-0">
+            <div className="text-xl sm:text-2xl font-bold text-gray-900">
               {ideia.votos}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-xs sm:text-sm text-gray-500">
               {ideia.votos === 1 ? 'voto' : 'votos'}
             </div>
           </div>
@@ -55,7 +55,7 @@ export const IdeaCard = ({
         
         {/* Description */}
         {ideia.descricao && (
-          <p className="text-sm text-gray-600 leading-relaxed mb-6">
+          <p className="text-sm text-gray-600 leading-relaxed mb-4 sm:mb-6 line-clamp-3">
             {ideia.descricao}
           </p>
         )}
@@ -64,7 +64,7 @@ export const IdeaCard = ({
         {showVoteButton && onVote && (
           <Button 
             onClick={onVote}
-            className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2"
+            className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 sm:py-3 rounded-lg flex items-center justify-center gap-2 min-h-[44px] text-sm sm:text-base transition-colors active:scale-98"
           >
             <ThumbsUp className="h-4 w-4" />
             Votar nesta ideia

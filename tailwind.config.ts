@@ -95,8 +95,16 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			// Mobile-specific utilities
+			scale: {
+				'98': '0.98',
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		// Add line-clamp plugin for text truncation
+		require('@tailwindcss/line-clamp')
+	],
 } satisfies Config;
