@@ -27,20 +27,11 @@ const Kanban = () => {
     };
   }, [refetch]);
 
-  const ideiasBacklog = ideias?.filter(ideia => ideia.status === 'backlog') || [];
   const ideiasVotacao = ideias?.filter(ideia => ideia.status === 'votacao') || [];
   const ideiasDesenvolvimento = ideias?.filter(ideia => ideia.status === 'desenvolvimento') || [];
   const ideiasFinalizada = ideias?.filter(ideia => ideia.status === 'finalizado') || [];
 
   const columns = [
-    {
-      title: "Backlog",
-      icon: Clock,
-      items: ideiasBacklog,
-      bgColor: "bg-gray-50 dark:bg-gray-950/20 border-gray-200 dark:border-gray-800",
-      count: ideiasBacklog.length,
-      color: "text-gray-600"
-    },
     {
       title: "Em Votação",
       icon: Vote,
@@ -127,21 +118,7 @@ const Kanban = () => {
           </p>
 
           {/* Overview Stats - Mobile Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-4xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 bg-background/50 rounded-lg">
-              <BarChart className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-              <span className="font-semibold text-xs sm:text-sm text-center">
-                {ideias?.length || 0} <span className="hidden sm:inline">funcionalidades</span>
-                <span className="sm:hidden">total</span>
-              </span>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 bg-background/50 rounded-lg">
-              <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
-              <span className="font-semibold text-xs sm:text-sm text-center">
-                {ideiasBacklog.length} <span className="hidden sm:inline">backlog</span>
-                <span className="sm:hidden">back.</span>
-              </span>
-            </div>
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-3xl mx-auto">
             <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 bg-background/50 rounded-lg">
               <Vote className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               <span className="font-semibold text-xs sm:text-sm text-center">
@@ -154,6 +131,13 @@ const Kanban = () => {
               <span className="font-semibold text-xs sm:text-sm text-center">
                 {ideiasDesenvolvimento.length} <span className="hidden sm:inline">desenvolvimento</span>
                 <span className="sm:hidden">dev.</span>
+              </span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 bg-background/50 rounded-lg">
+              <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+              <span className="font-semibold text-xs sm:text-sm text-center">
+                {ideiasFinalizada.length} <span className="hidden sm:inline">finalizadas</span>
+                <span className="sm:hidden">fin.</span>
               </span>
             </div>
           </div>
@@ -213,10 +197,6 @@ const Kanban = () => {
             Atualizações em tempo real • Saipos Innovation Week 2025
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-              Backlog planejado
-            </span>
             <span className="flex items-center gap-1">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               Votação aberta
