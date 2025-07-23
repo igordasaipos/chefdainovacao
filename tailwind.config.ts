@@ -104,7 +104,6 @@ export default {
 	},
 	plugins: [
 		require("tailwindcss-animate"),
-		// Add line-clamp plugin for text truncation
 		require('@tailwindcss/line-clamp')
 	],
 } satisfies Config;
