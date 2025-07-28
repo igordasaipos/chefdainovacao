@@ -94,6 +94,7 @@ const Kanban = () => {
                 ideia={ideia}
                 showVoteButton={false}
                 showPosition={false}
+                hasVoted={false}
               />
             ))
           ) : (

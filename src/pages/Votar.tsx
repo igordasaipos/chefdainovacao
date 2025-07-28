@@ -83,9 +83,9 @@ const Votar = () => {
           </Card>
         )}
 
-        {/* Ideas Grid - Mobile Optimized */}
+        {/* Ideas Grid - Single Column */}
         {sortedIdeias && sortedIdeias.length > 0 ? (
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-4 max-w-4xl mx-auto">
             {sortedIdeias.map((ideia, index) => (
               <IdeaCard
                 key={ideia.id}
@@ -94,6 +94,7 @@ const Votar = () => {
                 onVote={() => handleVote(ideia)}
                 showVoteButton={true}
                 showPosition={true}
+                hasVoted={false} // TODO: implementar lógica para verificar se já votou
               />
             ))}
           </div>
