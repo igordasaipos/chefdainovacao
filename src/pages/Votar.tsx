@@ -29,19 +29,37 @@ const Votar = () => {
     }
   };
 
-  // Get user WhatsApp on component mount
+  // Get user WhatsApp on component mount and listen for updates
   useEffect(() => {
-    const userData = getUserData();
-    if (userData?.whatsapp_votante) {
-      setUserWhatsApp(userData.whatsapp_votante);
-    }
+    const updateUserData = () => {
+      const userData = getUserData();
+      if (userData?.whatsapp_votante) {
+        setUserWhatsApp(userData.whatsapp_votante);
+      }
+    };
+
+    // Initial load
+    updateUserData();
+
+    // Listen for user data updates from VoteModal
+    const handleUserDataUpdate = (event: CustomEvent) => {
+      if (event.detail?.whatsapp_votante) {
+        setUserWhatsApp(event.detail.whatsapp_votante);
+      }
+    };
+
+    window.addEventListener('userDataUpdated', handleUserDataUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('userDataUpdated', handleUserDataUpdate as EventListener);
+    };
   }, []);
 
   // Sort ideas by votes (descending) for ranking
   const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
 
   // Get all votes to check which ones the user has voted on
-  const { data: allVotes } = useVotos();
+  const { data: allVotes, refetch: refetchVotes } = useVotos();
 
   // Create a function to check if user has voted on a specific idea
   const hasVotedOnIdeia = (ideiaId: string) => {
@@ -58,18 +76,23 @@ const Votar = () => {
       .channel('voting-updates')
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'ideias' },
-        () => refetch()
+        () => {
+          refetch();
+        }
       )
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'votos' },
-        () => refetch()
+        () => {
+          refetch();
+          refetchVotes();
+        }
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [refetch]);
+  }, [refetch, refetchVotes]);
 
   const handleVote = (ideia: Ideia) => {
     setSelectedIdeia(ideia);

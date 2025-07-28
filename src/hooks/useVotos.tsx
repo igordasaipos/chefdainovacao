@@ -83,9 +83,16 @@ export const useCreateVoto = () => {
       return votoData;
     },
     onSuccess: () => {
+      // Invalidate all vote-related queries
       queryClient.invalidateQueries({ queryKey: ['votos'] });
+      queryClient.invalidateQueries({ queryKey: ['votos', undefined] });
+      queryClient.invalidateQueries({ queryKey: ['hasVoted'] });
       queryClient.invalidateQueries({ queryKey: ['ideias'] });
       queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
+      
+      // Force refetch of all votes
+      queryClient.refetchQueries({ queryKey: ['votos'] });
+      
       toast({
         title: "Voto registrado",
         description: "Seu voto foi registrado com sucesso!",

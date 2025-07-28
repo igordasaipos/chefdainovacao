@@ -94,6 +94,11 @@ export const VoteModal = ({
       };
       saveUserDataToStorage(userData);
 
+      // Notify parent component that user data has been updated
+      window.dispatchEvent(new CustomEvent('userDataUpdated', { 
+        detail: { whatsapp_votante: formData.whatsapp_votante } 
+      }));
+
       onOpenChange(false);
     } catch (error) {
       // Error is handled by the hook
@@ -116,6 +121,12 @@ export const VoteModal = ({
 
     try {
       await createVoto.mutateAsync(votoData);
+      
+      // Notify parent component that user data has been updated
+      window.dispatchEvent(new CustomEvent('userDataUpdated', { 
+        detail: { whatsapp_votante: userData.whatsapp_votante } 
+      }));
+      
       onOpenChange(false);
     } catch (error) {
       // Error is handled by the hook
@@ -247,7 +258,7 @@ export const VoteModal = ({
                   whatsapp_votante: formatted
                 }));
               }} 
-              placeholder="(51) 98924-9280" 
+              placeholder="(11) 99999-9999" 
               required 
               className="min-h-[44px] text-base sm:text-sm"
               type="tel"
