@@ -49,22 +49,15 @@ const Votar = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-vote-bg to-background">
       <Navbar />
       
-      {/* Banner Section - Placeholder for communication image */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 mb-8">
-        <div className="container mx-auto px-4 text-center">
-          <div className="bg-white/10 rounded-lg p-8 max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="bg-white/20 p-3 rounded-full">
-                <Trophy className="h-8 w-8" />
-              </div>
-              <h1 className="text-3xl font-bold">A GREAT PLACE TO WORK</h1>
-              <div className="bg-red-500 text-white px-3 py-1 rounded text-sm font-semibold">
-                Certificada
-              </div>
-            </div>
-            <p className="text-blue-100">
-              Espaço para imagem de comunicação
-            </p>
+      {/* Banner Section with Communication Image */}
+      <div className="bg-white py-8 mb-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <img 
+              src="/lovable-uploads/698aaa8a-b352-44a5-90d4-c41dae8987bb.png"
+              alt="A Great Place to Work - Certificada"
+              className="w-full h-auto rounded-lg shadow-sm"
+            />
           </div>
         </div>
       </div>
