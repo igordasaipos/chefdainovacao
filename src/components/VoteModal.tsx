@@ -134,7 +134,7 @@ export const VoteModal = ({
           {ideia && (
             <div className="mb-4 p-3 bg-muted rounded-lg">
               <h3 className="font-semibold text-sm">{ideia.titulo}</h3>
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              <p className="text-xs text-muted-foreground mt-1">
                 {ideia.descricao}
               </p>
             </div>
@@ -180,7 +180,7 @@ export const VoteModal = ({
         {ideia && (
           <div className="mb-4 p-3 bg-muted rounded-lg">
             <h3 className="font-semibold text-sm">{ideia.titulo}</h3>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+            <p className="text-xs text-muted-foreground mt-1">
               {ideia.descricao}
             </p>
           </div>
@@ -189,7 +189,7 @@ export const VoteModal = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-3">
             <Label className="text-sm font-medium">Você é cliente Saipos?</Label>
-            <RadioGroup value={ehCliente} onValueChange={setEhCliente}>
+            <RadioGroup value={ehCliente} onValueChange={setEhCliente} className="flex flex-row gap-6">
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="true" id="sou-cliente" />
                 <Label htmlFor="sou-cliente" className="text-sm font-normal cursor-pointer">
@@ -207,7 +207,7 @@ export const VoteModal = ({
 
           <div className="space-y-2">
             <Label htmlFor="nome_restaurante" className="text-sm font-medium">
-              Nome da loja/ID Saipos/ CNPJ
+              Nome da loja ou ID Saipos ou CNPJ
             </Label>
             <Input 
               id="nome_restaurante" 
@@ -216,7 +216,7 @@ export const VoteModal = ({
                 ...prev,
                 nome_restaurante_votante: e.target.value
               }))} 
-              placeholder="Digite seu ID Saipos, CNPJ ou nome" 
+              placeholder="Nome da loja ou ID Saipos ou CNPJ" 
               required 
               className="min-h-[44px] text-base sm:text-sm"
             />
@@ -229,14 +229,29 @@ export const VoteModal = ({
             <Input 
               id="whatsapp" 
               value={formData.whatsapp_votante} 
-              onChange={e => setFormData(prev => ({
-                ...prev,
-                whatsapp_votante: e.target.value
-              }))} 
-              placeholder="(11) 99999-9999" 
+              onChange={e => {
+                // Remove all non-numeric characters
+                const numbers = e.target.value.replace(/\D/g, '');
+                
+                // Apply Brazilian phone mask: (XX) XXXXX-XXXX
+                let formatted = numbers;
+                if (numbers.length >= 2) {
+                  formatted = `(${numbers.substring(0, 2)}) ${numbers.substring(2)}`;
+                }
+                if (numbers.length >= 7) {
+                  formatted = `(${numbers.substring(0, 2)}) ${numbers.substring(2, 7)}-${numbers.substring(7, 11)}`;
+                }
+                
+                setFormData(prev => ({
+                  ...prev,
+                  whatsapp_votante: formatted
+                }));
+              }} 
+              placeholder="(51) 98924-9280" 
               required 
               className="min-h-[44px] text-base sm:text-sm"
               type="tel"
+              maxLength={15}
             />
           </div>
 

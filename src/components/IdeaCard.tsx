@@ -52,7 +52,7 @@ export const IdeaCard = ({
             
             {/* Description */}
             {ideia.descricao && (
-              <p className="text-muted-foreground leading-relaxed line-clamp-2">
+              <p className="text-muted-foreground leading-relaxed">
                 {ideia.descricao}
               </p>
             )}

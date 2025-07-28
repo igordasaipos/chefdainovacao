@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
-import { useVotos } from '@/hooks/useVotos';
+import { useVotos, useHasVoted } from '@/hooks/useVotos';
 import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,11 +47,11 @@ const Votar = () => {
     }
   }, []);
 
-  // Fetch user's votes to check which ideas they've voted on
-  const { data: userVotos } = useVotos();
-  const votedIdeaIds = userVotos?.filter(voto => 
-    voto.whatsapp_votante === userWhatsApp
-  ).map(voto => voto.ideia_id) || [];
+  // Helper function to check if user has voted on an idea
+  const hasVotedOnIdeia = (ideiaId: string) => {
+    if (!userWhatsApp) return false;
+    return useHasVoted(ideiaId, userWhatsApp).data || false;
+  };
 
   // Real-time subscription for voting updates
   useEffect(() => {
@@ -131,17 +131,20 @@ const Votar = () => {
         {/* Ideas Grid - Single Column */}
         {sortedIdeias && sortedIdeias.length > 0 ? (
           <div className="space-y-4 max-w-4xl mx-auto">
-            {sortedIdeias.map((ideia, index) => (
-              <IdeaCard
-                key={ideia.id}
-                ideia={ideia}
-                position={index + 1}
-                onVote={() => handleVote(ideia)}
-                showVoteButton={true}
-                showPosition={true}
-                hasVoted={votedIdeaIds.includes(ideia.id)}
-              />
-            ))}
+            {sortedIdeias.map((ideia, index) => {
+              const hasVoted = hasVotedOnIdeia(ideia.id);
+              return (
+                <IdeaCard
+                  key={ideia.id}
+                  ideia={ideia}
+                  position={index + 1}
+                  onVote={() => handleVote(ideia)}
+                  showVoteButton={true}
+                  showPosition={true}
+                  hasVoted={hasVoted}
+                />
+              );
+            })}
           </div>
         ) : (
           <Card className="text-center py-8 sm:py-12">
