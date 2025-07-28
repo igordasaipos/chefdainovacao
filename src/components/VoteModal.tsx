@@ -77,7 +77,7 @@ export const VoteModal = ({
 
     const votoData = {
       ideia_id: ideia.id,
-      telefone_votante: '', // Campo removido da UI mas necessário para o banco
+      telefone_votante: formData.whatsapp_votante, // Usar WhatsApp no telefone_votante para evitar constraint duplicate
       nome_restaurante_votante: formData.nome_restaurante_votante,
       whatsapp_votante: formData.whatsapp_votante,
       eh_cliente: ehCliente === 'true'
@@ -113,7 +113,7 @@ export const VoteModal = ({
 
     const votoData = {
       ideia_id: ideia.id,
-      telefone_votante: '',
+      telefone_votante: userData.whatsapp_votante, // Usar WhatsApp no telefone_votante para evitar constraint duplicate
       nome_restaurante_votante: userData.nome_restaurante_votante,
       whatsapp_votante: userData.whatsapp_votante,
       eh_cliente: userData.eh_cliente
