@@ -8,6 +8,7 @@ export interface Voto {
   telefone_votante: string;
   nome_restaurante_votante: string;
   whatsapp_votante: string;
+  eh_cliente: boolean;
   created_at: string;
 }
 
@@ -26,6 +27,27 @@ export const useVotos = (ideiaId?: string) => {
       if (error) throw error;
       return data as Voto[];
     },
+  });
+};
+
+// Hook para verificar se o usuário já votou em uma ideia específica
+export const useHasVoted = (ideiaId: string, whatsappVotante?: string) => {
+  return useQuery({
+    queryKey: ['hasVoted', ideiaId, whatsappVotante],
+    queryFn: async () => {
+      if (!whatsappVotante) return false;
+      
+      const { data, error } = await supabase
+        .from('votos')
+        .select('id')
+        .eq('ideia_id', ideiaId)
+        .eq('whatsapp_votante', whatsappVotante)
+        .maybeSingle();
+      
+      if (error) throw error;
+      return !!data;
+    },
+    enabled: !!whatsappVotante,
   });
 };
 

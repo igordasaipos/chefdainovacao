@@ -95,6 +95,7 @@ export type Database = {
       votos: {
         Row: {
           created_at: string
+          eh_cliente: boolean
           id: string
           ideia_id: string
           nome_restaurante_votante: string
@@ -103,6 +104,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          eh_cliente?: boolean
           id?: string
           ideia_id: string
           nome_restaurante_votante: string
@@ -111,6 +113,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          eh_cliente?: boolean
           id?: string
           ideia_id?: string
           nome_restaurante_votante?: string

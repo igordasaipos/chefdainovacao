@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
+import { useVotos } from '@/hooks/useVotos';
 import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +17,41 @@ const Votar = () => {
   const { data: ideias, refetch } = useIdeiasVotacao();
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+  const [userWhatsApp, setUserWhatsApp] = useState<string>('');
+
+  // Get user data from localStorage
+  const getUserData = () => {
+    try {
+      const data = localStorage.getItem('saipos_user_data');
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Check if user has voted for a specific idea
+  const hasUserVoted = (ideiaId: string) => {
+    const userData = getUserData();
+    if (!userData?.whatsapp_votante) return false;
+    
+    // This will be checked against the database in real-time
+    // For now, we'll use the votos data to check
+    return false; // Will be implemented with useVotos query
+  };
+
+  // Get user WhatsApp on component mount
+  useEffect(() => {
+    const userData = getUserData();
+    if (userData?.whatsapp_votante) {
+      setUserWhatsApp(userData.whatsapp_votante);
+    }
+  }, []);
+
+  // Fetch user's votes to check which ideas they've voted on
+  const { data: userVotos } = useVotos();
+  const votedIdeaIds = userVotos?.filter(voto => 
+    voto.whatsapp_votante === userWhatsApp
+  ).map(voto => voto.ideia_id) || [];
 
   // Real-time subscription for voting updates
   useEffect(() => {
@@ -103,7 +139,7 @@ const Votar = () => {
                 onVote={() => handleVote(ideia)}
                 showVoteButton={true}
                 showPosition={true}
-                hasVoted={false} // TODO: implementar lógica para verificar se já votou
+                hasVoted={votedIdeaIds.includes(ideia.id)}
               />
             ))}
           </div>
