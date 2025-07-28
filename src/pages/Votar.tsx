@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trophy, Users, Heart, ChevronDown } from 'lucide-react';
+import { Trophy, Layers, Heart, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Ideia } from '@/hooks/useIdeias';
 import { Navbar } from '@/components/Navbar';
@@ -64,7 +64,7 @@ const Votar = () => {
 
       <div className="container mx-auto px-4 py-6">
         {/* Filter and Stats Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+        <div className="flex justify-between items-center gap-4 mb-8 max-w-4xl mx-auto">
           {/* Left side - Filter */}
           <div className="flex items-center gap-2">
             <Select defaultValue="mais-votadas">
@@ -82,7 +82,7 @@ const Votar = () => {
           {/* Right side - Counters */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-blue-600">
-              <Users className="h-5 w-5" />
+              <Layers className="h-5 w-5" />
               <span className="font-semibold">{ideias?.length || 0} funcionalidades</span>
             </div>
             <div className="flex items-center gap-2 text-blue-600">
@@ -110,7 +110,7 @@ const Votar = () => {
         ) : (
           <Card className="text-center py-8 sm:py-12">
             <CardContent>
-              <Users className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4" />
+              <Layers className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-base sm:text-lg font-semibold mb-2">Nenhuma funcionalidade disponível</h3>
               <p className="text-sm sm:text-base text-muted-foreground px-4">
                 No momento não há funcionalidades disponíveis para votação.
