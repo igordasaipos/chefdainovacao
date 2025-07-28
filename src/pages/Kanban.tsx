@@ -29,14 +29,14 @@ const Kanban = () => {
   const ideiasDesenvolvimento = ideias?.filter(ideia => ideia.status === 'desenvolvimento') || [];
   const ideiasFinalizada = ideias?.filter(ideia => ideia.status === 'finalizado') || [];
   const columns = [{
-    title: "Em Votação",
+    title: "Votação",
     icon: Vote,
     items: ideiasVotacao.sort((a, b) => b.votos - a.votos),
     bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800",
     count: ideiasVotacao.length,
     color: "text-blue-600"
   }, {
-    title: "Em Desenvolvimento",
+    title: "Desenvolvimento",
     icon: Code,
     items: ideiasDesenvolvimento.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime()),
     bgColor: "bg-orange-50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800",
