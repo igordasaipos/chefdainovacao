@@ -29,9 +29,6 @@ const Votar = () => {
     }
   };
 
-  // Sort ideas by votes (descending) for ranking
-  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
-
   // Get user WhatsApp on component mount
   useEffect(() => {
     const userData = getUserData();
@@ -40,21 +37,19 @@ const Votar = () => {
     }
   }, []);
 
-  // Use individual useHasVoted hooks for each sorted idea
-  const voteQueries = sortedIdeias.map((ideia) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useHasVoted(ideia.id, userWhatsApp);
-  });
+  // Sort ideas by votes (descending) for ranking
+  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
+
+  // Get all votes to check which ones the user has voted on
+  const { data: allVotes } = useVotos();
 
   // Create a function to check if user has voted on a specific idea
   const hasVotedOnIdeia = (ideiaId: string) => {
-    if (!userWhatsApp) return false;
+    if (!userWhatsApp || !allVotes) return false;
     
-    // Find the matching query result for this idea
-    const ideaIndex = sortedIdeias.findIndex(ideia => ideia.id === ideiaId);
-    if (ideaIndex === -1) return false;
-    
-    return voteQueries[ideaIndex]?.data || false;
+    return allVotes.some(vote => 
+      vote.ideia_id === ideiaId && vote.whatsapp_votante === userWhatsApp
+    );
   };
 
   // Real-time subscription for voting updates
