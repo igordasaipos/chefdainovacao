@@ -32,15 +32,13 @@ export const IdeaCard = ({
         </h3>
         
         {/* Tags and Vote Info Row */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            {showPosition && position && (
-              <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 px-2 py-1 text-sm font-medium">
-                #{position}
-              </Badge>
-            )}
-            <ComplexityBadge complexity={ideia.complexidade} />
-          </div>
+        <div className="flex items-center gap-3 mb-4">
+          {showPosition && position && (
+            <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 px-2 py-1 text-sm font-medium">
+              #{position}
+            </Badge>
+          )}
+          <ComplexityBadge complexity={ideia.complexidade} />
           
           <div className="flex items-center gap-1 text-blue-600">
             <ThumbsUp className="h-4 w-4" />
@@ -55,8 +53,8 @@ export const IdeaCard = ({
           </p>
         )}
         
-        {/* Vote Section */}
-        <div className="flex justify-end">
+        {/* Vote Section - Centralized */}
+        <div className="flex justify-center">
           {showVoteButton && !hasVoted && onVote && (
             <Button 
               onClick={onVote}
