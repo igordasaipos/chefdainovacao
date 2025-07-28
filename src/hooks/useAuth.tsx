@@ -24,8 +24,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log(`Verificando se ${email} é admin...`);
       const { data, error } = await supabase
         .from('admins')
-        .select('email')
-        .eq('email', email)
+        .select('nome')
+        .eq('nome', email)
         .single();
       
       if (error) {
