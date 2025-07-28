@@ -65,9 +65,9 @@ const Kanban = () => {
     count: number;
     color: string;
   }) => <div className="flex-1 min-w-0">
-      <Card className={`h-full ${bgColor}`}>
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center justify-between">
+      <div className={`h-full rounded-lg ${bgColor}`}>
+        <div className="flex flex-col space-y-1.5 p-6 pb-4">
+          <div className="flex items-center justify-between text-2xl font-semibold leading-none tracking-tight">
             <div className={`flex items-center gap-2 ${color}`}>
               <Icon className="h-5 w-5" />
               <span className="text-base sm:text-lg font-medium">{title}</span>
@@ -75,15 +75,15 @@ const Kanban = () => {
             <Badge variant="secondary" className="ml-2 text-xs">
               {count}
             </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 pb-6 max-h-[60vh] overflow-y-auto">
+          </div>
+        </div>
+        <div className="p-6 pt-0 space-y-4 pb-6 max-h-[60vh] overflow-y-auto">
           {items.length > 0 ? items.map(ideia => <IdeaCard key={ideia.id} ideia={ideia} showVoteButton={false} showPosition={false} hasVoted={false} />) : <div className="text-center py-6 sm:py-8 text-muted-foreground">
               <Icon className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 opacity-50" />
               <p className="text-xs sm:text-sm">Nenhuma funcionalidade nesta etapa</p>
             </div>}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>;
   return <div className="min-h-screen bg-gradient-to-br from-background to-kanban-bg">
       <Navbar />
