@@ -5,7 +5,9 @@ import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Users, Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Trophy, Users, Heart, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Ideia } from '@/hooks/useIdeias';
 import { Navbar } from '@/components/Navbar';
@@ -46,42 +48,56 @@ const Votar = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-vote-bg to-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 px-2">
-            Vote nas melhores funcionalidades para o Saipos PDV e acompanhe o ranking em tempo real
-          </p>
-          
-          {/* Stats - Mobile Optimized */}
-          <div className="grid grid-cols-2 gap-4 mb-6 max-w-md mx-auto sm:max-w-none sm:flex sm:justify-center sm:gap-6">
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-0 bg-background/50 rounded-lg sm:bg-transparent">
-              <Users className="h-5 w-5 text-primary" />
-              <span className="font-semibold text-sm sm:text-base">{ideias?.length || 0} funcionalidades</span>
+      
+      {/* Banner Section - Placeholder for communication image */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 mb-8">
+        <div className="container mx-auto px-4 text-center">
+          <div className="bg-white/10 rounded-lg p-8 max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="bg-white/20 p-3 rounded-full">
+                <Trophy className="h-8 w-8" />
+              </div>
+              <h1 className="text-3xl font-bold">A GREAT PLACE TO WORK</h1>
+              <div className="bg-red-500 text-white px-3 py-1 rounded text-sm font-semibold">
+                Certificada
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 p-3 sm:p-0 bg-background/50 rounded-lg sm:bg-transparent">
-              <Heart className="h-5 w-5 text-primary" />
-              <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
+            <p className="text-blue-100">
+              Espaço para imagem de comunicação
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6">
+        {/* Filter and Stats Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+          {/* Left side - Filter */}
+          <div className="flex items-center gap-2">
+            <Select defaultValue="mais-votadas">
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Filtrar por..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mais-votadas">Ideias mais votadas</SelectItem>
+                <SelectItem value="recentes">Mais recentes</SelectItem>
+                <SelectItem value="alfabetica">Ordem alfabética</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Right side - Counters */}
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 text-blue-600">
+              <Users className="h-5 w-5" />
+              <span className="font-semibold">{ideias?.length || 0} funcionalidades</span>
+            </div>
+            <div className="flex items-center gap-2 text-blue-600">
+              <Heart className="h-5 w-5" />
+              <span className="font-semibold">{totalVotos} votos</span>
             </div>
           </div>
         </div>
-
-        {/* Ranking Header */}
-        {sortedIdeias && sortedIdeias.length > 0 && (
-          <Card className="mb-6 sm:mb-8 bg-primary/5 border-primary/20">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="flex items-center justify-center gap-2 text-lg sm:text-xl">
-                <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                Ranking das Funcionalidades
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center text-xs sm:text-sm text-muted-foreground">
-                Ranking atualizado em tempo real • Clique em "Votar" para participar
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Ideas Grid - Single Column */}
         {sortedIdeias && sortedIdeias.length > 0 ? (
