@@ -33,7 +33,9 @@ const Votar = () => {
   useEffect(() => {
     const updateUserData = () => {
       const userData = getUserData();
+      console.log('Updating user data:', userData);
       if (userData?.whatsapp_votante) {
+        console.log('Setting userWhatsApp to:', userData.whatsapp_votante);
         setUserWhatsApp(userData.whatsapp_votante);
       }
     };
@@ -43,6 +45,7 @@ const Votar = () => {
 
     // Listen for user data updates from VoteModal
     const handleUserDataUpdate = (event: CustomEvent) => {
+      console.log('User data update event received:', event.detail);
       if (event.detail?.whatsapp_votante) {
         setUserWhatsApp(event.detail.whatsapp_votante);
       }
@@ -63,11 +66,19 @@ const Votar = () => {
 
   // Create a function to check if user has voted on a specific idea
   const hasVotedOnIdeia = (ideiaId: string) => {
-    if (!userWhatsApp || !allVotes) return false;
+    if (!userWhatsApp || !allVotes) {
+      console.log('hasVotedOnIdeia returning false - no userWhatsApp or allVotes:', {userWhatsApp, allVotes});
+      return false;
+    }
     
-    return allVotes.some(vote => 
-      vote.ideia_id === ideiaId && vote.whatsapp_votante === userWhatsApp
-    );
+    const hasVoted = allVotes.some(vote => {
+      const match = vote.ideia_id === ideiaId && vote.whatsapp_votante === userWhatsApp;
+      console.log('Checking vote:', {ideiaId, userWhatsApp, vote, match});
+      return match;
+    });
+    
+    console.log('hasVotedOnIdeia result for idea', ideiaId, ':', hasVoted);
+    return hasVoted;
   };
 
   // Real-time subscription for voting updates
@@ -97,6 +108,21 @@ const Votar = () => {
   const handleVote = (ideia: Ideia) => {
     setSelectedIdeia(ideia);
     setIsVoteModalOpen(true);
+  };
+
+  const handleModalClose = (isOpen: boolean) => {
+    setIsVoteModalOpen(isOpen);
+    if (!isOpen) {
+      // Force refresh of data when modal closes
+      refetch();
+      refetchVotes();
+      
+      // Also update user data from localStorage
+      const userData = getUserData();
+      if (userData?.whatsapp_votante) {
+        setUserWhatsApp(userData.whatsapp_votante);
+      }
+    }
   };
 
   const totalVotos = ideias?.reduce((sum, ideia) => sum + ideia.votos, 0) || 0;
@@ -189,7 +215,7 @@ const Votar = () => {
         {/* Vote Modal */}
         <VoteModal
           open={isVoteModalOpen}
-          onOpenChange={setIsVoteModalOpen}
+          onOpenChange={handleModalClose}
           ideia={selectedIdeia}
         />
       </div>

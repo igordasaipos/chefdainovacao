@@ -71,9 +71,21 @@ export const IdeaCard = ({
             )}
             
             {hasVoted && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="h-4 w-4" />
-                <span className="font-medium">Votado!</span>
+              <div 
+                className="flex flex-col justify-center items-center gap-2 rounded-lg px-4 py-3"
+                style={{
+                  display: 'flex',
+                  padding: '13px 16px',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '8px',
+                  borderRadius: '8px',
+                  background: '#F4F7FF'
+                }}
+              >
+                <Check className="h-4 w-4 text-blue-600" />
+                <span className="font-medium text-blue-600 text-sm">Votado!</span>
               </div>
             )}
           </div>
