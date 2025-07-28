@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
 import { useVotos, useHasVoted } from '@/hooks/useVotos';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -29,15 +29,8 @@ const Votar = () => {
     }
   };
 
-  // Check if user has voted for a specific idea
-  const hasUserVoted = (ideiaId: string) => {
-    const userData = getUserData();
-    if (!userData?.whatsapp_votante) return false;
-    
-    // This will be checked against the database in real-time
-    // For now, we'll use the votos data to check
-    return false; // Will be implemented with useVotos query
-  };
+  // Sort ideas by votes (descending) for ranking
+  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
 
   // Get user WhatsApp on component mount
   useEffect(() => {
@@ -47,10 +40,21 @@ const Votar = () => {
     }
   }, []);
 
-  // Helper function to check if user has voted on an idea
+  // Use individual useHasVoted hooks for each sorted idea
+  const voteQueries = sortedIdeias.map((ideia) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useHasVoted(ideia.id, userWhatsApp);
+  });
+
+  // Create a function to check if user has voted on a specific idea
   const hasVotedOnIdeia = (ideiaId: string) => {
     if (!userWhatsApp) return false;
-    return useHasVoted(ideiaId, userWhatsApp).data || false;
+    
+    // Find the matching query result for this idea
+    const ideaIndex = sortedIdeias.findIndex(ideia => ideia.id === ideiaId);
+    if (ideaIndex === -1) return false;
+    
+    return voteQueries[ideaIndex]?.data || false;
   };
 
   // Real-time subscription for voting updates
@@ -77,8 +81,6 @@ const Votar = () => {
     setIsVoteModalOpen(true);
   };
 
-  // Sort ideas by votes (descending) for ranking
-  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
   const totalVotos = ideias?.reduce((sum, ideia) => sum + ideia.votos, 0) || 0;
 
   return (
