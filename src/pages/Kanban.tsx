@@ -78,7 +78,7 @@ const Kanban = () => {
           </div>
         </div>
         <div className="p-6 pt-0 space-y-4 pb-6 max-h-[60vh] overflow-y-auto">
-          {items.length > 0 ? items.map(ideia => <IdeaCard key={ideia.id} ideia={ideia} showVoteButton={false} showPosition={false} hasVoted={false} />) : <div className="text-center py-6 sm:py-8 text-muted-foreground">
+          {items.length > 0 ? items.map(ideia => <IdeaCard key={ideia.id} ideia={ideia} showVoteButton={false} showPosition={false} />) : <div className="text-center py-6 sm:py-8 text-muted-foreground">
               <Icon className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 opacity-50" />
               <p className="text-xs sm:text-sm">Nenhuma funcionalidade nesta etapa</p>
             </div>}

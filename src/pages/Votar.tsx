@@ -1,14 +1,12 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
-import { useVotos, useHasVoted } from '@/hooks/useVotos';
+import { useVotos } from '@/hooks/useVotos';
 import { IdeaCard } from '@/components/IdeaCard';
 import { VoteModal } from '@/components/VoteModal';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trophy, Layers, Heart, ChevronDown } from 'lucide-react';
+import { Layers, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Ideia } from '@/hooks/useIdeias';
 import { Navbar } from '@/components/Navbar';
@@ -17,60 +15,12 @@ const Votar = () => {
   const { data: ideias, refetch } = useIdeiasVotacao();
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
-  const [userWhatsApp, setUserWhatsApp] = useState<string>('');
-
-  // Get user data from localStorage
-  const getUserData = () => {
-    try {
-      const data = localStorage.getItem('saipos_user_data');
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
-    }
-  };
-
-  // Get user WhatsApp on component mount and listen for updates
-  useEffect(() => {
-    const updateUserData = () => {
-      const userData = getUserData();
-      if (userData?.whatsapp_votante) {
-        setUserWhatsApp(userData.whatsapp_votante);
-      }
-    };
-
-    // Initial load
-    updateUserData();
-
-    // Listen for user data updates from VoteModal
-    const handleUserDataUpdate = (event: CustomEvent) => {
-      if (event.detail?.whatsapp_votante) {
-        setUserWhatsApp(event.detail.whatsapp_votante);
-      }
-    };
-
-    window.addEventListener('userDataUpdated', handleUserDataUpdate as EventListener);
-
-    return () => {
-      window.removeEventListener('userDataUpdated', handleUserDataUpdate as EventListener);
-    };
-  }, []);
 
   // Sort ideas by votes (descending) for ranking
   const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
 
-  // Get all votes to check which ones the user has voted on
-  const { data: allVotes, refetch: refetchVotes } = useVotos();
-
-  // Create a function to check if user has voted on a specific idea
-  const hasVotedOnIdeia = (ideiaId: string) => {
-    if (!userWhatsApp || !allVotes) {
-      return false;
-    }
-    
-    return allVotes.some(vote => 
-      vote.ideia_id === ideiaId && vote.whatsapp_votante === userWhatsApp
-    );
-  };
+  // Get all votes for real-time updates
+  const { refetch: refetchVotes } = useVotos();
 
   // Real-time subscription for voting updates
   useEffect(() => {
@@ -107,12 +57,6 @@ const Votar = () => {
       // Force refresh of data when modal closes
       refetch();
       refetchVotes();
-      
-      // Also update user data from localStorage
-      const userData = getUserData();
-      if (userData?.whatsapp_votante) {
-        setUserWhatsApp(userData.whatsapp_votante);
-      }
     }
   };
 
@@ -168,20 +112,16 @@ const Votar = () => {
         {/* Ideas Grid - Single Column */}
         {sortedIdeias && sortedIdeias.length > 0 ? (
           <div className="space-y-4 max-w-4xl mx-auto">
-            {sortedIdeias.map((ideia, index) => {
-              const hasVoted = hasVotedOnIdeia(ideia.id);
-              return (
-                <IdeaCard
-                  key={ideia.id}
-                  ideia={ideia}
-                  position={index + 1}
-                  onVote={() => handleVote(ideia)}
-                  showVoteButton={true}
-                  showPosition={true}
-                  hasVoted={hasVoted}
-                />
-              );
-            })}
+            {sortedIdeias.map((ideia, index) => (
+              <IdeaCard
+                key={ideia.id}
+                ideia={ideia}
+                position={index + 1}
+                onVote={() => handleVote(ideia)}
+                showVoteButton={true}
+                showPosition={true}
+              />
+            ))}
           </div>
         ) : (
           <Card className="text-center py-8 sm:py-12">

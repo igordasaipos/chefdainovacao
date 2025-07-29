@@ -12,7 +12,6 @@ interface IdeaCardProps {
   onVote?: () => void;
   showVoteButton?: boolean;
   showPosition?: boolean;
-  hasVoted?: boolean;
 }
 
 export const IdeaCard = ({ 
@@ -20,8 +19,7 @@ export const IdeaCard = ({
   position, 
   onVote, 
   showVoteButton = false, 
-  showPosition = false,
-  hasVoted = false
+  showPosition = false
 }: IdeaCardProps) => {
   return (
     <Card className="w-full bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -60,7 +58,7 @@ export const IdeaCard = ({
           
           {/* Container 2 - Botão */}
           <div className="flex-shrink-0">
-            {showVoteButton && !hasVoted && onVote && (
+            {showVoteButton && onVote && (
               <Button 
                 onClick={onVote}
                 className="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-2 rounded-lg flex items-center gap-2 transition-colors"
@@ -68,25 +66,6 @@ export const IdeaCard = ({
                 <ThumbsUp className="h-4 w-4" />
                 Votar
               </Button>
-            )}
-            
-            {hasVoted && (
-              <div 
-                className="flex items-center gap-2 rounded-lg px-4 py-3"
-                style={{
-                  display: 'flex',
-                  padding: '13px 16px',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '8px',
-                  borderRadius: '8px',
-                  background: '#F4F7FF'
-                }}
-              >
-                <Check className="h-4 w-4 text-blue-600" />
-                <span className="font-medium text-blue-600 text-sm">Votado!</span>
-              </div>
             )}
           </div>
         </div>
