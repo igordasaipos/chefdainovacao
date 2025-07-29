@@ -15,6 +15,10 @@ export interface Ideia {
   nome_restaurante: string | null;
   whatsapp_criador: string | null;
   observacao: string | null;
+  tipo_cliente: 'cliente' | 'nao_cliente' | null;
+  nome_cliente: string | null;
+  admin_criador: string | null;
+  jira: string | null;
 }
 
 export const useIdeias = () => {

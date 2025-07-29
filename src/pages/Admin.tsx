@@ -103,7 +103,11 @@ const Admin = () => {
       nome_restaurante: "Pizzaria Central",
       whatsapp_criador: "(11) 99999-9999",
       desenvolvedor: "",
-      observacao: ""
+      observacao: "",
+      tipo_cliente: "cliente" as const,
+      nome_cliente: "João Silva",
+      admin_criador: adminEmail || "admin@sistema.com",
+      jira: ""
     }, {
       titulo: "Sistema de avaliações detalhadas",
       descricao: "Permitir avaliações mais específicas dos pratos e serviços",
@@ -113,7 +117,11 @@ const Admin = () => {
       nome_restaurante: "Restaurante ABC",
       whatsapp_criador: "(11) 88888-8888",
       desenvolvedor: "",
-      observacao: ""
+      observacao: "",
+      tipo_cliente: "cliente" as const,
+      nome_cliente: "Maria Silva",
+      admin_criador: adminEmail || "admin@sistema.com",
+      jira: ""
     }, {
       titulo: "Chat em tempo real com restaurante",
       descricao: "Sistema de mensagens diretas entre cliente e restaurante",
@@ -123,7 +131,11 @@ const Admin = () => {
       nome_restaurante: "Bistro Gourmet",
       whatsapp_criador: "(11) 77777-7777",
       desenvolvedor: "",
-      observacao: ""
+      observacao: "",
+      tipo_cliente: "cliente" as const,
+      nome_cliente: "Maria Santos",
+      admin_criador: adminEmail || "admin@sistema.com",
+      jira: ""
     }];
     const ideiasComVotos = exampleIdeas.map((idea, index) => ({
       ...idea,
@@ -140,18 +152,23 @@ const Admin = () => {
   const handleSubmitIdea = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Map new form fields to old structure
+    // Map form fields to new database structure
     const ideaData = {
       titulo: ideaForm.titulo,
       descricao: ideaForm.descricao,
       complexidade: ideaForm.complexidade === 'caixinha' ? 'complexa' as const : ideaForm.complexidade,
       status: ideaForm.status,
-      criado_por: ideaForm.nome,
+      criado_por: ideaForm.nome, // Mantido por compatibilidade
       nome_restaurante: ideaForm.cliente_tipo === 'nao_cliente' ? 'Não é cliente' : ideaForm.nome_id_saipos_cnpj,
       whatsapp_criador: ideaForm.whatsapp,
       desenvolvedor: '',
-      observacao: ideaForm.observacao + (ideaForm.jira ? ` | Jira: ${ideaForm.jira}` : '')
+      observacao: ideaForm.observacao,
+      tipo_cliente: ideaForm.cliente_tipo,
+      nome_cliente: ideaForm.nome,
+      admin_criador: adminEmail || "admin@sistema.com",
+      jira: ideaForm.jira
     };
+    
     if (editingIdea) {
       await updateIdeia.mutateAsync({
         id: editingIdea.id,
@@ -178,18 +195,17 @@ const Admin = () => {
     setIsFormOpen(false);
   };
   const handleEdit = (ideia: Ideia) => {
-    // Extract jira from observacao if present
-    const obs = ideia.observacao || '';
-    const jiraMatch = obs.match(/\| Jira: (.+)/);
-    const jira = jiraMatch ? jiraMatch[1] : '';
-    const observacao = jiraMatch ? obs.replace(/\| Jira: .+/, '').trim() : obs;
+    // Extract jira from new field or observacao if it contains concatenated data
+    const jira = ideia.jira || '';
+    const observacao = ideia.observacao || '';
+    
     setIdeaForm({
       titulo: ideia.titulo,
       descricao: ideia.descricao || '',
-      nome_id_saipos_cnpj: ideia.nome_restaurante === 'Não é cliente' ? '' : ideia.nome_restaurante || '',
-      cliente_tipo: ideia.nome_restaurante === 'Não é cliente' ? 'nao_cliente' : 'cliente',
+      nome_id_saipos_cnpj: ideia.tipo_cliente === 'nao_cliente' ? '' : ideia.nome_restaurante || '',
+      cliente_tipo: ideia.tipo_cliente || 'cliente',
       whatsapp: ideia.whatsapp_criador || '',
-      nome: ideia.criado_por,
+      nome: ideia.nome_cliente || ideia.criado_por,
       complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
       status: ideia.status,
       observacao: observacao,
@@ -456,7 +472,7 @@ const Admin = () => {
                       Votos {sortBy === 'votos' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Criado por
+                      Cliente / Admin
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
                       if (sortBy === 'criado_em') {
@@ -512,9 +528,19 @@ const Admin = () => {
                         <span className="text-sm font-medium text-gray-900">{ideia.votos}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-900">
-                          {adminEmail?.split('@')[0]?.split('.')[0]?.charAt(0).toUpperCase() + adminEmail?.split('@')[0]?.split('.')[0]?.slice(1) || adminEmail}
-                        </span>
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-900">
+                            Cliente: {ideia.nome_cliente || ideia.criado_por}
+                          </div>
+                          {ideia.tipo_cliente && (
+                            <div className="text-xs text-gray-500">
+                              {ideia.tipo_cliente === 'cliente' ? '✓ É cliente' : '✗ Não é cliente'}
+                            </div>
+                          )}
+                          <div className="text-xs text-gray-500 mt-1">
+                            Admin: {ideia.admin_criador || 'Sistema'}
+                          </div>
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-xs text-gray-500">
