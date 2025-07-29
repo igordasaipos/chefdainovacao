@@ -539,11 +539,9 @@ const Admin = () => {
         </Card>
 
         {/* Dialog for adding/editing ideas */}
-        <Dialog open={isFormOpen} onOpenChange={(open) => {
-          // Só permite fechar se open for false E se não estiver sendo forçado
-          if (!open) {
-            setIsFormOpen(false);
-          }
+        <Dialog open={isFormOpen} onOpenChange={() => {
+          // Impede o fechamento automático por clique no overlay
+          // Modal só fecha via botões específicos
         }}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
