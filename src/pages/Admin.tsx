@@ -512,7 +512,9 @@ const Admin = () => {
                         <span className="text-sm font-medium text-gray-900">{ideia.votos}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-sm text-gray-900">{adminEmail}</span>
+                        <span className="text-sm text-gray-900">
+                          {adminEmail?.split('@')[0]?.split('.')[0]?.charAt(0).toUpperCase() + adminEmail?.split('@')[0]?.split('.')[0]?.slice(1) || adminEmail}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-xs text-gray-500">
