@@ -258,6 +258,20 @@ const Admin = () => {
       }
     });
   };
+  // Helper function to extract first name from admin email
+  const getAdminFirstName = (adminEmail: string) => {
+    if (!adminEmail) return 'Sistema';
+    
+    // Extract the part before @ symbol
+    const emailPrefix = adminEmail.split('@')[0];
+    
+    // If there's a dot, take the part before the first dot
+    // Otherwise, take the whole prefix
+    const firstName = emailPrefix.includes('.') ? emailPrefix.split('.')[0] : emailPrefix;
+    
+    return firstName;
+  };
+
   const filteredAndSortedIdeias = ideias?.filter(ideia => {
     return (filters.status === 'todos' || ideia.status === filters.status) && (filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) && (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
   })?.sort((a, b) => {
@@ -472,7 +486,7 @@ const Admin = () => {
                       Votos {sortBy === 'votos' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cliente / Admin
+                      Admin
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
                       if (sortBy === 'criado_em') {
@@ -530,15 +544,7 @@ const Admin = () => {
                       <td className="px-6 py-4">
                         <div className="text-sm">
                           <div className="font-medium text-gray-900">
-                            Cliente: {ideia.nome_cliente || ideia.criado_por}
-                          </div>
-                          {ideia.tipo_cliente && (
-                            <div className="text-xs text-gray-500">
-                              {ideia.tipo_cliente === 'cliente' ? '✓ É cliente' : '✗ Não é cliente'}
-                            </div>
-                          )}
-                          <div className="text-xs text-gray-500 mt-1">
-                            Admin: {ideia.admin_criador || 'Sistema'}
+                            {getAdminFirstName(ideia.admin_criador || 'Sistema')}
                           </div>
                         </div>
                       </td>
