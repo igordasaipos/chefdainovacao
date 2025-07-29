@@ -89,23 +89,7 @@ const Kanban = () => {
       <Navbar />
       
       {/* Communication Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 mb-6">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-4">
-            <div className="bg-white/10 p-4 rounded-lg">
-              <BarChart className="h-8 w-8" />
-            </div>
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-2">
-                SAIPOS INNOVATION WEEK
-              </h2>
-              <p className="text-blue-100">
-                Acompanhe o desenvolvimento das funcionalidades mais votadas
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      
       
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
