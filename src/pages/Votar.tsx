@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useIdeiasVotacao } from '@/hooks/useIdeias';
 import { useVotos } from '@/hooks/useVotos';
 import { IdeaCard } from '@/components/IdeaCard';
@@ -15,9 +15,25 @@ const Votar = () => {
   const { data: ideias, refetch } = useIdeiasVotacao();
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+  const [filterType, setFilterType] = useState<string>('mais-votadas');
 
-  // Sort ideas by votes (descending) for ranking
-  const sortedIdeias = ideias ? [...ideias].sort((a, b) => b.votos - a.votos) : [];
+  // Dynamic sorting based on filter type
+  const sortedIdeias = useMemo(() => {
+    if (!ideias) return [];
+    
+    const ideiasClone = [...ideias];
+    
+    switch (filterType) {
+      case 'mais-votadas':
+        return ideiasClone.sort((a, b) => b.votos - a.votos);
+      case 'recentes':
+        return ideiasClone.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
+      case 'alfabetica':
+        return ideiasClone.sort((a, b) => a.titulo.localeCompare(b.titulo));
+      default:
+        return ideiasClone.sort((a, b) => b.votos - a.votos);
+    }
+  }, [ideias, filterType]);
 
   // Get all votes for real-time updates
   const { refetch: refetchVotes } = useVotos();
@@ -84,7 +100,7 @@ const Votar = () => {
         <div className="flex justify-between items-center gap-4 mb-8 max-w-4xl mx-auto">
           {/* Left side - Filter */}
           <div className="flex items-center gap-2">
-            <Select defaultValue="mais-votadas">
+            <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Filtrar por..." />
               </SelectTrigger>
@@ -119,7 +135,7 @@ const Votar = () => {
                 position={index + 1}
                 onVote={() => handleVote(ideia)}
                 showVoteButton={true}
-                showPosition={true}
+                showPosition={filterType === 'mais-votadas'}
               />
             ))}
           </div>
