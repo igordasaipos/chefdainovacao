@@ -34,43 +34,55 @@ export type Database = {
       }
       ideias: {
         Row: {
+          admin_criador: string | null
           complexidade: string
           criado_em: string
           criado_por: string
           descricao: string | null
           desenvolvedor: string | null
           id: string
+          jira: string | null
+          nome_cliente: string | null
           nome_restaurante: string | null
           observacao: string | null
           status: string
+          tipo_cliente: string | null
           titulo: string
           votos: number
           whatsapp_criador: string | null
         }
         Insert: {
+          admin_criador?: string | null
           complexidade: string
           criado_em?: string
           criado_por: string
           descricao?: string | null
           desenvolvedor?: string | null
           id?: string
+          jira?: string | null
+          nome_cliente?: string | null
           nome_restaurante?: string | null
           observacao?: string | null
           status?: string
+          tipo_cliente?: string | null
           titulo: string
           votos?: number
           whatsapp_criador?: string | null
         }
         Update: {
+          admin_criador?: string | null
           complexidade?: string
           criado_em?: string
           criado_por?: string
           descricao?: string | null
           desenvolvedor?: string | null
           id?: string
+          jira?: string | null
+          nome_cliente?: string | null
           nome_restaurante?: string | null
           observacao?: string | null
           status?: string
+          tipo_cliente?: string | null
           titulo?: string
           votos?: number
           whatsapp_criador?: string | null
