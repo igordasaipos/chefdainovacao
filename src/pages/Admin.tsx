@@ -539,7 +539,12 @@ const Admin = () => {
         </Card>
 
         {/* Dialog for adding/editing ideas */}
-        <Dialog open={isFormOpen}>
+        <Dialog open={isFormOpen} onOpenChange={(open) => {
+          // Só permite fechar se open for false E se não estiver sendo forçado
+          if (!open) {
+            setIsFormOpen(false);
+          }
+        }}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
