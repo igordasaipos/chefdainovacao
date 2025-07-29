@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
 import { LogOut, Plus, Edit2, Trash2, Download, BarChart } from 'lucide-react';
@@ -34,7 +34,7 @@ const Admin = () => {
     titulo: string;
     descricao: string;
     nome_id_saipos_cnpj: string;
-    nao_sou_cliente: boolean;
+    cliente_tipo: 'cliente' | 'nao_cliente';
     whatsapp: string;
     nome: string;
     complexidade: '1h30' | '3h' | '1turno' | 'caixinha';
@@ -45,7 +45,7 @@ const Admin = () => {
     titulo: '',
     descricao: '',
     nome_id_saipos_cnpj: '',
-    nao_sou_cliente: false,
+    cliente_tipo: 'cliente',
     whatsapp: '',
     nome: '',
     complexidade: '1h30',
@@ -145,9 +145,9 @@ const Admin = () => {
       titulo: ideaForm.titulo,
       descricao: ideaForm.descricao,
       complexidade: ideaForm.complexidade === 'caixinha' ? 'complexa' as const : ideaForm.complexidade,
-      status: 'caixinha' as const,
+      status: ideaForm.status,
       criado_por: ideaForm.nome,
-      nome_restaurante: ideaForm.nao_sou_cliente ? 'Não é cliente' : ideaForm.nome_id_saipos_cnpj,
+      nome_restaurante: ideaForm.cliente_tipo === 'nao_cliente' ? 'Não é cliente' : ideaForm.nome_id_saipos_cnpj,
       whatsapp_criador: ideaForm.whatsapp,
       desenvolvedor: '',
       observacao: ideaForm.observacao + (ideaForm.jira ? ` | Jira: ${ideaForm.jira}` : '')
@@ -166,7 +166,7 @@ const Admin = () => {
       titulo: '',
       descricao: '',
       nome_id_saipos_cnpj: '',
-      nao_sou_cliente: false,
+      cliente_tipo: 'cliente',
       whatsapp: '',
       nome: '',
       complexidade: '1h30',
@@ -187,7 +187,7 @@ const Admin = () => {
       titulo: ideia.titulo,
       descricao: ideia.descricao || '',
       nome_id_saipos_cnpj: ideia.nome_restaurante === 'Não é cliente' ? '' : ideia.nome_restaurante || '',
-      nao_sou_cliente: ideia.nome_restaurante === 'Não é cliente',
+      cliente_tipo: ideia.nome_restaurante === 'Não é cliente' ? 'nao_cliente' : 'cliente',
       whatsapp: ideia.whatsapp_criador || '',
       nome: ideia.criado_por,
       complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
@@ -303,7 +303,7 @@ const Admin = () => {
               titulo: '',
               descricao: '',
               nome_id_saipos_cnpj: '',
-              nao_sou_cliente: false,
+              cliente_tipo: 'cliente',
               whatsapp: '',
               nome: '',
               complexidade: '1h30',
@@ -562,22 +562,43 @@ const Admin = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="nome_id_saipos_cnpj">Nome da loja/ID Saipos/CNPJ</Label>
-                <Input id="nome_id_saipos_cnpj" value={ideaForm.nome_id_saipos_cnpj} onChange={e => setIdeaForm(prev => ({
-                ...prev,
-                nome_id_saipos_cnpj: e.target.value
-              }))} placeholder="Digite seu ID Saipos, CNPJ ou nome" />
-                <div className="flex items-center space-x-2 mt-2">
-                  <Checkbox id="nao_sou_cliente" checked={ideaForm.nao_sou_cliente} onCheckedChange={checked => {
-                  setIdeaForm(prev => ({
-                    ...prev,
-                    nao_sou_cliente: checked as boolean,
-                    nome_id_saipos_cnpj: checked ? '' : prev.nome_id_saipos_cnpj
-                  }));
-                }} />
-                  <Label htmlFor="nao_sou_cliente" className="text-sm">Não sou cliente</Label>
-                </div>
+                <Label>Tipo de Cliente *</Label>
+                <RadioGroup 
+                  value={ideaForm.cliente_tipo} 
+                  onValueChange={(value: 'cliente' | 'nao_cliente') => {
+                    setIdeaForm(prev => ({
+                      ...prev,
+                      cliente_tipo: value,
+                      nome_id_saipos_cnpj: value === 'nao_cliente' ? '' : prev.nome_id_saipos_cnpj
+                    }));
+                  }}
+                  className="flex gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="cliente" id="cliente" />
+                    <Label htmlFor="cliente">Sou cliente</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="nao_cliente" id="nao_cliente" />
+                    <Label htmlFor="nao_cliente">Não sou cliente</Label>
+                  </div>
+                </RadioGroup>
               </div>
+
+              {ideaForm.cliente_tipo === 'cliente' && (
+                <div className="space-y-2">
+                  <Label htmlFor="nome_id_saipos_cnpj">Nome da loja ou ID Saipos ou CNPJ</Label>
+                  <Input 
+                    id="nome_id_saipos_cnpj" 
+                    value={ideaForm.nome_id_saipos_cnpj} 
+                    onChange={e => setIdeaForm(prev => ({
+                      ...prev,
+                      nome_id_saipos_cnpj: e.target.value
+                    }))} 
+                    placeholder="Nome da loja ou ID Saipos ou CNPJ" 
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="whatsapp">WhatsApp *</Label>
