@@ -539,7 +539,7 @@ const Admin = () => {
         </Card>
 
         {/* Dialog for adding/editing ideas */}
-        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <Dialog open={isFormOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
