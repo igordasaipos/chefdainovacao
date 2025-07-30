@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useCreateVoto } from "@/hooks/useVotos";
+import { useCreateVoto, useHasVoted } from "@/hooks/useVotos";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 import type { Ideia } from "@/hooks/useIdeias";
 
 interface VoteModalProps {
@@ -31,6 +32,8 @@ export const VoteModal = ({
 
   const { mutateAsync: createVoto, isPending: isLoading } = useCreateVoto();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const { data: hasVoted } = useHasVoted(ideia?.id || "", whatsappVotante);
 
   const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
@@ -48,6 +51,17 @@ export const VoteModal = ({
 
   const handleSubmit = async () => {
     if (!ideia) return;
+
+    // Verificar se já votou antes de tentar enviar
+    if (hasVoted) {
+      toast({
+        title: "Voto já registrado",
+        description: "Você já votou nesta ideia!",
+        variant: "destructive",
+      });
+      onOpenChange(false);
+      return;
+    }
 
     onVoteStart?.(ideia.id);
 
