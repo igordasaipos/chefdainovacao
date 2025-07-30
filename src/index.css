@@ -288,4 +288,59 @@ All colors MUST be HSL.
   .scrollbar-hide::-webkit-scrollbar {
     display: none;            /* Chrome, Safari, Opera */
   }
+
+/* iOS-specific optimizations and focus removal */
+input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="url"], input[type="password"], textarea {
+  font-size: 16px !important;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Remove blue focus outline completely */
+input:focus, textarea:focus, button:focus, select:focus {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none !important;
+  border-color: hsl(var(--primary)) !important;
+}
+
+/* Prevent iOS zoom on input focus */
+@supports (-webkit-touch-callout: none) {
+  input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="url"], input[type="password"], textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Modern CSS solution for iOS keyboard */
+@supports (height: 100dvh) {
+  .sheet-content {
+    height: 100dvh;
+    height: calc(100dvh - env(keyboard-inset-height, 0px));
+  }
+}
+
+/* iOS sheet optimizations */
+.sheet-content {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent scroll when modal is open */
+@supports (-webkit-touch-callout: none) {
+  .modal-open {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}
 }
