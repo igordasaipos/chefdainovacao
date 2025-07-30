@@ -80,25 +80,25 @@ export const VoteModal = ({
 
   const content = (
     ideia && (
-      <div className="space-y-6">
-        <div className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
-          <h3 className="font-medium text-sm text-muted-foreground mb-3">Você está votando em:</h3>
-          <p className="font-semibold text-lg text-primary mb-2">{ideia?.titulo}</p>
+      <div className="space-y-4">
+        <div className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+          <h3 className="font-medium text-sm text-muted-foreground mb-2">Você está votando em:</h3>
+          <p className="font-semibold text-lg text-primary mb-1">{ideia?.titulo}</p>
           <p className="text-sm text-muted-foreground leading-relaxed">{ideia?.descricao}</p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <Label className="text-base font-medium text-foreground">Você é cliente Saipos?</Label>
           <RadioGroup
             value={ehCliente}
             onValueChange={setEhCliente}
             className="flex flex-row space-x-4"
           >
-            <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="sim" id="sim" className="border-2" />
               <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
             </div>
-            <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="nao" id="nao" className="border-2" />
               <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
             </div>
@@ -106,7 +106,7 @@ export const VoteModal = ({
         </div>
 
         {ehCliente === "nao" && (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
               Nome do Restaurante ou ID do Parceiro
             </Label>
@@ -121,7 +121,7 @@ export const VoteModal = ({
           </div>
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <Label htmlFor="whatsapp" className="text-base font-medium text-foreground">
             WhatsApp
           </Label>
@@ -135,7 +135,7 @@ export const VoteModal = ({
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <Label htmlFor="nome" className="text-base font-medium text-foreground">
             Seu Nome
           </Label>
@@ -149,7 +149,7 @@ export const VoteModal = ({
           />
         </div>
 
-        <div className="flex gap-4 pt-6">
+        <div className="flex gap-4 pt-4">
           <Button
             onClick={() => onOpenChange(false)}
             variant="outline"
@@ -181,7 +181,7 @@ export const VoteModal = ({
               Votar na ideia
             </SheetTitle>
           </SheetHeader>
-          <div className="px-1">
+          <div>
             {content}
           </div>
         </SheetContent>
@@ -197,7 +197,7 @@ export const VoteModal = ({
             Votar na ideia
           </DialogTitle>
         </DialogHeader>
-        <div className="px-1">
+        <div>
           {content}
         </div>
       </DialogContent>
