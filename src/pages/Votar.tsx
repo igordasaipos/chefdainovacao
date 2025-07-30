@@ -5,9 +5,8 @@ import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { useUserPersistence } from "@/hooks/useUserPersistence";
-import { useToast } from "@/hooks/use-toast";
+import { Layers, Heart } from "lucide-react";
 
 export default function Votar() {
   const { data: ideias = [], refetch } = useIdeias();
@@ -17,8 +16,7 @@ export default function Votar() {
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
   
-  const { userData, clearUserData } = useUserPersistence();
-  const { toast } = useToast();
+  const { userData } = useUserPersistence();
 
   const sortedIdeias = useMemo(() => {
     if (!ideias?.length) return [];
@@ -123,33 +121,16 @@ export default function Votar() {
             </Select>
           </div>
 
-          {/* Stats and Clear Data Button */}
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-4 sm:gap-6">
-            <div className="flex items-center gap-4 sm:gap-6">
-              <div className="flex items-center gap-2 text-primary">
-                <span className="font-semibold text-sm sm:text-base">{totalIdeias} funcionalidades</span>
-              </div>
-              <div className="flex items-center gap-2 text-primary">
-                <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
-              </div>
+          {/* Stats - Mobile optimized */}
+          <div className="flex items-center justify-center sm:justify-end gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 text-primary">
+              <Layers className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="font-semibold text-sm sm:text-base">{totalIdeias} funcionalidades</span>
             </div>
-            
-            {userData.nome && (
-              <Button
-                onClick={() => {
-                  clearUserData();
-                  toast({
-                    title: "Dados limpos",
-                    description: "Seus dados foram removidos com sucesso!",
-                  });
-                }}
-                variant="outline"
-                size="sm"
-                className="h-12 rounded-xl border-2 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive transition-all"
-              >
-                Limpar meus dados
-              </Button>
-            )}
+            <div className="flex items-center gap-2 text-primary">
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
+            </div>
           </div>
         </div>
 
