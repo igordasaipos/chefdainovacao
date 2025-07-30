@@ -52,100 +52,6 @@ export const useHasVoted = (ideiaId: string, whatsappVotante?: string) => {
   });
 };
 
-// Função para enviar dados para o Zapier webhook
-const sendToZapier = async (votoData: Voto, ideiaData: any) => {
-  console.log('🚀 INICIANDO envio para Zapier...');
-  console.log('📊 Dados do voto:', votoData);
-  console.log('💡 Dados da ideia:', ideiaData);
-  
-  try {
-    const zapierData = {
-      timestamp: new Date().toISOString(),
-      evento: "novo_voto",
-      voto: {
-        data_hora_voto: new Date(votoData.created_at).toLocaleString('pt-BR'),
-        nome_votante: votoData.nome_votante,
-        whatsapp_votante: votoData.whatsapp_votante,
-        eh_cliente: votoData.eh_cliente,
-        nome_restaurante_votante: votoData.nome_restaurante_votante
-      },
-      ideia: {
-        titulo: ideiaData.titulo,
-        descricao: ideiaData.descricao,
-        complexidade: ideiaData.complexidade,
-        status: ideiaData.status,
-        total_votos: ideiaData.votos,
-        nome_cliente_ideia: ideiaData.nome_cliente,
-        nome_restaurante_ideia: ideiaData.nome_restaurante
-      }
-    };
-
-    console.log('📤 Dados formatados para Zapier:', zapierData);
-    console.log('🌐 Enviando para webhook...');
-
-    // Removendo temporariamente no-cors para ver o status real
-    const response = await fetch('https://hooks.zapier.com/hooks/catch/19735149/u43entq/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(zapierData),
-    });
-
-    console.log('✅ Response status:', response.status);
-    console.log('✅ Response headers:', Object.fromEntries(response.headers.entries()));
-    
-    if (response.ok) {
-      console.log('🎉 Dados enviados com sucesso para Zapier!');
-    } else {
-      console.error('❌ Resposta não OK:', response.status, response.statusText);
-      const responseText = await response.text();
-      console.error('❌ Texto da resposta:', responseText);
-    }
-
-  } catch (error) {
-    console.error('💥 ERRO COMPLETO ao enviar para Zapier:', error);
-    console.error('💥 Tipo do erro:', typeof error);
-    console.error('💥 Stack trace:', error instanceof Error ? error.stack : 'Sem stack trace');
-    
-    // Tentativa com no-cors como fallback
-    try {
-      console.log('🔄 Tentando novamente com no-cors...');
-      const fallbackData = {
-        timestamp: new Date().toISOString(),
-        evento: "novo_voto",
-        voto: {
-          data_hora_voto: new Date(votoData.created_at).toLocaleString('pt-BR'),
-          nome_votante: votoData.nome_votante,
-          whatsapp_votante: votoData.whatsapp_votante,
-          eh_cliente: votoData.eh_cliente,
-          nome_restaurante_votante: votoData.nome_restaurante_votante
-        },
-        ideia: {
-          titulo: ideiaData.titulo,
-          descricao: ideiaData.descricao,
-          complexidade: ideiaData.complexidade,
-          status: ideiaData.status,
-          total_votos: ideiaData.votos,
-          nome_cliente_ideia: ideiaData.nome_cliente,
-          nome_restaurante_ideia: ideiaData.nome_restaurante
-        }
-      };
-      
-      await fetch('https://hooks.zapier.com/hooks/catch/19735149/u43entq/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        mode: 'no-cors',
-        body: JSON.stringify(fallbackData),
-      });
-      console.log('✅ Enviado com no-cors mode');
-    } catch (fallbackError) {
-      console.error('💥 Erro mesmo com no-cors:', fallbackError);
-    }
-  }
-};
 
 export const useCreateVoto = (onReset?: () => void) => {
   const queryClient = useQueryClient();
@@ -178,10 +84,6 @@ export const useCreateVoto = (onReset?: () => void) => {
           .select()
           .single();
         
-        // Envia dados para o Zapier
-        if (ideiaAtualizada) {
-          sendToZapier(votoData, ideiaAtualizada);
-        }
       }
       
       return votoData;

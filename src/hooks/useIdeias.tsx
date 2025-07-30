@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { sendIdeiaToZapier } from '@/lib/zapier';
 
 export interface Ideia {
   id: string;
@@ -67,12 +68,15 @@ export const useCreateIdeia = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['ideias'] });
       toast({
         title: "Ideia criada",
         description: "A ideia foi criada com sucesso!",
       });
+      
+      // Enviar para Zapier quando nova ideia é criada
+      sendIdeiaToZapier(data);
     },
     onError: (error) => {
       toast({
