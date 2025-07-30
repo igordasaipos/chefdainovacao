@@ -23,9 +23,11 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-xl font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            iFood Move 2025
-          </h1>
+          <Link to="/votar">
+            <h1 className="text-xl font-semibold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
+              iFood Move 2025
+            </h1>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
