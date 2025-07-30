@@ -99,8 +99,12 @@ export const useCreateVoto = () => {
         description: "Seu voto foi registrado com sucesso!",
       });
     },
-    onError: (error) => {
-      if (error.message.includes('duplicate')) {
+    onError: (error: any) => {
+      console.error('Erro ao votar:', error);
+      
+      if (error.message?.includes('duplicate') || 
+          error.message?.includes('unique') || 
+          error.code === '23505') {
         toast({
           title: "Voto já registrado",
           description: "Você já votou nesta ideia!",
@@ -109,7 +113,7 @@ export const useCreateVoto = () => {
       } else {
         toast({
           title: "Erro ao votar",
-          description: error.message,
+          description: error.message || "Ocorreu um erro inesperado",
           variant: "destructive",
         });
       }
