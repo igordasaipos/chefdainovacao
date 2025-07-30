@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Vote, Code, CheckCircle, BarChart, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
+import { cn } from '@/lib/utils';
 const Kanban = () => {
   const {
     data: ideias,
@@ -97,14 +98,25 @@ const Kanban = () => {
 
         {/* Mobile Tab Navigation */}
         <div className="lg:hidden mb-6">
-          <div className="flex overflow-x-auto pb-2 gap-2">
-            {columns.map((column, index) => <Button key={index} variant={activeTab === index ? "default" : "outline"} size="sm" onClick={() => setActiveTab(index)} className="flex-shrink-0 min-w-[120px] h-10 text-xs">
+          <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-hide">
+            {columns.map((column, index) => (
+              <Button 
+                key={index} 
+                variant={activeTab === index ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => setActiveTab(index)} 
+                className={cn(
+                  "flex-shrink-0 min-w-[120px] min-h-[44px] text-xs touch-target transition-all",
+                  activeTab === index ? "bg-primary text-primary-foreground" : "active:bg-accent/70"
+                )}
+              >
                 <column.icon className="h-3 w-3 mr-1" />
                 {column.title}
                 <Badge variant="secondary" className="ml-1 text-xs">
                   {column.count}
                 </Badge>
-              </Button>)}
+              </Button>
+            ))}
           </div>
         </div>
 

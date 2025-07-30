@@ -66,14 +66,14 @@ export function Navbar() {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden h-10 w-10"
+          className="md:hidden h-10 w-10 touch-target"
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
         >
           {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
+            <X className="h-6 w-6" />
           ) : (
-            <Menu className="h-5 w-5" />
+            <Menu className="h-6 w-6" />
           )}
         </Button>
       </div>
@@ -81,15 +81,15 @@ export function Navbar() {
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur">
-          <div className="container py-4 space-y-2">
+          <div className="container py-4 space-y-2 safe-area-padding">
             <Link
               to="/votar"
               onClick={() => setIsMobileMenuOpen(false)}
               className={cn(
                 "block w-full px-4 py-3 text-left font-medium rounded-md transition-colors",
-                "min-h-[44px] flex items-center",
+                "touch-target flex items-center active:bg-accent/70",
                 isActive("/votar") 
-                  ? "bg-accent text-accent-foreground" 
+                  ? "bg-primary/10 text-primary border-l-4 border-primary" 
                   : "hover:bg-accent/50"
               )}
             >
@@ -100,9 +100,9 @@ export function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
               className={cn(
                 "block w-full px-4 py-3 text-left font-medium rounded-md transition-colors",
-                "min-h-[44px] flex items-center",
+                "touch-target flex items-center active:bg-accent/70",
                 isActive("/kanban") 
-                  ? "bg-accent text-accent-foreground" 
+                  ? "bg-primary/10 text-primary border-l-4 border-primary" 
                   : "hover:bg-accent/50"
               )}
             >

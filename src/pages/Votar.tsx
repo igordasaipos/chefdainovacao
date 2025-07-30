@@ -118,13 +118,14 @@ const Votar = () => {
       <Navbar />
       
       {/* Banner Section with Communication Image */}
-      <div className="bg-white py-8 mb-8">
+      <div className="bg-white py-4 sm:py-8 mb-6 sm:mb-8">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <img 
               src="/lovable-uploads/6b51c7c0-de52-402b-8bd3-ecefa2ef43aa.png"
               alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
               className="w-full h-auto rounded-lg shadow-sm"
+              loading="lazy"
             />
           </div>
         </div>
@@ -132,11 +133,11 @@ const Votar = () => {
 
       <div className="container mx-auto px-4 py-6">
         {/* Filter and Stats Section */}
-        <div className="flex justify-between items-center gap-4 mb-8 max-w-4xl mx-auto">
-          {/* Left side - Filter */}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8 max-w-4xl mx-auto">
+          {/* Filter */}
           <div className="flex items-center gap-2">
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]">
                 <SelectValue placeholder="Filtrar por..." />
               </SelectTrigger>
               <SelectContent>
@@ -147,15 +148,15 @@ const Votar = () => {
             </Select>
           </div>
 
-          {/* Right side - Counters */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 text-blue-600">
-              <Layers className="h-5 w-5" />
-              <span className="font-semibold">{ideias?.length || 0} funcionalidades</span>
+          {/* Stats - Mobile optimized */}
+          <div className="flex items-center justify-center sm:justify-end gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 text-primary">
+              <Layers className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="font-semibold text-sm sm:text-base">{ideias?.length || 0} funcionalidades</span>
             </div>
-            <div className="flex items-center gap-2 text-blue-600">
-              <Heart className="h-5 w-5" />
-              <span className="font-semibold">{totalVotos} votos</span>
+            <div className="flex items-center gap-2 text-primary">
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
             </div>
           </div>
         </div>

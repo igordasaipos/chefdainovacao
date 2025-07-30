@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComplexityBadge } from './ComplexityBadge';
 import { Ideia } from '@/hooks/useIdeias';
-import { ThumbsUp, Check } from 'lucide-react';
+import { ThumbsUp, Check, Heart } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface IdeaCardProps {
   ideia: Ideia;
@@ -26,75 +27,65 @@ export const IdeaCard = ({
   isVoting = false
 }: IdeaCardProps) => {
   return (
-    <Card className="w-full bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        {/* Horizontal Container */}
-        <div className="flex items-center gap-6">
-          {/* Container 1 - Conteúdo */}
+    <Card className="transition-all duration-200 hover:shadow-md border-l-4 border-l-primary bg-card card-mobile-active">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div className="flex-1">
-            {/* Title */}
-            <h3 className="text-xl font-bold text-foreground mb-3 leading-tight">
-              {ideia.titulo}
-            </h3>
-            
-            {/* Tags and Vote Info Row */}
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-start gap-2 mb-3">
               {showPosition && position && (
-                <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 px-2 py-1 text-sm font-medium">
-                  #{position}
-                </Badge>
+                <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold min-w-[24px] text-center flex-shrink-0 mt-1">
+                  {position}
+                </span>
               )}
-              <ComplexityBadge complexity={ideia.complexidade} />
-              
-              <div className="flex items-center gap-1 text-blue-600">
-                <ThumbsUp className="h-4 w-4" />
-                <span className="font-medium">{ideia.votos} votos</span>
-              </div>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
+                {ideia.titulo}
+              </h3>
             </div>
             
-            {/* Description */}
-            {ideia.descricao && (
-              <p className="text-muted-foreground leading-relaxed">
-                {ideia.descricao}
-              </p>
-            )}
+            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+              {ideia.descricao}
+            </p>
+            
+            <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 sm:mb-3">
+              <ComplexityBadge complexity={ideia.complexidade} />
+              <div className="flex items-center gap-1">
+                <Heart className="h-4 w-4" />
+                <span className="font-medium">{ideia.votos}</span>
+              </div>
+            </div>
           </div>
           
-          {/* Container 2 - Botão */}
-          <div className="flex-shrink-0">
-            {showVoteButton && onVote && (
-              <Button 
-                onClick={onVote}
-                disabled={hasVotedRecently || isVoting}
-                className={`
-                  font-medium px-6 py-2 rounded-lg flex items-center gap-2 transition-all duration-300
-                  ${hasVotedRecently 
-                    ? 'bg-green-700 hover:bg-green-700 text-white' 
-                    : isVoting 
-                      ? 'bg-green-400 hover:bg-green-400 text-white animate-pulse' 
-                      : 'bg-green-500 hover:bg-green-600 text-white'
-                  }
-                `}
-              >
-                {hasVotedRecently ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    Votado!
-                  </>
-                ) : isVoting ? (
-                  <>
-                    <ThumbsUp className="h-4 w-4 animate-pulse" />
-                    Votando...
-                  </>
-                ) : (
-                  <>
-                    <ThumbsUp className="h-4 w-4" />
-                    Votar
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
+          {showVoteButton && (
+            <Button
+              onClick={() => onVote?.()}
+              disabled={hasVotedRecently || isVoting}
+              className={cn(
+                "w-full sm:w-auto sm:min-w-[100px] min-h-[48px] sm:min-h-[40px] transition-all duration-200 font-medium",
+                hasVotedRecently 
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : isVoting 
+                    ? "bg-gray-400 cursor-not-allowed" 
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
+              )}
+            >
+              {isVoting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Votando
+                </span>
+              ) : hasVotedRecently ? (
+                <span className="flex items-center justify-center gap-1">
+                  <Check className="h-4 w-4" />
+                  Votado
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-1">
+                  <Heart className="h-4 w-4" />
+                  Votar
+                </span>
+              )}
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

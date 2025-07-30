@@ -1,0 +1,25 @@
+{
+  "name": "Saipos Votação - iFood Move 2025",
+  "short_name": "Saipos Votação",
+  "description": "Sistema de votação para funcionalidades Saipos - iFood Move 2025",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/lovable-uploads/d37df660-b567-4060-a748-9a0489517939.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/lovable-uploads/d37df660-b567-4060-a748-9a0489517939.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "orientation": "portrait-primary"
+}
