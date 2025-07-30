@@ -31,12 +31,7 @@ export const IdeaCard = ({
       <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div className="flex-1">
-            <div className="flex items-start gap-2 mb-3">
-              {showPosition && position && (
-                <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-bold min-w-[24px] text-center flex-shrink-0 mt-1">
-                  {position}
-                </span>
-              )}
+            <div className="mb-3">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
                 {ideia.titulo}
               </h3>
@@ -48,6 +43,13 @@ export const IdeaCard = ({
             
             <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 sm:mb-3">
               <ComplexityBadge complexity={ideia.complexidade} />
+              {showPosition && position && (
+                <>
+                  <span>|</span>
+                  <span className="font-medium">#{position}</span>
+                </>
+              )}
+              <span>|</span>
               <div className="flex items-center gap-1">
                 <Heart className="h-4 w-4" />
                 <span className="font-medium">{ideia.votos}</span>
