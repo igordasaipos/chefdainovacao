@@ -14,7 +14,7 @@ export default function Votar() {
   const { data: votos = [] } = useVotos();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
-  const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes' | 'alfabetica'>('mais-votadas');
+  const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
   
@@ -30,8 +30,6 @@ export default function Votar() {
         return sortedArray.sort((a, b) => b.votos - a.votos);
       case 'recentes':
         return sortedArray.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
-      case 'alfabetica':
-        return sortedArray.sort((a, b) => a.titulo.localeCompare(b.titulo));
       default:
         return sortedArray;
     }
@@ -124,14 +122,13 @@ export default function Votar() {
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8 max-w-4xl mx-auto">
           {/* Filter */}
           <div className="flex items-center gap-2">
-            <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+            <Select value={filterType} onValueChange={(value: 'mais-votadas' | 'recentes') => setFilterType(value)}>
               <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]">
                 <SelectValue placeholder="Filtrar por..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="mais-votadas">Ideias mais votadas</SelectItem>
                 <SelectItem value="recentes">Mais recentes</SelectItem>
-                <SelectItem value="alfabetica">Ordem alfabética</SelectItem>
               </SelectContent>
             </Select>
           </div>

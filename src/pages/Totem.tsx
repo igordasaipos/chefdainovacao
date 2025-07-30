@@ -11,7 +11,7 @@ export default function Totem() {
   const { data: ideias = [], refetch } = useIdeias();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
-  const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes' | 'alfabetica'>('mais-votadas');
+  const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
 
@@ -25,8 +25,6 @@ export default function Totem() {
         return sortedArray.sort((a, b) => b.votos - a.votos);
       case 'recentes':
         return sortedArray.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
-      case 'alfabetica':
-        return sortedArray.sort((a, b) => a.titulo.localeCompare(b.titulo));
       default:
         return sortedArray;
     }
@@ -100,14 +98,13 @@ export default function Totem() {
         {/* Filtros e Estatísticas */}
         <div className="flex flex-col items-center justify-center gap-6 mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-center">
-            <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+            <Select value={filterType} onValueChange={(value: 'mais-votadas' | 'recentes') => setFilterType(value)}>
               <SelectTrigger className="w-48 h-12 text-base rounded-xl border-2 hover:border-primary/50 transition-all">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="mais-votadas">Mais Votadas</SelectItem>
                 <SelectItem value="recentes">Mais Recentes</SelectItem>
-                <SelectItem value="alfabetica">Ordem Alfabética</SelectItem>
               </SelectContent>
             </Select>
             
