@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { AuthProvider } from "@/hooks/useAuth"
 import Admin from "./pages/Admin"
 import Votar from "./pages/Votar"
+import Totem from "./pages/Totem"
 import Kanban from "./pages/Kanban"
 import Login from "./pages/Login"
 import NotFound from "./pages/NotFound"
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
             <Route path="/votar" element={<Votar />} />
+            <Route path="/totem" element={<Totem />} />
             <Route path="/kanban" element={<Kanban />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

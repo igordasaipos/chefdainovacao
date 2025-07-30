@@ -5,20 +5,14 @@ import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useUserPersistence } from "@/hooks/useUserPersistence";
-import { useToast } from "@/hooks/use-toast";
 
-export default function Votar() {
+export default function Totem() {
   const { data: ideias = [], refetch } = useIdeias();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes' | 'alfabetica'>('mais-votadas');
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
-  
-  const { userData, clearUserData } = useUserPersistence();
-  const { toast } = useToast();
 
   const sortedIdeias = useMemo(() => {
     if (!ideias?.length) return [];
@@ -102,13 +96,8 @@ export default function Votar() {
         />
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div className="text-center text-white px-4">
-            <h1 className="text-3xl md:text-5xl font-bold mb-2">Caixinha de Ideias</h1>
-            <p className="text-lg md:text-xl opacity-90">Vote e compartilhe suas ideias favoritas!</p>
-            {userData.nome && (
-              <p className="text-sm opacity-75 mt-2">
-                Olá, {userData.nome}! Seus dados estão salvos para facilitar os próximos votos.
-              </p>
-            )}
+            <h1 className="text-3xl md:text-5xl font-bold mb-2">Totem de Votação</h1>
+            <p className="text-lg md:text-xl opacity-90">Vote nas melhores ideias!</p>
           </div>
         </div>
       </div>
@@ -137,23 +126,6 @@ export default function Votar() {
               </span>
             </div>
           </div>
-          
-          {userData.nome && (
-            <Button
-              onClick={() => {
-                clearUserData();
-                toast({
-                  title: "Dados limpos",
-                  description: "Seus dados foram removidos com sucesso!",
-                });
-              }}
-              variant="outline"
-              size="sm"
-              className="h-12 rounded-xl border-2 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive transition-all"
-            >
-              Limpar meus dados
-            </Button>
-          )}
         </div>
 
         {/* Grid de Ideias */}
@@ -193,7 +165,7 @@ export default function Votar() {
         ideia={selectedIdea}
         onVoteStart={handleVoteStart}
         onVoteSuccess={handleVoteSuccess}
-        persistUserData={true}
+        persistUserData={false}
       />
     </div>
   );

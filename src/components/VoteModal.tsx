@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useCreateVoto, useHasVoted } from "@/hooks/useVotos";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
+import { useUserPersistence } from "@/hooks/useUserPersistence";
 import type { Ideia } from "@/hooks/useIdeias";
 
 interface VoteModalProps {
@@ -16,6 +17,7 @@ interface VoteModalProps {
   ideia: Ideia | null;
   onVoteStart?: (ideiaId: string) => void;
   onVoteSuccess?: (ideiaId: string) => void;
+  persistUserData?: boolean;
 }
 
 export const VoteModal = ({
@@ -24,17 +26,29 @@ export const VoteModal = ({
   ideia,
   onVoteStart,
   onVoteSuccess,
+  persistUserData = false
 }: VoteModalProps) => {
   const [nomeRestauranteVotante, setNomeRestauranteVotante] = useState("");
   const [whatsappVotante, setWhatsappVotante] = useState("");
   const [nome, setNome] = useState("");
   const [ehCliente, setEhCliente] = useState("sim");
 
+  const { userData, saveUserData } = useUserPersistence();
+
   const resetForm = () => {
-    setNomeRestauranteVotante("");
-    setWhatsappVotante("");
-    setNome("");
-    setEhCliente("sim");
+    if (persistUserData) {
+      // Para /votar: carrega dados salvos
+      setNomeRestauranteVotante(userData.nomeRestauranteVotante);
+      setWhatsappVotante(userData.whatsappVotante);
+      setNome(userData.nome);
+      setEhCliente(userData.ehCliente);
+    } else {
+      // Para /totem: sempre limpa
+      setNomeRestauranteVotante("");
+      setWhatsappVotante("");
+      setNome("");
+      setEhCliente("sim");
+    }
   };
 
   // Reset form quando a modal abre
@@ -42,7 +56,7 @@ export const VoteModal = ({
     if (open) {
       resetForm();
     }
-  }, [open]);
+  }, [open, persistUserData, userData]);
 
   const { mutateAsync: createVoto, isPending: isLoading } = useCreateVoto(resetForm);
   const isMobile = useIsMobile();
@@ -89,6 +103,16 @@ export const VoteModal = ({
         nome_votante: nome,
         eh_cliente: ehCliente === "sim",
       };
+
+      // Salva dados do usuário se persistência estiver habilitada
+      if (persistUserData) {
+        saveUserData({
+          nome,
+          whatsappVotante,
+          nomeRestauranteVotante,
+          ehCliente,
+        });
+      }
 
       await createVoto(votoData);
 
