@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Layers, Heart } from "lucide-react";
 
 export default function Totem() {
   const { data: ideias = [], refetch } = useIdeias();
@@ -86,26 +87,19 @@ export default function Totem() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Navbar />
       
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
+      {/* Banner Section */}
+      <div className="bg-white border-b">
         <img 
-          src="/lovable-uploads/698aaa8a-b352-44a5-90d4-c41dae8987bb.png" 
-          alt="Banner da caixinha de ideias" 
-          className="w-full h-48 md:h-64 object-cover"
+          src="/lovable-uploads/d37df660-b567-4060-a748-9a0489517939.png" 
+          alt="Chef da Inovação - Caixinha de Ideias" 
+          className="w-full h-auto object-contain max-h-48"
         />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <h1 className="text-3xl md:text-5xl font-bold mb-2">Totem de Votação</h1>
-            <p className="text-lg md:text-xl opacity-90">Vote nas melhores ideias!</p>
-          </div>
-        </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
         {/* Filtros e Estatísticas */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div className="flex flex-col items-center justify-center gap-6 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
             <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
               <SelectTrigger className="w-48 h-12 text-base rounded-xl border-2 hover:border-primary/50 transition-all">
                 <SelectValue placeholder="Ordenar por" />
@@ -118,27 +112,32 @@ export default function Totem() {
             </Select>
             
             <div className="flex gap-6 text-sm text-muted-foreground">
-              <span className="bg-muted/50 px-3 py-2 rounded-lg">
-                <strong className="text-foreground">{totalIdeias}</strong> ideias
+              <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
+                <Layers className="h-4 w-4" />
+                <strong className="text-foreground">{totalIdeias}</strong> funcionalidades
               </span>
-              <span className="bg-muted/50 px-3 py-2 rounded-lg">
-                <strong className="text-foreground">{totalVotos}</strong> votos totais
+              <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
+                <Heart className="h-4 w-4" />
+                <strong className="text-foreground">{totalVotos}</strong> votos
               </span>
             </div>
           </div>
         </div>
 
-        {/* Grid de Ideias */}
+        {/* Lista de Ideias */}
         {sortedIdeias?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedIdeias.map((idea) => (
+          <div className="max-w-4xl mx-auto space-y-4">
+            {sortedIdeias.map((idea, index) => (
               <IdeaCard
                 key={idea.id}
                 ideia={idea}
                 onVote={() => handleVote(idea)}
                 showVoteButton={true}
+                showPosition={filterType === 'mais-votadas'}
+                position={filterType === 'mais-votadas' ? index + 1 : undefined}
                 hasVotedRecently={recentlyVotedIds.includes(idea.id)}
                 isVoting={votingIds.includes(idea.id)}
+                hasVoted={false}
               />
             ))}
           </div>
