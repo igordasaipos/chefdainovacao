@@ -90,7 +90,7 @@ export default function Totem() {
       {/* Banner Section */}
       <div className="bg-white border-b">
         <img 
-          src="/lovable-uploads/d37df660-b567-4060-a748-9a0489517939.png" 
+          src="/lovable-uploads/c3122bba-ee99-408f-bab6-c598e83287fb.png" 
           alt="Chef da Inovação - Caixinha de Ideias" 
           className="w-full h-auto object-contain max-h-48"
         />
