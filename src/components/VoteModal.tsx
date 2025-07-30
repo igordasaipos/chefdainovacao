@@ -26,7 +26,8 @@ export const VoteModal = ({
 }: VoteModalProps) => {
   const [formData, setFormData] = useState({
     nome_restaurante_votante: '',
-    whatsapp_votante: ''
+    whatsapp_votante: '',
+    nome: ''
   });
   const [ehCliente, setEhCliente] = useState('true'); // 'true' for cliente, 'false' for não cliente
   const createVoto = useCreateVoto();
@@ -39,7 +40,7 @@ export const VoteModal = ({
     const votoData = {
       ideia_id: ideia.id,
       telefone_votante: formData.whatsapp_votante, // Usar WhatsApp no telefone_votante para evitar constraint duplicate
-      nome_restaurante_votante: formData.nome_restaurante_votante,
+      nome_restaurante_votante: ehCliente === 'true' ? formData.nome_restaurante_votante : `${formData.nome} (Não é cliente)`,
       whatsapp_votante: formData.whatsapp_votante,
       eh_cliente: ehCliente === 'true'
     };
@@ -55,7 +56,8 @@ export const VoteModal = ({
       // Reset form after successful vote
       setFormData({
         nome_restaurante_votante: '',
-        whatsapp_votante: ''
+        whatsapp_votante: '',
+        nome: ''
       });
       setEhCliente('true');
       
@@ -70,8 +72,10 @@ export const VoteModal = ({
     }
   };
 
-  // Always show full form
-  const isValid = formData.nome_restaurante_votante.trim() && formData.whatsapp_votante.trim();
+  // Conditional validation based on client type
+  const isValid = ehCliente === 'true' 
+    ? formData.nome_restaurante_votante.trim() && formData.whatsapp_votante.trim() && formData.nome.trim()
+    : formData.whatsapp_votante.trim() && formData.nome.trim();
 
   const formContent = (
     <>
@@ -103,26 +107,29 @@ export const VoteModal = ({
           </RadioGroup>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="nome_restaurante" className="text-sm font-medium">
-            Nome da loja ou ID Saipos ou CNPJ
-          </Label>
-          <Input 
-            id="nome_restaurante" 
-            value={formData.nome_restaurante_votante} 
-            onChange={e => setFormData(prev => ({
-              ...prev,
-              nome_restaurante_votante: e.target.value
-            }))} 
-            placeholder="Nome da loja ou ID Saipos ou CNPJ" 
-            required 
-            className="min-h-[48px] text-base"
-          />
-        </div>
+        {/* Conditional fields based on client type */}
+        {ehCliente === 'true' && (
+          <div className="space-y-2">
+            <Label htmlFor="nome_restaurante" className="text-sm font-medium">
+              Nome da loja ou ID Saipos ou CNPJ *
+            </Label>
+            <Input 
+              id="nome_restaurante" 
+              value={formData.nome_restaurante_votante} 
+              onChange={e => setFormData(prev => ({
+                ...prev,
+                nome_restaurante_votante: e.target.value
+              }))} 
+              placeholder="Nome da loja ou ID Saipos ou CNPJ" 
+              required 
+              className="min-h-[48px] text-base"
+            />
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="whatsapp" className="text-sm font-medium">
-            WhatsApp
+            WhatsApp *
           </Label>
           <Input 
             id="whatsapp" 
@@ -150,6 +157,23 @@ export const VoteModal = ({
             className="min-h-[48px] text-base"
             type="tel"
             maxLength={15}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="nome" className="text-sm font-medium">
+            Nome *
+          </Label>
+          <Input 
+            id="nome" 
+            value={formData.nome} 
+            onChange={e => setFormData(prev => ({
+              ...prev,
+              nome: e.target.value
+            }))} 
+            placeholder="Seu nome completo" 
+            required 
+            className="min-h-[48px] text-base"
           />
         </div>
 
