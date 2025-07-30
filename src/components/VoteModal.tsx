@@ -144,14 +144,12 @@ export const VoteModal = ({
       <div className="p-4 bg-gradient-to-r from-muted/30 to-muted/10 rounded-xl border border-muted/30">
         <div className="flex items-center justify-between mb-3">
           <h4 className="font-medium text-base text-foreground">Votando como:</h4>
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={() => setIsEditingData(true)}
-            className="text-primary hover:text-primary/80 text-sm h-8 px-3"
+            className="text-primary hover:text-primary/80 text-sm underline cursor-pointer"
           >
             Editar dados
-          </Button>
+          </button>
         </div>
         
         <div className="space-y-2 text-sm">
