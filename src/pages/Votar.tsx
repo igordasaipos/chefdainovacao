@@ -114,12 +114,12 @@ export default function Votar() {
           {/* Filter */}
           <div className="flex items-center gap-2">
             <Select value={filterType} onValueChange={(value: 'mais-votadas' | 'recentes') => setFilterType(value)}>
-              <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]">
+              <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]" data-qa="votar-filter-select">
                 <SelectValue placeholder="Filtrar por..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mais-votadas">Ideias mais votadas</SelectItem>
-                <SelectItem value="recentes">Mais recentes</SelectItem>
+                <SelectItem value="mais-votadas" data-qa="votar-filter-mais-votadas">Ideias mais votadas</SelectItem>
+                <SelectItem value="recentes" data-qa="votar-filter-recentes">Mais recentes</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -151,6 +151,7 @@ export default function Votar() {
                 hasVotedRecently={recentlyVotedIds.includes(idea.id)}
                 isVoting={votingIds.includes(idea.id)}
                 hasVoted={hasUserVoted(idea.id)}
+                data-qa={`votar-card-${idea.id}`}
               />
             ))}
           </div>

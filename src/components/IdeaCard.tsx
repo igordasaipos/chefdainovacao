@@ -16,6 +16,7 @@ interface IdeaCardProps {
   hasVotedRecently?: boolean;
   isVoting?: boolean;
   hasVoted?: boolean;
+  "data-qa"?: string;
 }
 
 export const IdeaCard = ({ 
@@ -26,10 +27,11 @@ export const IdeaCard = ({
   showPosition = false,
   hasVotedRecently = false,
   isVoting = false,
-  hasVoted = false
+  hasVoted = false,
+  "data-qa": dataQa
 }: IdeaCardProps) => {
   return (
-    <Card className="transition-all duration-200 hover:shadow-md border-l-4 border-l-primary bg-card card-mobile-active">
+    <Card className="transition-all duration-200 hover:shadow-md border-l-4 border-l-primary bg-card card-mobile-active" data-qa={dataQa}>
       <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div className="flex-1">
@@ -71,6 +73,7 @@ export const IdeaCard = ({
                     ? "bg-gray-400 cursor-not-allowed" 
                     : "bg-primary hover:bg-primary/90 text-primary-foreground"
               )}
+              data-qa={`votar-button-${ideia.id}`}
             >
               {isVoting ? (
                 <span className="flex items-center justify-center gap-2">

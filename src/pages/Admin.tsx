@@ -360,7 +360,7 @@ const Admin = () => {
               jira: ''
             });
             setIsFormOpen(true);
-          }} className="bg-black text-white hover:bg-gray-800">
+          }} className="bg-black text-white hover:bg-gray-800" data-qa="admin-create-idea-button">
               <Plus className="h-4 w-4 mr-2" />
               Nova Ideia
             </Button>
@@ -384,6 +384,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('total')}
+            data-qa="admin-filter-total"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.total}</div>
@@ -397,6 +398,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('caixinha')}
+            data-qa="admin-filter-caixinha"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.caixinha}</div>
@@ -410,6 +412,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('backlog')}
+            data-qa="admin-filter-backlog"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.backlog}</div>
@@ -423,6 +426,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('votacao')}
+            data-qa="admin-filter-votacao"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.votacao}</div>
@@ -436,6 +440,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('desenvolvimento')}
+            data-qa="admin-filter-desenvolvimento"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.desenvolvimento}</div>
@@ -449,6 +454,7 @@ const Admin = () => {
                 : 'bg-white hover:bg-gray-50'
             }`}
             onClick={() => setActiveStatusFilter('finalizado')}
+            data-qa="admin-filter-finalizado"
           >
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.finalizado}</div>
@@ -637,10 +643,10 @@ const Admin = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
-                          <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm">
+                          <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm" data-qa={`admin-edit-${ideia.id}`}>
                             <Edit2 className="h-4 w-4" />
                           </Button>
-                          <Button onClick={() => handleDeleteClick(ideia.id)} variant="destructive" size="sm">
+                          <Button onClick={() => handleDeleteClick(ideia.id)} variant="destructive" size="sm" data-qa={`admin-delete-${ideia.id}`}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -669,7 +675,7 @@ const Admin = () => {
                 <Input id="titulo" value={ideaForm.titulo} onChange={e => setIdeaForm(prev => ({
                 ...prev,
                 titulo: e.target.value
-              }))} required />
+              }))} required data-qa="admin-form-titulo" />
               </div>
               
               <div className="space-y-2">
@@ -789,10 +795,10 @@ const Admin = () => {
               </div>
 
               <div className="flex gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)} className="flex-1">
+                <Button type="button" variant="outline" onClick={() => setIsFormOpen(false)} className="flex-1" data-qa="admin-form-cancel">
                   Cancelar
                 </Button>
-                <Button type="submit" className="flex-1">
+                <Button type="submit" className="flex-1" data-qa="admin-form-submit">
                   {editingIdea ? 'Atualizar' : 'Criar'}
                 </Button>
               </div>

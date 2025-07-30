@@ -68,30 +68,32 @@ export function Navbar() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to={getVotarLink()}>
-                <NavigationMenuLink
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "h-10 px-4 py-2 text-sm font-medium",
-                    isActive("/votar") && "bg-accent text-accent-foreground"
-                  )}
-                >
-                  Votar
-                </NavigationMenuLink>
-              </Link>
+          <Link to={getVotarLink()}>
+            <NavigationMenuLink
+              className={cn(
+                navigationMenuTriggerStyle(),
+                "h-10 px-4 py-2 text-sm font-medium",
+                isActive("/votar") && "bg-accent text-accent-foreground"
+              )}
+              data-qa="navbar-link-votar"
+            >
+              Votar
+            </NavigationMenuLink>
+          </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to={getKanbanLink()}>
-                <NavigationMenuLink
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "h-10 px-4 py-2 text-sm font-medium",
-                    isActive("/kanban") && "bg-accent text-accent-foreground"
-                  )}
-                >
-                  Acompanhar
-                </NavigationMenuLink>
-              </Link>
+          <Link to={getKanbanLink()}>
+            <NavigationMenuLink
+              className={cn(
+                navigationMenuTriggerStyle(),
+                "h-10 px-4 py-2 text-sm font-medium",
+                isActive("/kanban") && "bg-accent text-accent-foreground"
+              )}
+              data-qa="navbar-link-acompanhar"
+            >
+              Acompanhar
+            </NavigationMenuLink>
+          </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -103,6 +105,7 @@ export function Navbar() {
           className="md:hidden h-10 w-10 touch-target"
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
+          data-qa="navbar-mobile-toggle"
         >
           {isMobileMenuOpen ? (
             <X className="h-6 w-6" />
@@ -126,6 +129,7 @@ export function Navbar() {
                   ? "bg-primary/10 text-primary border-l-4 border-primary" 
                   : "hover:bg-accent/50"
               )}
+              data-qa="navbar-mobile-link-votar"
             >
               Votar
             </Link>
@@ -139,6 +143,7 @@ export function Navbar() {
                   ? "bg-primary/10 text-primary border-l-4 border-primary" 
                   : "hover:bg-accent/50"
               )}
+              data-qa="navbar-mobile-link-acompanhar"
             >
               Acompanhar
             </Link>

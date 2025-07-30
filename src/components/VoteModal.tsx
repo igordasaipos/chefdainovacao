@@ -170,6 +170,7 @@ export const VoteModal = ({
           }}
           variant="outline"
           className="flex-1 h-12 text-base rounded-xl border-2 hover:bg-muted/50 transition-all"
+          data-qa="vote-modal-cancel"
         >
           Cancelar
         </Button>
@@ -177,6 +178,7 @@ export const VoteModal = ({
           onClick={handleSubmit}
           disabled={isLoading}
           className="flex-1 h-12 text-base rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all shadow-lg disabled:opacity-50"
+          data-qa="vote-modal-submit"
         >
           {isLoading ? "Votando..." : "Confirmar Voto"}
         </Button>
@@ -194,20 +196,21 @@ export const VoteModal = ({
 
       <div className="space-y-3">
         <Label className="text-base font-medium text-foreground">Você é cliente Saipos?</Label>
-        <RadioGroup
-          value={ehCliente}
-          onValueChange={setEhCliente}
-          className="flex flex-row space-x-4"
-        >
-          <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-            <RadioGroupItem value="sim" id="sim" className="border-2" />
-            <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
-          </div>
-          <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-            <RadioGroupItem value="nao" id="nao" className="border-2" />
-            <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
-          </div>
-        </RadioGroup>
+          <RadioGroup
+            value={ehCliente}
+            onValueChange={setEhCliente}
+            className="flex flex-row space-x-4"
+            data-qa="vote-modal-radio-cliente"
+          >
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="sim" id="sim" className="border-2" data-qa="vote-modal-radio-sim" />
+              <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
+            </div>
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="nao" id="nao" className="border-2" data-qa="vote-modal-radio-nao" />
+              <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
+            </div>
+          </RadioGroup>
       </div>
 
       {ehCliente === "sim" && (
@@ -224,6 +227,7 @@ export const VoteModal = ({
             className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
             autoFocus={false}
             tabIndex={-1}
+            data-qa="vote-modal-input-restaurante"
           />
         </div>
       )}
@@ -241,6 +245,7 @@ export const VoteModal = ({
           className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
           autoFocus={false}
           tabIndex={-1}
+          data-qa="vote-modal-input-whatsapp"
         />
       </div>
 
@@ -257,6 +262,7 @@ export const VoteModal = ({
           className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
           autoFocus={false}
           tabIndex={-1}
+          data-qa="vote-modal-input-nome"
         />
       </div>
 
