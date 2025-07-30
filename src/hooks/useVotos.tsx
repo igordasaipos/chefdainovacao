@@ -52,6 +52,46 @@ export const useHasVoted = (ideiaId: string, whatsappVotante?: string) => {
   });
 };
 
+// Função para enviar dados para o Zapier webhook
+const sendToZapier = async (votoData: Voto, ideiaData: any) => {
+  try {
+    const zapierData = {
+      timestamp: new Date().toISOString(),
+      evento: "novo_voto",
+      voto: {
+        data_hora_voto: new Date(votoData.created_at).toLocaleString('pt-BR'),
+        nome_votante: votoData.nome_votante,
+        whatsapp_votante: votoData.whatsapp_votante,
+        eh_cliente: votoData.eh_cliente,
+        nome_restaurante_votante: votoData.nome_restaurante_votante
+      },
+      ideia: {
+        titulo: ideiaData.titulo,
+        descricao: ideiaData.descricao,
+        complexidade: ideiaData.complexidade,
+        status: ideiaData.status,
+        total_votos: ideiaData.votos,
+        nome_cliente_ideia: ideiaData.nome_cliente,
+        nome_restaurante_ideia: ideiaData.nome_restaurante
+      }
+    };
+
+    await fetch('https://hooks.zapier.com/hooks/catch/19735149/u43entq/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'no-cors',
+      body: JSON.stringify(zapierData),
+    });
+
+    console.log('Dados enviados para Zapier:', zapierData);
+  } catch (error) {
+    console.error('Erro ao enviar para Zapier:', error);
+    // Não bloqueia o fluxo principal se falhar
+  }
+};
+
 export const useCreateVoto = (onReset?: () => void) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -67,18 +107,26 @@ export const useCreateVoto = (onReset?: () => void) => {
       
       if (votoError) throw votoError;
       
-      // Atualiza o contador de votos na ideia
-      const { data: ideiaData } = await supabase
+      // Busca dados completos da ideia para enviar ao Zapier
+      const { data: ideiaCompleta } = await supabase
         .from('ideias')
-        .select('votos')
+        .select('*')
         .eq('id', voto.ideia_id)
         .single();
       
-      if (ideiaData) {
-        await supabase
+      // Atualiza o contador de votos na ideia
+      if (ideiaCompleta) {
+        const { data: ideiaAtualizada } = await supabase
           .from('ideias')
-          .update({ votos: ideiaData.votos + 1 })
-          .eq('id', voto.ideia_id);
+          .update({ votos: ideiaCompleta.votos + 1 })
+          .eq('id', voto.ideia_id)
+          .select()
+          .single();
+        
+        // Envia dados para o Zapier
+        if (ideiaAtualizada) {
+          sendToZapier(votoData, ideiaAtualizada);
+        }
       }
       
       return votoData;
