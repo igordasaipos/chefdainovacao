@@ -200,12 +200,12 @@ export const VoteModal = ({
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[85vh] px-4 pb-6">
+      <Drawer open={open} onOpenChange={onOpenChange} shouldScaleBackground={false}>
+        <DrawerContent className="max-h-[90vh] px-4 pb-safe focus-within:max-h-[70vh] ios-keyboard-adjust">
           <DrawerHeader className="px-0">
             <DrawerTitle className="text-lg text-left">Confirmar seu voto</DrawerTitle>
           </DrawerHeader>
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto flex-1 pb-4">
             {formContent}
           </div>
         </DrawerContent>

@@ -175,6 +175,38 @@ All colors MUST be HSL.
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  /* iOS keyboard adjustments */
+  .ios-keyboard-adjust {
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Prevent iOS zoom on input focus while maintaining accessibility */
+  @supports (-webkit-touch-callout: none) {
+    input[type="tel"],
+    input[type="text"],
+    input[type="email"] {
+      font-size: 16px !important;
+      transform: scale(1);
+      -webkit-text-size-adjust: 100%;
+    }
+    
+    /* Better iOS drawer handling */
+    [data-vaul-drawer] {
+      touch-action: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    [data-vaul-drawer-content] {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+  }
+
   /* Pull-to-refresh animation */
   @keyframes pullRefresh {
     0% { transform: translateY(-100px); opacity: 0; }
