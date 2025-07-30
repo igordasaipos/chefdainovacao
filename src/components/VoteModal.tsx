@@ -27,7 +27,7 @@ export const VoteModal = ({
   const [nomeRestauranteVotante, setNomeRestauranteVotante] = useState("");
   const [whatsappVotante, setWhatsappVotante] = useState("");
   const [nome, setNome] = useState("");
-  const [ehCliente, setEhCliente] = useState("");
+  const [ehCliente, setEhCliente] = useState("sim");
 
   const { mutateAsync: createVoto, isPending: isLoading } = useCreateVoto();
   const isMobile = useIsMobile();
@@ -67,7 +67,7 @@ export const VoteModal = ({
       setNomeRestauranteVotante("");
       setWhatsappVotante("");
       setNome("");
-      setEhCliente("");
+      setEhCliente("sim");
 
       onVoteSuccess?.(ideia.id);
       onOpenChange(false);
