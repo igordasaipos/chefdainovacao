@@ -142,15 +142,7 @@ export const VoteModal = ({
       </div>
 
       <div className="p-4 bg-gradient-to-r from-muted/30 to-muted/10 rounded-xl border border-muted/30">
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="font-medium text-base text-foreground">Votando como:</h4>
-          <button
-            onClick={() => setIsEditingData(true)}
-            className="text-primary hover:text-primary/80 text-sm underline cursor-pointer"
-          >
-            Editar dados
-          </button>
-        </div>
+        <h4 className="font-medium text-base text-foreground mb-3">Votando como:</h4>
         
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
@@ -167,10 +159,6 @@ export const VoteModal = ({
               <span className="text-foreground">{userData.nomeRestauranteVotante}</span>
             </div>
           )}
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-muted-foreground min-w-[80px]">Cliente:</span>
-            <span className="text-foreground">{userData.ehCliente === "sim" ? "Sou cliente Saipos" : "Não sou cliente"}</span>
-          </div>
         </div>
       </div>
 
