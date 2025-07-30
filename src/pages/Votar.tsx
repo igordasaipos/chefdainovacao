@@ -7,6 +7,7 @@ import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUserPersistence } from "@/hooks/useUserPersistence";
+import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart } from "lucide-react";
 
 export default function Votar() {
@@ -19,21 +20,7 @@ export default function Votar() {
   const [votingIds, setVotingIds] = useState<string[]>([]);
   
   const { userData } = useUserPersistence();
-
-  const sortedIdeias = useMemo(() => {
-    if (!ideias?.length) return [];
-    
-    const sortedArray = [...ideias];
-    
-    switch (filterType) {
-      case 'mais-votadas':
-        return sortedArray.sort((a, b) => b.votos - a.votos);
-      case 'recentes':
-        return sortedArray.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
-      default:
-        return sortedArray;
-    }
-  }, [ideias, filterType]);
+  const { stableSortedIdeias, updateSortSnapshot } = useStableSort(ideias, filterType);
 
   useEffect(() => {
     const channel = supabase
@@ -43,13 +30,17 @@ export default function Votar() {
         (payload) => {
           console.log('Mudança nas ideias:', payload);
           refetch();
+          // Only update sort when new ideas are added/removed, not for vote updates
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            updateSortSnapshot();
+          }
         }
       )
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'votos' }, 
         (payload) => {
           console.log('Mudança nos votos:', payload);
-          refetch();
+          refetch(); // This will update vote counts without reordering
         }
       )
       .subscribe();
@@ -57,7 +48,7 @@ export default function Votar() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [refetch]);
+  }, [refetch, updateSortSnapshot]);
 
   // Função para verificar se o usuário já votou em uma ideia
   const hasUserVoted = (ideiaId: string) => {
@@ -147,9 +138,9 @@ export default function Votar() {
         </div>
 
         {/* Ideas List - Single Column Centered */}
-        {sortedIdeias && sortedIdeias.length > 0 ? (
+        {stableSortedIdeias && stableSortedIdeias.length > 0 ? (
           <div className="space-y-4 max-w-4xl mx-auto">
-            {sortedIdeias.map((idea, index) => (
+            {stableSortedIdeias.map((idea, index) => (
               <IdeaCard
                 key={idea.id}
                 ideia={idea}

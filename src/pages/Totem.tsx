@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart } from "lucide-react";
 
 export default function Totem() {
@@ -14,21 +15,7 @@ export default function Totem() {
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
-
-  const sortedIdeias = useMemo(() => {
-    if (!ideias?.length) return [];
-    
-    const sortedArray = [...ideias];
-    
-    switch (filterType) {
-      case 'mais-votadas':
-        return sortedArray.sort((a, b) => b.votos - a.votos);
-      case 'recentes':
-        return sortedArray.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
-      default:
-        return sortedArray;
-    }
-  }, [ideias, filterType]);
+  const { stableSortedIdeias, updateSortSnapshot } = useStableSort(ideias, filterType);
 
   useEffect(() => {
     const channel = supabase
@@ -38,13 +25,17 @@ export default function Totem() {
         (payload) => {
           console.log('Mudança nas ideias:', payload);
           refetch();
+          // Only update sort when new ideas are added/removed, not for vote updates
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+            updateSortSnapshot();
+          }
         }
       )
       .on('postgres_changes', 
         { event: '*', schema: 'public', table: 'votos' }, 
         (payload) => {
           console.log('Mudança nos votos:', payload);
-          refetch();
+          refetch(); // This will update vote counts without reordering
         }
       )
       .subscribe();
@@ -52,7 +43,7 @@ export default function Totem() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [refetch]);
+  }, [refetch, updateSortSnapshot]);
 
   const handleVote = (idea: any) => {
     setSelectedIdea(idea);
@@ -122,9 +113,9 @@ export default function Totem() {
         </div>
 
         {/* Lista de Ideias */}
-        {sortedIdeias?.length > 0 ? (
+        {stableSortedIdeias?.length > 0 ? (
           <div className="max-w-4xl mx-auto space-y-4">
-            {sortedIdeias.map((idea, index) => (
+            {stableSortedIdeias.map((idea, index) => (
               <IdeaCard
                 key={idea.id}
                 ideia={idea}
