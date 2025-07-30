@@ -59,8 +59,8 @@ const Admin = () => {
   const [ideaToDelete, setIdeaToDelete] = useState<string | null>(null);
   const [activeStatusFilter, setActiveStatusFilter] = useState<string>('total');
   const [filters, setFilters] = useState({
-    complexidade: '',
-    criador: ''
+    complexidade: 'all',
+    criador: 'all'
   });
   const [admins, setAdmins] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'votos' | 'criado_em'>('criado_em');
@@ -288,8 +288,8 @@ const Admin = () => {
 
   const filteredAndSortedIdeias = ideias?.filter(ideia => {
     const statusMatch = activeStatusFilter === 'total' || ideia.status === activeStatusFilter;
-    const complexityMatch = !filters.complexidade || ideia.complexidade === filters.complexidade;
-    const creatorMatch = !filters.criador || (ideia.admin_criador && ideia.admin_criador.includes(filters.criador));
+    const complexityMatch = filters.complexidade === 'all' || ideia.complexidade === filters.complexidade;
+    const creatorMatch = filters.criador === 'all' || (ideia.admin_criador && ideia.admin_criador.includes(filters.criador));
     
     return statusMatch && complexityMatch && creatorMatch;
   })?.sort((a, b) => {
@@ -472,7 +472,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todas complexidades" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="1h30">⚡ 1h30</SelectItem>
                     <SelectItem value="3h">🕒 3h</SelectItem>
                     <SelectItem value="1turno">🌙 1 turno</SelectItem>
@@ -492,7 +492,7 @@ const Admin = () => {
                     <SelectValue placeholder="Todos os admins" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     {admins.map(admin => (
                       <SelectItem key={admin} value={admin}>{admin}</SelectItem>
                     ))}
@@ -501,10 +501,10 @@ const Admin = () => {
               </div>
 
               {/* Clear Filters */}
-              {(filters.complexidade || filters.criador) && (
+              {(filters.complexidade !== 'all' || filters.criador !== 'all') && (
                 <Button 
                   variant="outline" 
-                  onClick={() => setFilters({ complexidade: '', criador: '' })}
+                  onClick={() => setFilters({ complexidade: 'all', criador: 'all' })}
                   className="whitespace-nowrap"
                 >
                   Limpar Filtros
@@ -513,7 +513,7 @@ const Admin = () => {
             </div>
             
             {/* Active Filters Display */}
-            {(activeStatusFilter !== 'total' || filters.complexidade || filters.criador) && (
+            {(activeStatusFilter !== 'total' || filters.complexidade !== 'all' || filters.criador !== 'all') && (
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-sm text-muted-foreground">Filtros ativos:</span>
                 {activeStatusFilter !== 'total' && (
@@ -521,12 +521,12 @@ const Admin = () => {
                     Status: {activeStatusFilter}
                   </Badge>
                 )}
-                {filters.complexidade && (
+                {filters.complexidade !== 'all' && (
                   <Badge variant="secondary">
                     Complexidade: {filters.complexidade}
                   </Badge>
                 )}
-                {filters.criador && (
+                {filters.criador !== 'all' && (
                   <Badge variant="secondary">
                     Admin: {filters.criador}
                   </Badge>
