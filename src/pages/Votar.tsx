@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useIdeias } from "@/hooks/useIdeias";
+import { useVotos } from "@/hooks/useVotos";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
@@ -10,6 +11,7 @@ import { Layers, Heart } from "lucide-react";
 
 export default function Votar() {
   const { data: ideias = [], refetch } = useIdeias();
+  const { data: votos = [] } = useVotos();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes' | 'alfabetica'>('mais-votadas');
@@ -59,7 +61,20 @@ export default function Votar() {
     };
   }, [refetch]);
 
+  // Função para verificar se o usuário já votou em uma ideia
+  const hasUserVoted = (ideiaId: string) => {
+    if (!userData.whatsappVotante) return false;
+    return votos.some(voto => 
+      voto.ideia_id === ideiaId && 
+      voto.whatsapp_votante === userData.whatsappVotante
+    );
+  };
+
   const handleVote = (idea: any) => {
+    // Verificar se já votou
+    if (hasUserVoted(idea.id)) {
+      return; // Não permite votar novamente
+    }
     setSelectedIdea(idea);
     setIsVoteModalOpen(true);
   };
@@ -147,6 +162,7 @@ export default function Votar() {
                 showPosition={filterType === 'mais-votadas'}
                 hasVotedRecently={recentlyVotedIds.includes(idea.id)}
                 isVoting={votingIds.includes(idea.id)}
+                hasVoted={hasUserVoted(idea.id)}
               />
             ))}
           </div>

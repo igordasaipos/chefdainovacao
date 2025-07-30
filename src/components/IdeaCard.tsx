@@ -15,6 +15,7 @@ interface IdeaCardProps {
   showPosition?: boolean;
   hasVotedRecently?: boolean;
   isVoting?: boolean;
+  hasVoted?: boolean;
 }
 
 export const IdeaCard = ({ 
@@ -24,7 +25,8 @@ export const IdeaCard = ({
   showVoteButton = false, 
   showPosition = false,
   hasVotedRecently = false,
-  isVoting = false
+  isVoting = false,
+  hasVoted = false
 }: IdeaCardProps) => {
   return (
     <Card className="transition-all duration-200 hover:shadow-md border-l-4 border-l-primary bg-card card-mobile-active">
@@ -60,11 +62,11 @@ export const IdeaCard = ({
           {showVoteButton && (
             <Button
               onClick={() => onVote?.()}
-              disabled={hasVotedRecently || isVoting}
+              disabled={hasVotedRecently || isVoting || hasVoted}
               className={cn(
                 "w-full sm:w-auto sm:min-w-[100px] min-h-[48px] sm:min-h-[40px] transition-all duration-200 font-medium",
-                hasVotedRecently 
-                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                hasVotedRecently || hasVoted
+                  ? "bg-green-500 hover:bg-green-600 text-white cursor-not-allowed" 
                   : isVoting 
                     ? "bg-gray-400 cursor-not-allowed" 
                     : "bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -75,10 +77,10 @@ export const IdeaCard = ({
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Votando
                 </span>
-              ) : hasVotedRecently ? (
+              ) : hasVotedRecently || hasVoted ? (
                 <span className="flex items-center justify-center gap-1">
                   <Check className="h-4 w-4" />
-                  Votado
+                  Já votei
                 </span>
               ) : (
                 <span className="flex items-center justify-center gap-1">
