@@ -15,7 +15,12 @@ import { Button } from "@/components/ui/button"
 export function Navbar() {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const isActive = (path: string) => location.pathname === path
+  const isActive = (path: string) => {
+    if (path === "/votar") {
+      return location.pathname === "/votar" || location.pathname === "/totem"
+    }
+    return location.pathname === path
+  }
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
