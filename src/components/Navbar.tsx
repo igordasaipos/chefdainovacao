@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import {
@@ -12,10 +12,22 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
+const TOTEM_CONTEXT_KEY = "totem_context"
+
 export function Navbar() {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const isTotemRoute = location.pathname === "/totem"
+  const isKanbanRoute = location.pathname === "/kanban"
+  
+  // Gerenciar contexto do totem
+  useEffect(() => {
+    if (isTotemRoute) {
+      sessionStorage.setItem(TOTEM_CONTEXT_KEY, "true")
+    } else if (location.pathname === "/votar") {
+      sessionStorage.removeItem(TOTEM_CONTEXT_KEY)
+    }
+  }, [location.pathname, isTotemRoute])
   
   const isActive = (path: string) => {
     if (path === "/votar") {
@@ -24,7 +36,18 @@ export function Navbar() {
     return location.pathname === path
   }
 
-  const getVotarLink = () => isTotemRoute ? "/totem" : "/votar"
+  const getVotarLink = () => {
+    if (isTotemRoute) return "/totem"
+    if (isKanbanRoute && sessionStorage.getItem(TOTEM_CONTEXT_KEY)) return "/totem"
+    return "/votar"
+  }
+
+  const getKanbanLink = () => {
+    if (isTotemRoute) {
+      sessionStorage.setItem(TOTEM_CONTEXT_KEY, "true")
+    }
+    return "/kanban"
+  }
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
@@ -58,7 +81,7 @@ export function Navbar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link to="/kanban">
+              <Link to={getKanbanLink()}>
                 <NavigationMenuLink
                   className={cn(
                     navigationMenuTriggerStyle(),
@@ -107,7 +130,7 @@ export function Navbar() {
               Votar
             </Link>
             <Link
-              to="/kanban"
+              to={getKanbanLink()}
               onClick={() => setIsMobileMenuOpen(false)}
               className={cn(
                 "block w-full px-4 py-3 text-left font-medium rounded-md transition-colors",
