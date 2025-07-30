@@ -57,11 +57,12 @@ const Admin = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [ideaToDelete, setIdeaToDelete] = useState<string | null>(null);
+  const [activeStatusFilter, setActiveStatusFilter] = useState<string>('total');
   const [filters, setFilters] = useState({
-    status: 'todos',
-    complexidade: 'todas',
+    complexidade: '',
     criador: ''
   });
+  const [admins, setAdmins] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'votos' | 'criado_em'>('criado_em');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
@@ -86,6 +87,19 @@ const Admin = () => {
       supabase.removeChannel(votosChannel);
     };
   }, [isAdmin, refetchIdeias]);
+
+  // Load admins data
+  useEffect(() => {
+    if (isAdmin) {
+      const fetchAdmins = async () => {
+        const { data } = await supabase.from('admins').select('nome').order('nome');
+        if (data) {
+          setAdmins(data.map(admin => admin.nome));
+        }
+      };
+      fetchAdmins();
+    }
+  }, [isAdmin]);
 
   // Add example ideas on first load
   useEffect(() => {
@@ -273,7 +287,11 @@ const Admin = () => {
   };
 
   const filteredAndSortedIdeias = ideias?.filter(ideia => {
-    return (filters.status === 'todos' || ideia.status === filters.status) && (filters.complexidade === 'todas' || ideia.complexidade === filters.complexidade) && (!filters.criador || ideia.criado_por.toLowerCase().includes(filters.criador.toLowerCase()));
+    const statusMatch = activeStatusFilter === 'total' || ideia.status === activeStatusFilter;
+    const complexityMatch = !filters.complexidade || ideia.complexidade === filters.complexidade;
+    const creatorMatch = !filters.criador || (ideia.admin_criador && ideia.admin_criador.includes(filters.criador));
+    
+    return statusMatch && complexityMatch && creatorMatch;
   })?.sort((a, b) => {
     if (sortBy === 'votos') {
       return sortOrder === 'asc' ? a.votos - b.votos : b.votos - a.votos;
@@ -357,83 +375,104 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Stats Dashboard */}
-        <div className="grid grid-cols-6 gap-4 mb-8">
-          <Card className="bg-white">
+        {/* Stats Dashboard - Now Clickable Filters */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'total' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('total')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total de Ideias</div>
+              <div className="text-3xl font-bold mb-1">{stats.total}</div>
+              <div className="text-sm">Total de Ideias</div>
             </CardContent>
           </Card>
-          <Card className="bg-white">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'caixinha' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('caixinha')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.caixinha}</div>
-              <div className="text-sm text-gray-600">Caixinha</div>
+              <div className="text-3xl font-bold mb-1">{stats.caixinha}</div>
+              <div className="text-sm">Caixinha</div>
             </CardContent>
           </Card>
-          <Card className="bg-white">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'backlog' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('backlog')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.backlog}</div>
-              <div className="text-sm text-gray-600">Backlog</div>
+              <div className="text-3xl font-bold mb-1">{stats.backlog}</div>
+              <div className="text-sm">Backlog</div>
             </CardContent>
           </Card>
-          <Card className="bg-white">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'votacao' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('votacao')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.votacao}</div>
-              <div className="text-sm text-gray-600">Votação</div>
+              <div className="text-3xl font-bold mb-1">{stats.votacao}</div>
+              <div className="text-sm">Votação</div>
             </CardContent>
           </Card>
-          <Card className="bg-white">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'desenvolvimento' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('desenvolvimento')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.desenvolvimento}</div>
-              <div className="text-sm text-gray-600">Desenvolvimento</div>
+              <div className="text-3xl font-bold mb-1">{stats.desenvolvimento}</div>
+              <div className="text-sm">Desenvolvimento</div>
             </CardContent>
           </Card>
-          <Card className="bg-white">
+          <Card 
+            className={`cursor-pointer transition-all hover:scale-105 ${
+              activeStatusFilter === 'finalizado' 
+                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveStatusFilter('finalizado')}
+          >
             <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stats.finalizado}</div>
-              <div className="text-sm text-gray-600">Finalizado</div>
+              <div className="text-3xl font-bold mb-1">{stats.finalizado}</div>
+              <div className="text-sm">Finalizado</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Filters and Controls */}
+        {/* Additional Filters */}
         <Card className="bg-white mb-6">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Status Filter */}
-              <div className="space-y-2">
-                <Label>Filtrar por Status</Label>
-                <Select value={filters.status} onValueChange={value => setFilters(prev => ({
-                ...prev,
-                status: value
-              }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Todos os status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white z-50">
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="caixinha">Caixinha</SelectItem>
-                    <SelectItem value="backlog">Backlog</SelectItem>
-                    <SelectItem value="votacao">Votação</SelectItem>
-                    <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                    <SelectItem value="finalizado">Finalizado</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
+            <div className="flex flex-col md:flex-row gap-4 md:items-end">
               {/* Complexity Filter */}
-              <div className="space-y-2">
+              <div className="space-y-2 flex-1">
                 <Label>Filtrar por Complexidade</Label>
                 <Select value={filters.complexidade} onValueChange={value => setFilters(prev => ({
-                ...prev,
-                complexidade: value
-              }))}>
+                  ...prev,
+                  complexidade: value
+                }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas complexidades" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
-                    <SelectItem value="todas">Todas</SelectItem>
+                    <SelectItem value="">Todas</SelectItem>
                     <SelectItem value="1h30">⚡ 1h30</SelectItem>
                     <SelectItem value="3h">🕒 3h</SelectItem>
                     <SelectItem value="1turno">🌙 1 turno</SelectItem>
@@ -443,14 +482,57 @@ const Admin = () => {
               </div>
 
               {/* Creator Filter */}
-              <div className="space-y-2">
-                <Label>Filtrar por Criador</Label>
-                <Input placeholder="Digite o nome do criador" value={filters.criador} onChange={e => setFilters(prev => ({
-                ...prev,
-                criador: e.target.value
-              }))} />
+              <div className="space-y-2 flex-1">
+                <Label>Filtrar por Admin Criador</Label>
+                <Select value={filters.criador} onValueChange={value => setFilters(prev => ({
+                  ...prev,
+                  criador: value
+                }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Todos os admins" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="">Todos</SelectItem>
+                    {admins.map(admin => (
+                      <SelectItem key={admin} value={admin}>{admin}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+
+              {/* Clear Filters */}
+              {(filters.complexidade || filters.criador) && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setFilters({ complexidade: '', criador: '' })}
+                  className="whitespace-nowrap"
+                >
+                  Limpar Filtros
+                </Button>
+              )}
             </div>
+            
+            {/* Active Filters Display */}
+            {(activeStatusFilter !== 'total' || filters.complexidade || filters.criador) && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-sm text-muted-foreground">Filtros ativos:</span>
+                {activeStatusFilter !== 'total' && (
+                  <Badge variant="secondary">
+                    Status: {activeStatusFilter}
+                  </Badge>
+                )}
+                {filters.complexidade && (
+                  <Badge variant="secondary">
+                    Complexidade: {filters.complexidade}
+                  </Badge>
+                )}
+                {filters.criador && (
+                  <Badge variant="secondary">
+                    Admin: {filters.criador}
+                  </Badge>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -458,7 +540,7 @@ const Admin = () => {
         <Card className="bg-white">
           <CardHeader>
             <CardTitle className="text-lg font-medium text-gray-900">
-              Todas as Ideias ({filteredAndSortedIdeias.length})
+              {activeStatusFilter === 'total' ? 'Todas as Ideias' : `Ideias em ${activeStatusFilter}`} ({filteredAndSortedIdeias.length})
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
