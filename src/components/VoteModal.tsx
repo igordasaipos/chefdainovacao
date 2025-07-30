@@ -117,6 +117,7 @@ export const VoteModal = ({
               onChange={(e) => setNomeRestauranteVotante(e.target.value)}
               placeholder="Digite o nome do seu restaurante ou ID"
               className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+              autoFocus={false}
             />
           </div>
         )}
@@ -132,6 +133,7 @@ export const VoteModal = ({
             onChange={handleWhatsAppChange}
             placeholder="(11) 99999-9999"
             className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+            autoFocus={false}
           />
         </div>
 
@@ -146,6 +148,7 @@ export const VoteModal = ({
             onChange={(e) => setNome(e.target.value)}
             placeholder="Digite seu nome"
             className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+            autoFocus={false}
           />
         </div>
 

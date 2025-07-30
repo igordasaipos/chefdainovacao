@@ -111,6 +111,7 @@ export type Database = {
           id: string
           ideia_id: string
           nome_restaurante_votante: string
+          nome_votante: string
           telefone_votante: string
           whatsapp_votante: string
         }
@@ -120,6 +121,7 @@ export type Database = {
           id?: string
           ideia_id: string
           nome_restaurante_votante: string
+          nome_votante?: string
           telefone_votante: string
           whatsapp_votante: string
         }
@@ -129,6 +131,7 @@ export type Database = {
           id?: string
           ideia_id?: string
           nome_restaurante_votante?: string
+          nome_votante?: string
           telefone_votante?: string
           whatsapp_votante?: string
         }
