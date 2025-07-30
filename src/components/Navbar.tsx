@@ -23,8 +23,10 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center">
-          <Link to="/votar">
-            <h1 className="text-xl font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity">
+          <Link to="/votar" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <img src="/lovable-uploads/a90576ab-4829-4164-ba8c-928d19fe5bed.png" alt="Logo" className="w-8 h-8" />
+            <span className="text-xl font-semibold text-muted-foreground">|</span>
+            <h1 className="text-xl font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               iFood Move 2025
             </h1>
           </Link>
