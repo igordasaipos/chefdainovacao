@@ -89,102 +89,107 @@ export default function Votar() {
   const totalVotos = ideias?.reduce((sum, idea) => sum + idea.votos, 0) || 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-vote-bg to-background">
       <Navbar />
       
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" />
-        <img 
-          src="/lovable-uploads/698aaa8a-b352-44a5-90d4-c41dae8987bb.png" 
-          alt="Banner da caixinha de ideias" 
-          className="w-full h-48 md:h-64 object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <h1 className="text-3xl md:text-5xl font-bold mb-2">Caixinha de Ideias</h1>
-            <p className="text-lg md:text-xl opacity-90">Vote e compartilhe suas ideias favoritas!</p>
-            {userData.nome && (
-              <p className="text-sm opacity-75 mt-2">
-                Olá, {userData.nome}! Seus dados estão salvos para facilitar os próximos votos.
-              </p>
-            )}
+      {/* Banner Section with Communication Image */}
+      <div className="bg-white py-4 sm:py-8 mb-6 sm:mb-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <img 
+              src="/lovable-uploads/6b51c7c0-de52-402b-8bd3-ecefa2ef43aa.png"
+              alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
+              className="w-full h-auto rounded-lg shadow-sm"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Filtros e Estatísticas */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <div className="container mx-auto px-4 py-6">
+        {/* Filter and Stats Section */}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8 max-w-4xl mx-auto">
+          {/* Filter */}
+          <div className="flex items-center gap-2">
             <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
-              <SelectTrigger className="w-48 h-12 text-base rounded-xl border-2 hover:border-primary/50 transition-all">
-                <SelectValue placeholder="Ordenar por" />
+              <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]">
+                <SelectValue placeholder="Filtrar por..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mais-votadas">Mais Votadas</SelectItem>
-                <SelectItem value="recentes">Mais Recentes</SelectItem>
-                <SelectItem value="alfabetica">Ordem Alfabética</SelectItem>
+                <SelectItem value="mais-votadas">Ideias mais votadas</SelectItem>
+                <SelectItem value="recentes">Mais recentes</SelectItem>
+                <SelectItem value="alfabetica">Ordem alfabética</SelectItem>
               </SelectContent>
             </Select>
-            
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <span className="bg-muted/50 px-3 py-2 rounded-lg">
-                <strong className="text-foreground">{totalIdeias}</strong> ideias
-              </span>
-              <span className="bg-muted/50 px-3 py-2 rounded-lg">
-                <strong className="text-foreground">{totalVotos}</strong> votos totais
-              </span>
-            </div>
           </div>
-          
-          {userData.nome && (
-            <Button
-              onClick={() => {
-                clearUserData();
-                toast({
-                  title: "Dados limpos",
-                  description: "Seus dados foram removidos com sucesso!",
-                });
-              }}
-              variant="outline"
-              size="sm"
-              className="h-12 rounded-xl border-2 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive transition-all"
-            >
-              Limpar meus dados
-            </Button>
-          )}
+
+          {/* Stats and Clear Data Button */}
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-4 sm:gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
+              <div className="flex items-center gap-2 text-primary">
+                <span className="font-semibold text-sm sm:text-base">{totalIdeias} funcionalidades</span>
+              </div>
+              <div className="flex items-center gap-2 text-primary">
+                <span className="font-semibold text-sm sm:text-base">{totalVotos} votos</span>
+              </div>
+            </div>
+            
+            {userData.nome && (
+              <Button
+                onClick={() => {
+                  clearUserData();
+                  toast({
+                    title: "Dados limpos",
+                    description: "Seus dados foram removidos com sucesso!",
+                  });
+                }}
+                variant="outline"
+                size="sm"
+                className="h-12 rounded-xl border-2 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive transition-all"
+              >
+                Limpar meus dados
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Grid de Ideias */}
-        {sortedIdeias?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedIdeias.map((idea) => (
+        {/* Ideas List - Single Column Centered */}
+        {sortedIdeias && sortedIdeias.length > 0 ? (
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {sortedIdeias.map((idea, index) => (
               <IdeaCard
                 key={idea.id}
                 ideia={idea}
+                position={index + 1}
                 onVote={() => handleVote(idea)}
                 showVoteButton={true}
+                showPosition={filterType === 'mais-votadas'}
                 hasVotedRecently={recentlyVotedIds.includes(idea.id)}
                 isVoting={votingIds.includes(idea.id)}
               />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
+          <div className="text-center py-8 sm:py-12 max-w-4xl mx-auto">
             <div className="max-w-md mx-auto">
               <div className="w-24 h-24 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
                 <span className="text-4xl">💡</span>
               </div>
-              <h3 className="text-2xl font-semibold mb-3 text-foreground">
-                Nenhuma ideia encontrada
-              </h3>
-              <p className="text-muted-foreground text-lg">
-                Ainda não há ideias disponíveis para votação.
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Nenhuma funcionalidade disponível</h3>
+              <p className="text-sm sm:text-base text-muted-foreground px-4">
+                No momento não há funcionalidades disponíveis para votação.
               </p>
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="text-center mt-8 sm:mt-12 text-xs sm:text-sm text-muted-foreground space-y-2 px-4">
+          <p>iFood Move 2025 - Sistema Saipos de Votação</p>
+          <p>
+            Cada número de telefone pode votar uma vez por funcionalidade
+          </p>
+        </div>
       </div>
 
       <VoteModal
