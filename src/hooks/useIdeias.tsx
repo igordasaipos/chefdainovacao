@@ -27,7 +27,7 @@ export const useIdeias = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('ideias')
-        .select('*')
+        .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, observacao, tipo_cliente, nome_cliente, jira')
         .order('criado_em', { ascending: false });
       
       if (error) throw error;
@@ -42,7 +42,7 @@ export const useIdeiasVotacao = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('ideias')
-        .select('*')
+        .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, observacao, tipo_cliente, nome_cliente, jira')
         .eq('status', 'votacao')
         .order('votos', { ascending: false });
       
