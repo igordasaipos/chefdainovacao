@@ -52,7 +52,7 @@ export const useHasVoted = (ideiaId: string, whatsappVotante?: string) => {
   });
 };
 
-export const useCreateVoto = () => {
+export const useCreateVoto = (onReset?: () => void) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -98,6 +98,9 @@ export const useCreateVoto = () => {
         title: "Voto registrado",
         description: "Seu voto foi registrado com sucesso!",
       });
+      
+      // Reset form after successful vote
+      onReset?.();
     },
     onError: (error: any) => {
       console.error('Erro ao votar:', error);
@@ -117,6 +120,9 @@ export const useCreateVoto = () => {
           variant: "destructive",
         });
       }
+      
+      // Reset form after error
+      onReset?.();
     },
   });
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,21 @@ export const VoteModal = ({
   const [nome, setNome] = useState("");
   const [ehCliente, setEhCliente] = useState("sim");
 
-  const { mutateAsync: createVoto, isPending: isLoading } = useCreateVoto();
+  const resetForm = () => {
+    setNomeRestauranteVotante("");
+    setWhatsappVotante("");
+    setNome("");
+    setEhCliente("sim");
+  };
+
+  // Reset form quando a modal abre
+  useEffect(() => {
+    if (open) {
+      resetForm();
+    }
+  }, [open]);
+
+  const { mutateAsync: createVoto, isPending: isLoading } = useCreateVoto(resetForm);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { data: hasVoted } = useHasVoted(ideia?.id || "", whatsappVotante);
@@ -59,6 +73,7 @@ export const VoteModal = ({
         description: "Você já votou nesta ideia!",
         variant: "destructive",
       });
+      resetForm();
       onOpenChange(false);
       return;
     }
@@ -76,12 +91,6 @@ export const VoteModal = ({
       };
 
       await createVoto(votoData);
-
-      // Reset form
-      setNomeRestauranteVotante("");
-      setWhatsappVotante("");
-      setNome("");
-      setEhCliente("sim");
 
       onVoteSuccess?.(ideia.id);
       onOpenChange(false);
@@ -171,7 +180,10 @@ export const VoteModal = ({
 
         <div className="flex gap-4 pt-4">
           <Button
-            onClick={() => onOpenChange(false)}
+            onClick={() => {
+              resetForm();
+              onOpenChange(false);
+            }}
             variant="outline"
             className="flex-1 h-12 text-base rounded-xl border-2 hover:bg-muted/50 transition-all"
           >
