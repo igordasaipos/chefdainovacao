@@ -32,6 +32,7 @@ export const VoteModal = ({
   const [whatsappVotante, setWhatsappVotante] = useState("");
   const [nome, setNome] = useState("");
   const [ehCliente, setEhCliente] = useState("sim");
+  const [isEditingData, setIsEditingData] = useState(false);
 
   const { userData, saveUserData } = useUserPersistence();
 
@@ -55,6 +56,7 @@ export const VoteModal = ({
   useEffect(() => {
     if (open) {
       resetForm();
+      setIsEditingData(false);
     }
   }, [open, persistUserData, userData]);
 
@@ -125,105 +127,181 @@ export const VoteModal = ({
 
   const isFormValid = ehCliente && whatsappVotante && nome && (ehCliente === "nao" || nomeRestauranteVotante);
 
-  const content = (
-    ideia && (
-      <div className="space-y-4">
-        <div className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
-          <h3 className="font-medium text-sm text-muted-foreground mb-2">Você está votando em:</h3>
-          <p className="font-semibold text-lg text-primary mb-1">{ideia?.titulo}</p>
-          <p className="text-sm text-muted-foreground leading-relaxed">{ideia?.descricao}</p>
-        </div>
+  // Verifica se deve mostrar preview ou formulário completo
+  const hasUserData = persistUserData && userData.nome && userData.whatsappVotante && 
+    (userData.ehCliente === "nao" || userData.nomeRestauranteVotante);
+  
+  const showPreview = hasUserData && !isEditingData;
 
-        <div className="space-y-3">
-          <Label className="text-base font-medium text-foreground">Você é cliente Saipos?</Label>
-          <RadioGroup
-            value={ehCliente}
-            onValueChange={setEhCliente}
-            className="flex flex-row space-x-4"
+  const previewContent = (
+    <div className="space-y-4">
+      <div className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+        <h3 className="font-medium text-sm text-muted-foreground mb-2">Você está votando em:</h3>
+        <p className="font-semibold text-lg text-primary mb-1">{ideia?.titulo}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">{ideia?.descricao}</p>
+      </div>
+
+      <div className="p-4 bg-gradient-to-r from-muted/30 to-muted/10 rounded-xl border border-muted/30">
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="font-medium text-base text-foreground">Votando como:</h4>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsEditingData(true)}
+            className="text-primary hover:text-primary/80 text-sm h-8 px-3"
           >
-            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="sim" id="sim" className="border-2" />
-              <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
-            </div>
-            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="nao" id="nao" className="border-2" />
-              <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
-            </div>
-          </RadioGroup>
+            Editar dados
+          </Button>
         </div>
-
-        {ehCliente === "sim" && (
-          <div className="space-y-2">
-            <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
-              Nome da loja ou ID Saipos ou CNPJ
-            </Label>
-            <Input
-              id="nome-restaurante"
-              type="text"
-              value={nomeRestauranteVotante}
-              onChange={(e) => setNomeRestauranteVotante(e.target.value)}
-              placeholder="Digite o nome da sua loja, ID Saipos ou CNPJ"
-              className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-              autoFocus={false}
-              tabIndex={-1}
-            />
+        
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-muted-foreground min-w-[80px]">Nome:</span>
+            <span className="text-foreground">{userData.nome}</span>
           </div>
-        )}
-
-        <div className="space-y-2">
-          <Label htmlFor="whatsapp" className="text-base font-medium text-foreground">
-            WhatsApp
-          </Label>
-          <Input
-            id="whatsapp"
-            type="tel"
-            value={whatsappVotante}
-            onChange={handleWhatsAppChange}
-            placeholder="(11) 99999-9999"
-            className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-            autoFocus={false}
-            tabIndex={-1}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="nome" className="text-base font-medium text-foreground">
-            Seu Nome
-          </Label>
-          <Input
-            id="nome"
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            placeholder="Digite seu nome"
-            className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-            autoFocus={false}
-            tabIndex={-1}
-          />
-        </div>
-
-        <div className="flex gap-4 pt-4">
-          <Button
-            onClick={() => {
-              resetForm();
-              onOpenChange(false);
-            }}
-            variant="outline"
-            className="flex-1 h-12 text-base rounded-xl border-2 hover:bg-muted/50 transition-all"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isLoading || !isFormValid}
-            className="flex-1 h-12 text-base rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all shadow-lg disabled:opacity-50"
-          >
-            {isLoading ? "Votando..." : "Confirmar Voto"}
-          </Button>
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-muted-foreground min-w-[80px]">WhatsApp:</span>
+            <span className="text-foreground">{userData.whatsappVotante}</span>
+          </div>
+          {userData.ehCliente === "sim" && userData.nomeRestauranteVotante && (
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-muted-foreground min-w-[80px]">Loja:</span>
+              <span className="text-foreground">{userData.nomeRestauranteVotante}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-muted-foreground min-w-[80px]">Cliente:</span>
+            <span className="text-foreground">{userData.ehCliente === "sim" ? "Sou cliente Saipos" : "Não sou cliente"}</span>
+          </div>
         </div>
       </div>
-    )
+
+      <div className="flex gap-4 pt-2">
+        <Button
+          onClick={() => {
+            resetForm();
+            onOpenChange(false);
+          }}
+          variant="outline"
+          className="flex-1 h-12 text-base rounded-xl border-2 hover:bg-muted/50 transition-all"
+        >
+          Cancelar
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className="flex-1 h-12 text-base rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all shadow-lg disabled:opacity-50"
+        >
+          {isLoading ? "Votando..." : "Confirmar Voto"}
+        </Button>
+      </div>
+    </div>
   );
+
+  const formContent = (
+    <div className="space-y-4">
+      <div className="p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+        <h3 className="font-medium text-sm text-muted-foreground mb-2">Você está votando em:</h3>
+        <p className="font-semibold text-lg text-primary mb-1">{ideia?.titulo}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">{ideia?.descricao}</p>
+      </div>
+
+      <div className="space-y-3">
+        <Label className="text-base font-medium text-foreground">Você é cliente Saipos?</Label>
+        <RadioGroup
+          value={ehCliente}
+          onValueChange={setEhCliente}
+          className="flex flex-row space-x-4"
+        >
+          <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+            <RadioGroupItem value="sim" id="sim" className="border-2" />
+            <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
+          </div>
+          <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+            <RadioGroupItem value="nao" id="nao" className="border-2" />
+            <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      {ehCliente === "sim" && (
+        <div className="space-y-2">
+          <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
+            Nome da loja ou ID Saipos ou CNPJ
+          </Label>
+          <Input
+            id="nome-restaurante"
+            type="text"
+            value={nomeRestauranteVotante}
+            onChange={(e) => setNomeRestauranteVotante(e.target.value)}
+            placeholder="Digite o nome da sua loja, ID Saipos ou CNPJ"
+            className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+            autoFocus={false}
+            tabIndex={-1}
+          />
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="whatsapp" className="text-base font-medium text-foreground">
+          WhatsApp
+        </Label>
+        <Input
+          id="whatsapp"
+          type="tel"
+          value={whatsappVotante}
+          onChange={handleWhatsAppChange}
+          placeholder="(11) 99999-9999"
+          className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+          autoFocus={false}
+          tabIndex={-1}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="nome" className="text-base font-medium text-foreground">
+          Seu Nome
+        </Label>
+        <Input
+          id="nome"
+          type="text"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          placeholder="Digite seu nome"
+          className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+          autoFocus={false}
+          tabIndex={-1}
+        />
+      </div>
+
+      <div className="flex gap-4 pt-4">
+        <Button
+          onClick={() => {
+            if (isEditingData) {
+              setIsEditingData(false);
+              resetForm();
+            } else {
+              resetForm();
+              onOpenChange(false);
+            }
+          }}
+          variant="outline"
+          className="flex-1 h-12 text-base rounded-xl border-2 hover:bg-muted/50 transition-all"
+        >
+          {isEditingData ? "Voltar" : "Cancelar"}
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={isLoading || !isFormValid}
+          className="flex-1 h-12 text-base rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all shadow-lg disabled:opacity-50"
+        >
+          {isLoading ? "Votando..." : "Confirmar Voto"}
+        </Button>
+      </div>
+    </div>
+  );
+
+  const content = ideia && (showPreview ? previewContent : formContent);
 
   if (isMobile) {
     return (
