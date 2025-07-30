@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useCreateVoto } from '@/hooks/useVotos';
 import { Ideia } from '@/hooks/useIdeias';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useVisualViewport } from '@/hooks/useVisualViewport';
 
 interface VoteModalProps {
   open: boolean;
@@ -32,6 +33,7 @@ export const VoteModal = ({
   const [ehCliente, setEhCliente] = useState('true'); // 'true' for cliente, 'false' for não cliente
   const createVoto = useCreateVoto();
   const isMobile = useIsMobile();
+  const { height: viewportHeight, isKeyboardOpen } = useVisualViewport();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,13 +201,30 @@ export const VoteModal = ({
   );
 
   if (isMobile) {
+    // Calculate dynamic height based on viewport changes
+    const dynamicMaxHeight = isKeyboardOpen 
+      ? Math.min(viewportHeight - 20, window.innerHeight * 0.6)
+      : Math.min(window.innerHeight * 0.9, viewportHeight - 20);
+
     return (
       <Drawer open={open} onOpenChange={onOpenChange} shouldScaleBackground={false}>
-        <DrawerContent className="max-h-[90vh] px-4 pb-safe focus-within:max-h-[70vh] ios-keyboard-adjust">
-          <DrawerHeader className="px-0">
+        <DrawerContent 
+          className="px-4 pb-safe border-t-0"
+          style={{
+            maxHeight: `${dynamicMaxHeight}px`,
+            height: 'auto',
+            minHeight: '300px'
+          }}
+        >
+          <DrawerHeader className="px-0 pb-2">
             <DrawerTitle className="text-lg text-left">Confirmar seu voto</DrawerTitle>
           </DrawerHeader>
-          <div className="overflow-y-auto flex-1 pb-4">
+          <div 
+            className="overflow-y-auto flex-1 pb-4 scrollbar-thin"
+            style={{
+              maxHeight: `${dynamicMaxHeight - 100}px` // Account for header
+            }}
+          >
             {formContent}
           </div>
         </DrawerContent>
