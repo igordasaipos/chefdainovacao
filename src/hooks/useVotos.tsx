@@ -8,6 +8,7 @@ export interface Voto {
   telefone_votante: string;
   nome_restaurante_votante: string;
   whatsapp_votante: string;
+  nome_votante: string;
   eh_cliente: boolean;
   created_at: string;
 }

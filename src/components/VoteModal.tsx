@@ -54,7 +54,7 @@ export const VoteModal = ({
     try {
       const votoData = {
         ideia_id: ideia.id,
-        nome_restaurante_votante: ehCliente === "nao" ? nomeRestauranteVotante : null,
+        nome_restaurante_votante: ehCliente === "sim" ? nomeRestauranteVotante : "",
         whatsapp_votante: whatsappVotante,
         telefone_votante: whatsappVotante,
         nome_votante: nome,
@@ -76,7 +76,7 @@ export const VoteModal = ({
     }
   };
 
-  const isFormValid = ehCliente && whatsappVotante && nome && (ehCliente === "sim" || nomeRestauranteVotante);
+  const isFormValid = ehCliente && whatsappVotante && nome && (ehCliente === "nao" || nomeRestauranteVotante);
 
   const content = (
     ideia && (
@@ -105,19 +105,20 @@ export const VoteModal = ({
           </RadioGroup>
         </div>
 
-        {ehCliente === "nao" && (
+        {ehCliente === "sim" && (
           <div className="space-y-2">
             <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
-              Nome do Restaurante ou ID do Parceiro
+              Nome da loja ou ID Saipos ou CNPJ
             </Label>
             <Input
               id="nome-restaurante"
               type="text"
               value={nomeRestauranteVotante}
               onChange={(e) => setNomeRestauranteVotante(e.target.value)}
-              placeholder="Digite o nome do seu restaurante ou ID"
+              placeholder="Digite o nome da sua loja, ID Saipos ou CNPJ"
               className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
               autoFocus={false}
+              tabIndex={-1}
             />
           </div>
         )}
@@ -134,6 +135,7 @@ export const VoteModal = ({
             placeholder="(11) 99999-9999"
             className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
             autoFocus={false}
+            tabIndex={-1}
           />
         </div>
 
@@ -149,6 +151,7 @@ export const VoteModal = ({
             placeholder="Digite seu nome"
             className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
             autoFocus={false}
+            tabIndex={-1}
           />
         </div>
 
