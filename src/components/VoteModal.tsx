@@ -92,7 +92,7 @@ export const VoteModal = ({
           <RadioGroup
             value={ehCliente}
             onValueChange={setEhCliente}
-            className="flex flex-col space-y-3"
+            className="flex flex-row space-x-4"
           >
             <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="sim" id="sim" className="border-2" />
