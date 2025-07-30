@@ -16,6 +16,8 @@ const Votar = () => {
   const [selectedIdeia, setSelectedIdeia] = useState<Ideia | null>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [filterType, setFilterType] = useState<string>('mais-votadas');
+  const [recentlyVotedIds, setRecentlyVotedIds] = useState<Set<string>>(new Set());
+  const [votingIds, setVotingIds] = useState<Set<string>>(new Set());
 
   // Dynamic sorting based on filter type
   const sortedIdeias = useMemo(() => {
@@ -74,6 +76,39 @@ const Votar = () => {
       refetch();
       refetchVotes();
     }
+  };
+
+  const handleVoteSuccess = (ideiaId: string) => {
+    // Remove from voting state
+    setVotingIds(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(ideiaId);
+      return newSet;
+    });
+    
+    // Add to recently voted
+    setRecentlyVotedIds(prev => {
+      const newSet = new Set(prev);
+      newSet.add(ideiaId);
+      return newSet;
+    });
+    
+    // Remove from recently voted after 3 seconds
+    setTimeout(() => {
+      setRecentlyVotedIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(ideiaId);
+        return newSet;
+      });
+    }, 3000);
+  };
+
+  const handleVoteStart = (ideiaId: string) => {
+    setVotingIds(prev => {
+      const newSet = new Set(prev);
+      newSet.add(ideiaId);
+      return newSet;
+    });
   };
 
   const totalVotos = ideias?.reduce((sum, ideia) => sum + ideia.votos, 0) || 0;
@@ -136,6 +171,8 @@ const Votar = () => {
                 onVote={() => handleVote(ideia)}
                 showVoteButton={true}
                 showPosition={filterType === 'mais-votadas'}
+                hasVotedRecently={recentlyVotedIds.has(ideia.id)}
+                isVoting={votingIds.has(ideia.id)}
               />
             ))}
           </div>
@@ -164,6 +201,8 @@ const Votar = () => {
           open={isVoteModalOpen}
           onOpenChange={handleModalClose}
           ideia={selectedIdeia}
+          onVoteStart={handleVoteStart}
+          onVoteSuccess={handleVoteSuccess}
         />
       </div>
     </div>

@@ -12,6 +12,8 @@ interface IdeaCardProps {
   onVote?: () => void;
   showVoteButton?: boolean;
   showPosition?: boolean;
+  hasVotedRecently?: boolean;
+  isVoting?: boolean;
 }
 
 export const IdeaCard = ({ 
@@ -19,7 +21,9 @@ export const IdeaCard = ({
   position, 
   onVote, 
   showVoteButton = false, 
-  showPosition = false
+  showPosition = false,
+  hasVotedRecently = false,
+  isVoting = false
 }: IdeaCardProps) => {
   return (
     <Card className="w-full bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -61,10 +65,33 @@ export const IdeaCard = ({
             {showVoteButton && onVote && (
               <Button 
                 onClick={onVote}
-                className="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                disabled={hasVotedRecently || isVoting}
+                className={`
+                  font-medium px-6 py-2 rounded-lg flex items-center gap-2 transition-all duration-300
+                  ${hasVotedRecently 
+                    ? 'bg-green-700 hover:bg-green-700 text-white' 
+                    : isVoting 
+                      ? 'bg-green-400 hover:bg-green-400 text-white animate-pulse' 
+                      : 'bg-green-500 hover:bg-green-600 text-white'
+                  }
+                `}
               >
-                <ThumbsUp className="h-4 w-4" />
-                Votar
+                {hasVotedRecently ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Votado!
+                  </>
+                ) : isVoting ? (
+                  <>
+                    <ThumbsUp className="h-4 w-4 animate-pulse" />
+                    Votando...
+                  </>
+                ) : (
+                  <>
+                    <ThumbsUp className="h-4 w-4" />
+                    Votar
+                  </>
+                )}
               </Button>
             )}
           </div>

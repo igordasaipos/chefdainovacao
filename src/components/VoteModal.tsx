@@ -11,12 +11,16 @@ interface VoteModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   ideia: Ideia | null;
+  onVoteStart?: (ideiaId: string) => void;
+  onVoteSuccess?: (ideiaId: string) => void;
 }
 
 export const VoteModal = ({
   open,
   onOpenChange,
-  ideia
+  ideia,
+  onVoteStart,
+  onVoteSuccess
 }: VoteModalProps) => {
   const [formData, setFormData] = useState({
     nome_restaurante_votante: '',
@@ -38,6 +42,11 @@ export const VoteModal = ({
     };
 
     try {
+      // Notify parent component that voting started
+      if (onVoteStart) {
+        onVoteStart(ideia.id);
+      }
+
       await createVoto.mutateAsync(votoData);
       
       // Reset form after successful vote
@@ -46,6 +55,11 @@ export const VoteModal = ({
         whatsapp_votante: ''
       });
       setEhCliente('true');
+      
+      // Notify parent component of successful vote
+      if (onVoteSuccess) {
+        onVoteSuccess(ideia.id);
+      }
       
       onOpenChange(false);
     } catch (error) {
