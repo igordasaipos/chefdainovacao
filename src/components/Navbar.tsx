@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button"
 export function Navbar() {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const isTotemRoute = location.pathname === "/totem"
+  
   const isActive = (path: string) => {
     if (path === "/votar") {
       return location.pathname === "/votar" || location.pathname === "/totem"
@@ -22,13 +24,15 @@ export function Navbar() {
     return location.pathname === path
   }
 
+  const getVotarLink = () => isTotemRoute ? "/totem" : "/votar"
+
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center">
-          <Link to="/votar" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+          <Link to={getVotarLink()} className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
             <img src="/lovable-uploads/a90576ab-4829-4164-ba8c-928d19fe5bed.png" alt="Logo" className="w-8 h-8" />
             <span className="text-xl font-semibold text-muted-foreground">|</span>
             <h1 className="text-xl font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -41,7 +45,7 @@ export function Navbar() {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to="/votar">
+              <Link to={getVotarLink()}>
                 <NavigationMenuLink
                   className={cn(
                     navigationMenuTriggerStyle(),
@@ -90,7 +94,7 @@ export function Navbar() {
         <div className="md:hidden border-t bg-background/95 backdrop-blur">
           <div className="container py-4 space-y-2 safe-area-padding">
             <Link
-              to="/votar"
+              to={getVotarLink()}
               onClick={() => setIsMobileMenuOpen(false)}
               className={cn(
                 "block w-full px-4 py-3 text-left font-medium rounded-md transition-colors",
