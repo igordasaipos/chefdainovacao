@@ -88,7 +88,7 @@ export const VoteModal = ({
         </div>
 
         <div className="space-y-4">
-          <Label className="text-base font-medium text-foreground">Você é cliente do iFood?</Label>
+          <Label className="text-base font-medium text-foreground">Você é cliente Saipos?</Label>
           <RadioGroup
             value={ehCliente}
             onValueChange={setEhCliente}
@@ -96,11 +96,11 @@ export const VoteModal = ({
           >
             <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="sim" id="sim" className="border-2" />
-              <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sim, sou cliente</Label>
+              <Label htmlFor="sim" className="text-sm font-medium flex-1 cursor-pointer">Sou cliente</Label>
             </div>
             <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
               <RadioGroupItem value="nao" id="nao" className="border-2" />
-              <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não, sou restaurante parceiro</Label>
+              <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
             </div>
           </RadioGroup>
         </div>
