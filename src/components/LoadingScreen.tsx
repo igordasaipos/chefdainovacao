@@ -36,7 +36,7 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="flex flex-col items-center justify-center space-y-4 p-8">
         {/* Container da animação Lottie */}
-        <div className="w-48 h-48 flex items-center justify-center">
+        <div className="w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center">
           {animationData && (
             <Player
               play
@@ -48,9 +48,9 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
         </div>
         
         {/* Texto de carregamento */}
-        <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">Saipos Chef da Inovação</h2>
-          <p className="text-muted-foreground animate-pulse">Carregando sistema de votação...</p>
+        <div className="text-center space-y-2 sm:space-y-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground">Saipos Chef da Inovação</h2>
+          <p className="text-muted-foreground">Carregando sistema de votação...</p>
         </div>
       </div>
     </div>
