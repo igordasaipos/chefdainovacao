@@ -10,7 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { useUserPersistence } from "@/hooks/useUserPersistence";
 import type { Ideia } from "@/hooks/useIdeias";
-import { formatWhatsApp } from "@/lib/utils";
+import { formatWhatsApp, isValidWhatsApp } from "@/lib/utils";
 
 interface VoteModalProps {
   open: boolean;
@@ -117,7 +117,7 @@ export const VoteModal = ({
     }
   };
 
-  const isFormValid = ehCliente && whatsappVotante && nome && (ehCliente === "nao" || nomeRestauranteVotante);
+  const isFormValid = ehCliente && whatsappVotante && isValidWhatsApp(whatsappVotante) && nome && (ehCliente === "nao" || nomeRestauranteVotante);
 
   // Verifica se deve mostrar preview ou formulário completo
   const hasUserData = persistUserData && userData.nome && userData.whatsappVotante && 

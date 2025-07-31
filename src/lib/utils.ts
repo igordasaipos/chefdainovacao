@@ -23,3 +23,8 @@ export function formatWhatsApp(value: string): string {
   
   return numericValue;
 }
+
+export function isValidWhatsApp(value: string): boolean {
+  const numericValue = value.replace(/\D/g, "");
+  return numericValue.length === 11;
+}
