@@ -82,6 +82,8 @@ export default function Totem() {
           src="/lovable-uploads/c3122bba-ee99-408f-bab6-c598e83287fb.png" 
           alt="Chef da Inovação - Caixinha de Ideias" 
           className="w-full h-auto object-contain max-h-48"
+          loading="eager"
+          decoding="async"
         />
       </div>
 

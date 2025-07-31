@@ -102,7 +102,8 @@ export default function Votar() {
               src="/lovable-uploads/6b51c7c0-de52-402b-8bd3-ecefa2ef43aa.png"
               alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
               className="w-full h-auto rounded-lg shadow-sm"
-              loading="lazy"
+              loading="eager"
+              decoding="async"
             />
           </div>
         </div>
