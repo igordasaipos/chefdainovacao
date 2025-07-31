@@ -49,7 +49,7 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
         
         {/* Texto de carregamento */}
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold text-foreground">Saipos Chefe da Inovação</h2>
+          <h2 className="text-2xl font-bold text-foreground">Saipos Chef da Inovação</h2>
           <p className="text-muted-foreground animate-pulse">Carregando sistema de votação...</p>
         </div>
       </div>
