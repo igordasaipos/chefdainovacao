@@ -171,7 +171,7 @@ export default function Votar() {
 
         {/* Footer */}
         <div className="text-center mt-8 sm:mt-12 text-xs sm:text-sm text-muted-foreground space-y-2 px-4">
-          <p>iFood Move 2025 - Sistema Saipos de Votação</p>
+          <p>iFood Move 2025 - Saipos Chefe da Inovação</p>
           <p>
             Cada número de telefone pode votar uma vez por funcionalidade
           </p>
