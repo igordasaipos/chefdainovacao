@@ -41,7 +41,6 @@ const Admin = () => {
     status: 'caixinha' | 'votacao' | 'desenvolvimento' | 'finalizado' | 'backlog';
     observacao: string;
     jira: string;
-    admin_criador: string;
   }>({
     titulo: '',
     descricao: '',
@@ -52,8 +51,7 @@ const Admin = () => {
     complexidade: '1h30',
     status: 'caixinha',
     observacao: '',
-    jira: '',
-    admin_criador: ''
+    jira: ''
   });
   const [editingIdea, setEditingIdea] = useState<Ideia | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -205,8 +203,7 @@ const Admin = () => {
       complexidade: '1h30',
       status: 'caixinha',
       observacao: '',
-      jira: '',
-      admin_criador: ''
+      jira: ''
     });
     setEditingIdea(null);
     setIsFormOpen(false);
@@ -226,8 +223,7 @@ const Admin = () => {
       complexidade: ideia.complexidade === 'complexa' ? 'caixinha' : ideia.complexidade,
       status: ideia.status,
       observacao: observacao,
-      jira: jira,
-      admin_criador: ideia.admin_criador || ''
+      jira: jira
     });
     setEditingIdea(ideia);
     setIsFormOpen(true);
@@ -362,8 +358,7 @@ const Admin = () => {
               complexidade: '1h30',
               status: 'caixinha',
               observacao: '',
-              jira: '',
-              admin_criador: ''
+              jira: ''
             });
             setIsFormOpen(true);
           }} className="bg-black text-white hover:bg-gray-800" data-qa="admin-create-idea-button">
@@ -747,17 +742,15 @@ const Admin = () => {
               }))} required />
               </div>
 
+              {/* Creator Info - Read Only */}
               <div className="space-y-2">
-                <Label htmlFor="criador">Criador da Ideia</Label>
-                <Input 
-                  id="criador" 
-                  value={ideaForm.admin_criador || ''} 
-                  onChange={e => setIdeaForm(prev => ({
-                    ...prev,
-                    admin_criador: e.target.value
-                  }))} 
-                  placeholder="Email do admin criador"
-                />
+                <Label>Criado por</Label>
+                <div className="px-3 py-2 bg-muted rounded-md text-sm text-muted-foreground">
+                  {editingIdea 
+                    ? `${getAdminFirstName(editingIdea.admin_criador || 'Sistema')} (${editingIdea.admin_criador || 'sistema@admin.com'})` 
+                    : `${getAdminFirstName(adminEmail || 'Sistema')} (${adminEmail || 'sistema@admin.com'})`
+                  }
+                </div>
               </div>
 
                <div className="space-y-2">
