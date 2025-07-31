@@ -274,7 +274,7 @@ const Admin = () => {
   };
   // Helper function to extract first name from admin email
   const getAdminFirstName = (adminEmail: string) => {
-    if (!adminEmail) return 'Sistema';
+    if (!adminEmail || adminEmail === 'Sistema') return 'Sistema';
     
     // Extract the part before @ symbol
     const emailPrefix = adminEmail.split('@')[0];
@@ -283,7 +283,8 @@ const Admin = () => {
     // Otherwise, take the whole prefix
     const firstName = emailPrefix.includes('.') ? emailPrefix.split('.')[0] : emailPrefix;
     
-    return firstName;
+    // Capitalize first letter and make the rest lowercase
+    return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   };
 
   const filteredAndSortedIdeias = ideias?.filter(ideia => {
