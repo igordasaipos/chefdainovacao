@@ -633,7 +633,7 @@ const Admin = () => {
                       <td className="px-6 py-4">
                         <div className="text-sm">
                           <div className="font-medium text-gray-900">
-                            {ideia.admin_criador ? getAdminFirstName(ideia.admin_criador) : 'Não informado'}
+                            {getAdminFirstName(ideia.admin_criador || '')}
                           </div>
                           {ideia.admin_criador && (
                             <div className="text-xs text-gray-500">{ideia.admin_criador}</div>
@@ -749,11 +749,9 @@ const Admin = () => {
               <div className="space-y-2">
                 <Label>Criado por</Label>
                 <div className="px-3 py-2 bg-muted rounded-md text-sm text-muted-foreground">
-                  {editingIdea?.admin_criador 
-                    ? `${getAdminFirstName(editingIdea.admin_criador)} (${editingIdea.admin_criador})` 
-                    : adminEmail 
-                      ? `${getAdminFirstName(adminEmail)} (${adminEmail})`
-                      : 'Não informado'
+                  {editingIdea 
+                    ? `${getAdminFirstName(editingIdea.admin_criador || '')} ${editingIdea.admin_criador ? `(${editingIdea.admin_criador})` : ''}` 
+                    : `${getAdminFirstName(adminEmail || '')} ${adminEmail ? `(${adminEmail})` : ''}`
                   }
                 </div>
               </div>
