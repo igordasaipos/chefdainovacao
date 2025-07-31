@@ -120,7 +120,7 @@ const Admin = () => {
       observacao: "",
       tipo_cliente: "cliente" as const,
       nome_cliente: "João Silva",
-      admin_criador: adminEmail || "admin@sistema.com",
+      admin_criador: adminEmail || "",
       jira: ""
     }, {
       titulo: "Sistema de avaliações detalhadas",
@@ -134,7 +134,7 @@ const Admin = () => {
       observacao: "",
       tipo_cliente: "cliente" as const,
       nome_cliente: "Maria Silva",
-      admin_criador: adminEmail || "admin@sistema.com",
+      admin_criador: adminEmail || "",
       jira: ""
     }, {
       titulo: "Chat em tempo real com restaurante",
@@ -148,7 +148,7 @@ const Admin = () => {
       observacao: "",
       tipo_cliente: "cliente" as const,
       nome_cliente: "Maria Santos",
-      admin_criador: adminEmail || "admin@sistema.com",
+      admin_criador: adminEmail || "",
       jira: ""
     }];
     const ideiasComVotos = exampleIdeas.map((idea, index) => ({
@@ -179,7 +179,7 @@ const Admin = () => {
       observacao: ideaForm.observacao,
       tipo_cliente: ideaForm.cliente_tipo,
       nome_cliente: ideaForm.nome,
-      admin_criador: adminEmail || "admin@sistema.com",
+      admin_criador: adminEmail || "",
       jira: ideaForm.jira
     };
     
@@ -274,7 +274,7 @@ const Admin = () => {
   };
   // Helper function to extract first name from admin email
   const getAdminFirstName = (adminEmail: string) => {
-    if (!adminEmail || adminEmail === 'Sistema') return 'Sistema';
+    if (!adminEmail) return 'Não informado';
     
     // Extract the part before @ symbol
     const emailPrefix = adminEmail.split('@')[0];
@@ -633,8 +633,11 @@ const Admin = () => {
                       <td className="px-6 py-4">
                         <div className="text-sm">
                           <div className="font-medium text-gray-900">
-                            {getAdminFirstName(ideia.admin_criador || 'Sistema')}
+                            {ideia.admin_criador ? getAdminFirstName(ideia.admin_criador) : 'Não informado'}
                           </div>
+                          {ideia.admin_criador && (
+                            <div className="text-xs text-gray-500">{ideia.admin_criador}</div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -746,9 +749,11 @@ const Admin = () => {
               <div className="space-y-2">
                 <Label>Criado por</Label>
                 <div className="px-3 py-2 bg-muted rounded-md text-sm text-muted-foreground">
-                  {editingIdea 
-                    ? `${getAdminFirstName(editingIdea.admin_criador || 'Sistema')} (${editingIdea.admin_criador || 'sistema@admin.com'})` 
-                    : `${getAdminFirstName(adminEmail || 'Sistema')} (${adminEmail || 'sistema@admin.com'})`
+                  {editingIdea?.admin_criador 
+                    ? `${getAdminFirstName(editingIdea.admin_criador)} (${editingIdea.admin_criador})` 
+                    : adminEmail 
+                      ? `${getAdminFirstName(adminEmail)} (${adminEmail})`
+                      : 'Não informado'
                   }
                 </div>
               </div>
