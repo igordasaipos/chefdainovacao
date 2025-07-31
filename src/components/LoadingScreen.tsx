@@ -6,7 +6,6 @@ interface LoadingScreenProps {
 }
 
 export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
-  const [showFallback, setShowFallback] = useState(false)
   const [animationData, setAnimationData] = useState(null)
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
     fetch('/lovable-uploads/loading-animation.json')
       .then(response => response.json())
       .then(data => setAnimationData(data))
-      .catch(() => setShowFallback(true))
+      .catch(() => console.log('Lottie animation not found'))
   }, [])
 
   useEffect(() => {
@@ -31,16 +30,13 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
       <div className="flex flex-col items-center justify-center space-y-4 p-8">
         {/* Container da animação Lottie */}
         <div className="w-64 h-64 flex items-center justify-center">
-          {!showFallback && animationData ? (
+          {animationData && (
             <Player
               play
               loop
               animationData={animationData}
               style={{ width: '100%', height: '100%' }}
             />
-          ) : (
-            // Fallback - animação CSS simples
-            <div className="w-24 h-24 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           )}
         </div>
         
