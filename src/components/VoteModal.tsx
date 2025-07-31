@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { useUserPersistence } from "@/hooks/useUserPersistence";
 import type { Ideia } from "@/hooks/useIdeias";
+import { formatWhatsApp } from "@/lib/utils";
 
 interface VoteModalProps {
   open: boolean;
@@ -66,17 +67,8 @@ export const VoteModal = ({
   const { data: hasVoted } = useHasVoted(ideia?.id || "", whatsappVotante);
 
   const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-    if (value.length <= 11) {
-      if (value.length > 6) {
-        value = value.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-      } else if (value.length > 2) {
-        value = value.replace(/(\d{2})(\d{0,5})/, "($1) $2");
-      } else if (value.length > 0) {
-        value = value.replace(/(\d{0,2})/, "($1");
-      }
-    }
-    setWhatsappVotante(value);
+    const formattedValue = formatWhatsApp(e.target.value);
+    setWhatsappVotante(formattedValue);
   };
 
   const handleSubmit = async () => {
