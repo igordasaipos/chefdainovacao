@@ -9,11 +9,18 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
   const [animationData, setAnimationData] = useState(null)
 
   useEffect(() => {
-    // Carrega a animação Lottie
-    fetch('/lovable-uploads/loading-animation.json')
-      .then(response => response.json())
-      .then(data => setAnimationData(data))
-      .catch(() => console.log('Lottie animation not found'))
+    // Carrega a animação Lottie imediatamente
+    const loadAnimation = async () => {
+      try {
+        const response = await fetch('/lovable-uploads/loading-animation.json')
+        const data = await response.json()
+        setAnimationData(data)
+      } catch (error) {
+        console.log('Lottie animation not found')
+      }
+    }
+    
+    loadAnimation()
   }, [])
 
   useEffect(() => {
@@ -30,13 +37,15 @@ export const LoadingScreen = ({ onLoadingComplete }: LoadingScreenProps) => {
       <div className="flex flex-col items-center justify-center space-y-4 p-8">
         {/* Container da animação Lottie */}
         <div className="w-64 h-64 flex items-center justify-center">
-          {animationData && (
+          {animationData ? (
             <Player
               play
               loop
               animationData={animationData}
               style={{ width: '100%', height: '100%' }}
             />
+          ) : (
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           )}
         </div>
         
