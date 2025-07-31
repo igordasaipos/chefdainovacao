@@ -16,6 +16,7 @@ import { ComplexityBadge } from '@/components/ComplexityBadge';
 import { LogOut, Plus, Edit2, Trash2, Download, BarChart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
+import { formatWhatsApp } from '@/lib/utils';
 const Admin = () => {
   const {
     adminEmail,
@@ -731,10 +732,19 @@ const Admin = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="whatsapp">WhatsApp *</Label>
-                <Input id="whatsapp" value={ideaForm.whatsapp} onChange={e => setIdeaForm(prev => ({
-                ...prev,
-                whatsapp: e.target.value
-              }))} placeholder="(11) 99999-9999" required />
+                <Input 
+                  id="whatsapp" 
+                  value={ideaForm.whatsapp} 
+                  onChange={e => {
+                    const formattedValue = formatWhatsApp(e.target.value);
+                    setIdeaForm(prev => ({
+                      ...prev,
+                      whatsapp: formattedValue
+                    }));
+                  }} 
+                  placeholder="(11) 99999-9999" 
+                  required 
+                />
               </div>
 
               <div className="space-y-2">
