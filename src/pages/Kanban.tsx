@@ -107,7 +107,7 @@ const Kanban = () => {
                 onClick={() => setActiveTab(index)} 
                 className={cn(
                   "flex-shrink-0 min-w-[120px] min-h-[44px] text-xs touch-target transition-all",
-                  activeTab === index ? "bg-primary text-primary-foreground" : "active:bg-accent/70"
+                  activeTab === index ? "bg-primary text-primary-foreground" : "hover:bg-background active:bg-accent/70"
                 )}
                 data-qa={`kanban-tab-${column.title.toLowerCase()}`}
               >
