@@ -102,12 +102,7 @@ const Admin = () => {
     }
   }, [isAdmin]);
 
-  // Add example ideas on first load
-  useEffect(() => {
-    if (isAdmin && ideias && ideias.length === 0) {
-      addExampleIdeas();
-    }
-  }, [isAdmin, ideias]);
+  // Function to manually add example ideas (removed automatic creation)
   const addExampleIdeas = async () => {
     const exampleIdeas = [{
       titulo: "Melhorar filtros de busca",
@@ -365,6 +360,14 @@ const Admin = () => {
           }} className="bg-black text-white hover:bg-gray-800" data-qa="admin-create-idea-button">
               <Plus className="h-4 w-4 mr-2" />
               Nova Ideia
+            </Button>
+            <Button 
+              onClick={addExampleIdeas}
+              variant="outline"
+              className="text-gray-700 border-gray-300 hover:bg-gray-50"
+            >
+              <BarChart className="h-4 w-4 mr-2" />
+              Criar Dados de Teste
             </Button>
             <Button 
               onClick={signOut}
