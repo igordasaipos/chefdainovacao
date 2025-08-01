@@ -99,7 +99,7 @@ export default function Votar() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <img 
-              src="/lovable-uploads/6b51c7c0-de52-402b-8bd3-ecefa2ef43aa.png"
+              src="/lovable-uploads/chefedainovacao.webp"
               alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
               className="w-full h-auto rounded-lg shadow-sm"
               loading="eager"
