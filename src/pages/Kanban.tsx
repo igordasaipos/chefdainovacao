@@ -133,7 +133,7 @@ const Kanban = () => {
 
         {/* Info Footer */}
         <div className="text-center mt-8 sm:mt-12 space-y-2 px-4">
-          <p className="text-xs sm:text-sm text-muted-foreground">Atualizações em tempo real • Saipos - Ifood Move 2025</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">Atualizações em tempo real • Saipos - iFood Move 2025</p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
