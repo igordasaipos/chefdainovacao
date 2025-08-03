@@ -109,14 +109,14 @@ export default function Votar() {
               decoding="async"
             />
             
-            {/* Floating Help Button */}
+            {/* Fixed Vertical Help Button */}
             <Button
               onClick={() => setIsHelpModalOpen(true)}
-              className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg hover:scale-105 transition-transform px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-full z-10"
+              className="fixed right-0 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg hover:scale-105 transition-transform p-3 rounded-l-lg rounded-r-none z-50 writing-mode-vertical"
+              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
             >
-              <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Como sugerir uma ideia?</span>
-              <span className="sm:hidden">Sugerir</span>
+              <Lightbulb className="h-4 w-4 mb-2" />
+              <span className="text-sm font-medium">Como sugerir uma ideia?</span>
             </Button>
           </div>
         </div>
