@@ -112,11 +112,11 @@ export default function Votar() {
             {/* Fixed Vertical Help Button */}
             <Button
               onClick={() => setIsHelpModalOpen(true)}
-              className="fixed right-0 top-1/2 -translate-y-1/2 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg hover:scale-105 transition-transform py-4 px-3 rounded-l-lg rounded-r-none z-50"
-              style={{ writingMode: 'vertical-rl', textOrientation: 'upright' }}
+              className="fixed right-0 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transition-transform px-4 py-6 rounded-l-lg rounded-r-none z-50 flex flex-col items-center justify-center gap-2"
             >
-              <Lightbulb className="h-4 w-4 mb-2" />
-              <span className="text-sm font-medium">Como sugerir uma ideia?</span>
+              <div className="transform -rotate-90 whitespace-nowrap text-sm font-medium">
+                Como sugerir uma ideia?
+              </div>
             </Button>
           </div>
         </div>
