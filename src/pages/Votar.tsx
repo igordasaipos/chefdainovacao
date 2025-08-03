@@ -109,19 +109,22 @@ export default function Votar() {
               decoding="async"
             />
             
-            {/* Fixed Vertical Help Button */}
-            <Button
-              onClick={() => setIsHelpModalOpen(true)}
-              className="fixed right-0 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:scale-105 transition-transform px-4 py-6 rounded-l-lg rounded-r-none z-50 flex flex-col items-center justify-center gap-2"
-            >
-              <div className="transform -rotate-90 whitespace-nowrap text-sm font-medium">
-                Como sugerir uma ideia?
-              </div>
-            </Button>
           </div>
         </div>
       </div>
 
+      {/* Help Button - Below Banner */}
+      <div className="container mx-auto px-4 mb-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <Button
+            onClick={() => setIsHelpModalOpen(true)}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:scale-105 transition-transform px-6 py-3 rounded-lg"
+          >
+            <Lightbulb className="h-4 w-4 mr-2" />
+            Como sugerir uma ideia?
+          </Button>
+        </div>
+      </div>
       <div className="container mx-auto px-4 py-6">
         {/* Filter and Stats Section */}
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8 max-w-4xl mx-auto">
