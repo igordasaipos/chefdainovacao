@@ -6,9 +6,11 @@ import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useUserPersistence } from "@/hooks/useUserPersistence";
 import { useStableSort } from "@/hooks/useStableSort";
-import { Layers, Heart } from "lucide-react";
+import { Layers, Heart, Lightbulb } from "lucide-react";
 
 export default function Votar() {
   const { data: ideias = [], refetch } = useIdeias();
@@ -18,6 +20,7 @@ export default function Votar() {
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   
   const { userData } = useUserPersistence();
   const { stableSortedIdeias, updateSortSnapshot } = useStableSort(ideias, filterType);
@@ -95,9 +98,9 @@ export default function Votar() {
       <Navbar />
       
       {/* Banner Section with Communication Image */}
-      <div className="bg-white py-4 sm:py-8 mb-6 sm:mb-8">
+      <div className="bg-white py-4 sm:py-8 mb-6 sm:mb-8 relative">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto relative">
             <img 
               src="/lovable-uploads/chefedainovacao.webp"
               alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
@@ -105,6 +108,16 @@ export default function Votar() {
               loading="eager"
               decoding="async"
             />
+            
+            {/* Floating Help Button */}
+            <Button
+              onClick={() => setIsHelpModalOpen(true)}
+              className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg hover:scale-105 transition-transform px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-full z-10"
+            >
+              <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Como sugerir uma ideia?</span>
+              <span className="sm:hidden">Sugerir</span>
+            </Button>
           </div>
         </div>
       </div>
@@ -187,6 +200,57 @@ export default function Votar() {
         onVoteSuccess={handleVoteSuccess}
         persistUserData={true}
       />
+
+      {/* Help Modal */}
+      <Dialog open={isHelpModalOpen} onOpenChange={setIsHelpModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-lg font-semibold text-primary">
+              💡 Como sugerir uma nova ideia?
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-muted-foreground text-center mb-6">
+              Siga estes passos simples para contribuir com suas sugestões:
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold text-sm">
+                  1
+                </div>
+                <p className="text-sm">
+                  Vá até o stand da Saipos no iFood Move
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold text-sm">
+                  2
+                </div>
+                <p className="text-sm">
+                  Fale com um dos nossos especialistas sobre sua necessidade
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold text-sm">
+                  3
+                </div>
+                <p className="text-sm">
+                  Dê sua sugestão de melhoria para nossos produtos
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-4 rounded-lg mt-6">
+              <p className="text-sm font-medium text-primary text-center">
+                🚀 As ideias mais votadas pelo público irão para desenvolvimento e entregue em tempo real!
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
