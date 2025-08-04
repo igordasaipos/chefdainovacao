@@ -70,19 +70,16 @@ const Admin = () => {
   // Real-time subscription for ideas and votes
   useEffect(() => {
     if (!isAdmin) return;
-    
     const ideiasChannel = supabase.channel('admin-ideias').on('postgres_changes', {
       event: '*',
       schema: 'public',
       table: 'ideias'
     }, () => refetchIdeias()).subscribe();
-
     const votosChannel = supabase.channel('admin-votos').on('postgres_changes', {
       event: '*',
       schema: 'public',
       table: 'votos'
     }, () => refetchIdeias()).subscribe();
-    
     return () => {
       supabase.removeChannel(ideiasChannel);
       supabase.removeChannel(votosChannel);
@@ -93,7 +90,9 @@ const Admin = () => {
   useEffect(() => {
     if (isAdmin) {
       const fetchAdmins = async () => {
-        const { data } = await supabase.from('admins').select('nome').order('nome');
+        const {
+          data
+        } = await supabase.from('admins').select('nome').order('nome');
         if (data) {
           setAdmins(data.map(admin => admin.nome));
         }
@@ -168,7 +167,8 @@ const Admin = () => {
       descricao: ideaForm.descricao,
       complexidade: ideaForm.complexidade === 'caixinha' ? 'complexa' as const : ideaForm.complexidade,
       status: ideaForm.status,
-      criado_por: ideaForm.nome, // Mantido por compatibilidade
+      criado_por: ideaForm.nome,
+      // Mantido por compatibilidade
       nome_restaurante: ideaForm.cliente_tipo === 'nao_cliente' ? 'Não é cliente' : ideaForm.nome_id_saipos_cnpj,
       whatsapp_criador: ideaForm.whatsapp,
       desenvolvedor: '',
@@ -178,7 +178,6 @@ const Admin = () => {
       admin_criador: adminEmail || "",
       jira: ideaForm.jira
     };
-    
     if (editingIdea) {
       await updateIdeia.mutateAsync({
         id: editingIdea.id,
@@ -208,7 +207,6 @@ const Admin = () => {
     // Extract jira from new field or observacao if it contains concatenated data
     const jira = ideia.jira || '';
     const observacao = ideia.observacao || '';
-    
     setIdeaForm({
       titulo: ideia.titulo,
       descricao: ideia.descricao || '',
@@ -228,7 +226,6 @@ const Admin = () => {
     setIdeaToDelete(id);
     setDeleteDialogOpen(true);
   };
-
   const handleConfirmDelete = async () => {
     if (ideaToDelete) {
       await deleteIdeia.mutateAsync(ideaToDelete);
@@ -271,23 +268,21 @@ const Admin = () => {
   // Helper function to extract first name from admin email
   const getAdminFirstName = (adminEmail: string) => {
     if (!adminEmail) return 'Não informado';
-    
+
     // Extract the part before @ symbol
     const emailPrefix = adminEmail.split('@')[0];
-    
+
     // If there's a dot, take the part before the first dot
     // Otherwise, take the whole prefix
     const firstName = emailPrefix.includes('.') ? emailPrefix.split('.')[0] : emailPrefix;
-    
+
     // Capitalize first letter and make the rest lowercase
     return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
   };
-
   const filteredAndSortedIdeias = ideias?.filter(ideia => {
     const statusMatch = activeStatusFilter === 'total' || ideia.status === activeStatusFilter;
     const complexityMatch = filters.complexidade === 'all' || ideia.complexidade === filters.complexidade;
-    const creatorMatch = filters.criador === 'all' || (ideia.admin_criador && ideia.admin_criador.includes(filters.criador));
-    
+    const creatorMatch = filters.criador === 'all' || ideia.admin_criador && ideia.admin_criador.includes(filters.criador);
     return statusMatch && complexityMatch && creatorMatch;
   })?.sort((a, b) => {
     if (sortBy === 'votos') {
@@ -361,19 +356,8 @@ const Admin = () => {
               <Plus className="h-4 w-4 mr-2" />
               Nova Ideia
             </Button>
-            <Button 
-              onClick={addExampleIdeas}
-              variant="outline"
-              className="text-gray-700 border-gray-300 hover:bg-gray-50"
-            >
-              <BarChart className="h-4 w-4 mr-2" />
-              Criar Dados de Teste
-            </Button>
-            <Button 
-              onClick={signOut}
-              variant="outline"
-              className="text-gray-700 border-gray-300 hover:bg-gray-50"
-            >
+            
+            <Button onClick={signOut} variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
               <LogOut className="h-4 w-4 mr-2" />
               Sair
             </Button>
@@ -382,85 +366,37 @@ const Admin = () => {
 
         {/* Stats Dashboard - Now Clickable Filters */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'total' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('total')}
-            data-qa="admin-filter-total"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'total' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('total')} data-qa="admin-filter-total">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.total}</div>
               <div className="text-sm">Total de Ideias</div>
             </CardContent>
           </Card>
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'caixinha' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('caixinha')}
-            data-qa="admin-filter-caixinha"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'caixinha' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('caixinha')} data-qa="admin-filter-caixinha">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.caixinha}</div>
               <div className="text-sm">Caixinha</div>
             </CardContent>
           </Card>
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'backlog' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('backlog')}
-            data-qa="admin-filter-backlog"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'backlog' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('backlog')} data-qa="admin-filter-backlog">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.backlog}</div>
               <div className="text-sm">Backlog</div>
             </CardContent>
           </Card>
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'votacao' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('votacao')}
-            data-qa="admin-filter-votacao"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'votacao' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('votacao')} data-qa="admin-filter-votacao">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.votacao}</div>
               <div className="text-sm">Votação</div>
             </CardContent>
           </Card>
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'desenvolvimento' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('desenvolvimento')}
-            data-qa="admin-filter-desenvolvimento"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'desenvolvimento' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('desenvolvimento')} data-qa="admin-filter-desenvolvimento">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.desenvolvimento}</div>
               <div className="text-sm">Desenvolvimento</div>
             </CardContent>
           </Card>
-          <Card 
-            className={`cursor-pointer transition-all hover:scale-105 ${
-              activeStatusFilter === 'finalizado' 
-                ? 'bg-primary text-primary-foreground shadow-lg border-primary' 
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveStatusFilter('finalizado')}
-            data-qa="admin-filter-finalizado"
-          >
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'finalizado' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('finalizado')} data-qa="admin-filter-finalizado">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.finalizado}</div>
               <div className="text-sm">Finalizado</div>
@@ -476,9 +412,9 @@ const Admin = () => {
               <div className="space-y-2 flex-1">
                 <Label>Filtrar por Complexidade</Label>
                 <Select value={filters.complexidade} onValueChange={value => setFilters(prev => ({
-                  ...prev,
-                  complexidade: value
-                }))}>
+                ...prev,
+                complexidade: value
+              }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas complexidades" />
                   </SelectTrigger>
@@ -496,54 +432,41 @@ const Admin = () => {
               <div className="space-y-2 flex-1">
                 <Label>Filtrar por Admin Criador</Label>
                 <Select value={filters.criador} onValueChange={value => setFilters(prev => ({
-                  ...prev,
-                  criador: value
-                }))}>
+                ...prev,
+                criador: value
+              }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os admins" />
                   </SelectTrigger>
                   <SelectContent className="bg-white z-50">
                     <SelectItem value="all">Todos</SelectItem>
-                    {admins.map(admin => (
-                      <SelectItem key={admin} value={admin}>{admin}</SelectItem>
-                    ))}
+                    {admins.map(admin => <SelectItem key={admin} value={admin}>{admin}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Clear Filters */}
-              {(filters.complexidade !== 'all' || filters.criador !== 'all') && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setFilters({ complexidade: 'all', criador: 'all' })}
-                  className="whitespace-nowrap"
-                >
+              {(filters.complexidade !== 'all' || filters.criador !== 'all') && <Button variant="outline" onClick={() => setFilters({
+              complexidade: 'all',
+              criador: 'all'
+            })} className="whitespace-nowrap">
                   Limpar Filtros
-                </Button>
-              )}
+                </Button>}
             </div>
             
             {/* Active Filters Display */}
-            {(activeStatusFilter !== 'total' || filters.complexidade !== 'all' || filters.criador !== 'all') && (
-              <div className="mt-4 flex flex-wrap gap-2">
+            {(activeStatusFilter !== 'total' || filters.complexidade !== 'all' || filters.criador !== 'all') && <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-sm text-muted-foreground">Filtros ativos:</span>
-                {activeStatusFilter !== 'total' && (
-                  <Badge variant="secondary">
+                {activeStatusFilter !== 'total' && <Badge variant="secondary">
                     Status: {activeStatusFilter}
-                  </Badge>
-                )}
-                {filters.complexidade !== 'all' && (
-                  <Badge variant="secondary">
+                  </Badge>}
+                {filters.complexidade !== 'all' && <Badge variant="secondary">
                     Complexidade: {filters.complexidade}
-                  </Badge>
-                )}
-                {filters.criador !== 'all' && (
-                  <Badge variant="secondary">
+                  </Badge>}
+                {filters.criador !== 'all' && <Badge variant="secondary">
                     Admin: {filters.criador}
-                  </Badge>
-                )}
-              </div>
-            )}
+                  </Badge>}
+              </div>}
           </CardContent>
         </Card>
 
@@ -569,26 +492,26 @@ const Admin = () => {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
-                      if (sortBy === 'votos') {
-                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                      } else {
-                        setSortBy('votos');
-                        setSortOrder('desc');
-                      }
-                    }}>
+                    if (sortBy === 'votos') {
+                      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                    } else {
+                      setSortBy('votos');
+                      setSortOrder('desc');
+                    }
+                  }}>
                       Votos {sortBy === 'votos' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Admin
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => {
-                      if (sortBy === 'criado_em') {
-                        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-                      } else {
-                        setSortBy('criado_em');
-                        setSortOrder('desc');
-                      }
-                    }}>
+                    if (sortBy === 'criado_em') {
+                      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                    } else {
+                      setSortBy('criado_em');
+                      setSortOrder('desc');
+                    }
+                  }}>
                       Criado em {sortBy === 'criado_em' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -639,9 +562,7 @@ const Admin = () => {
                           <div className="font-medium text-gray-900">
                             {getAdminFirstName(ideia.admin_criador || '')}
                           </div>
-                          {ideia.admin_criador && (
-                            <div className="text-xs text-gray-500">{ideia.admin_criador}</div>
-                          )}
+                          {ideia.admin_criador && <div className="text-xs text-gray-500">{ideia.admin_criador}</div>}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -668,9 +589,9 @@ const Admin = () => {
 
         {/* Dialog for adding/editing ideas */}
         <Dialog open={isFormOpen} onOpenChange={() => {
-          // Impede o fechamento automático por clique no overlay
-          // Modal só fecha via botões específicos
-        }}>
+        // Impede o fechamento automático por clique no overlay
+        // Modal só fecha via botões específicos
+      }}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -696,17 +617,13 @@ const Admin = () => {
 
               <div className="space-y-2">
                 <Label>Tipo de Cliente *</Label>
-                <RadioGroup 
-                  value={ideaForm.cliente_tipo} 
-                  onValueChange={(value: 'cliente' | 'nao_cliente') => {
-                    setIdeaForm(prev => ({
-                      ...prev,
-                      cliente_tipo: value,
-                      nome_id_saipos_cnpj: value === 'nao_cliente' ? '' : prev.nome_id_saipos_cnpj
-                    }));
-                  }}
-                  className="flex gap-6"
-                >
+                <RadioGroup value={ideaForm.cliente_tipo} onValueChange={(value: 'cliente' | 'nao_cliente') => {
+                setIdeaForm(prev => ({
+                  ...prev,
+                  cliente_tipo: value,
+                  nome_id_saipos_cnpj: value === 'nao_cliente' ? '' : prev.nome_id_saipos_cnpj
+                }));
+              }} className="flex gap-6">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="cliente" id="cliente" />
                     <Label htmlFor="cliente">Sou cliente</Label>
@@ -718,36 +635,23 @@ const Admin = () => {
                 </RadioGroup>
               </div>
 
-              {ideaForm.cliente_tipo === 'cliente' && (
-                <div className="space-y-2">
+              {ideaForm.cliente_tipo === 'cliente' && <div className="space-y-2">
                   <Label htmlFor="nome_id_saipos_cnpj">Nome da loja ou ID Saipos ou CNPJ</Label>
-                  <Input 
-                    id="nome_id_saipos_cnpj" 
-                    value={ideaForm.nome_id_saipos_cnpj} 
-                    onChange={e => setIdeaForm(prev => ({
-                      ...prev,
-                      nome_id_saipos_cnpj: e.target.value
-                    }))} 
-                    placeholder="Nome da loja ou ID Saipos ou CNPJ" 
-                  />
-                </div>
-              )}
+                  <Input id="nome_id_saipos_cnpj" value={ideaForm.nome_id_saipos_cnpj} onChange={e => setIdeaForm(prev => ({
+                ...prev,
+                nome_id_saipos_cnpj: e.target.value
+              }))} placeholder="Nome da loja ou ID Saipos ou CNPJ" />
+                </div>}
 
               <div className="space-y-2">
                 <Label htmlFor="whatsapp">WhatsApp *</Label>
-                <Input 
-                  id="whatsapp" 
-                  value={ideaForm.whatsapp} 
-                  onChange={e => {
-                    const formattedValue = formatWhatsApp(e.target.value);
-                    setIdeaForm(prev => ({
-                      ...prev,
-                      whatsapp: formattedValue
-                    }));
-                  }} 
-                  placeholder="(11) 99999-9999" 
-                  required 
-                />
+                <Input id="whatsapp" value={ideaForm.whatsapp} onChange={e => {
+                const formattedValue = formatWhatsApp(e.target.value);
+                setIdeaForm(prev => ({
+                  ...prev,
+                  whatsapp: formattedValue
+                }));
+              }} placeholder="(11) 99999-9999" required />
               </div>
 
               <div className="space-y-2">
@@ -762,10 +666,7 @@ const Admin = () => {
               <div className="space-y-2">
                 <Label>Criado por</Label>
                 <div className="px-3 py-2 bg-muted rounded-md text-sm text-muted-foreground">
-                  {editingIdea 
-                    ? `${getAdminFirstName(editingIdea.admin_criador || '')} ${editingIdea.admin_criador ? `(${editingIdea.admin_criador})` : ''}` 
-                    : `${getAdminFirstName(adminEmail || '')} ${adminEmail ? `(${adminEmail})` : ''}`
-                  }
+                  {editingIdea ? `${getAdminFirstName(editingIdea.admin_criador || '')} ${editingIdea.admin_criador ? `(${editingIdea.admin_criador})` : ''}` : `${getAdminFirstName(adminEmail || '')} ${adminEmail ? `(${adminEmail})` : ''}`}
                 </div>
               </div>
 
