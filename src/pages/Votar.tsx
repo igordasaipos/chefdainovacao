@@ -223,7 +223,7 @@ export default function Votar() {
                   1
                 </div>
                 <p className="text-sm">
-                  Vá até o stand da Saipos no iFood Move
+                  Vá até o estande da Saipos no iFood Move
                 </p>
               </div>
               
@@ -248,7 +248,7 @@ export default function Votar() {
             
             <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-4 rounded-lg mt-6">
               <p className="text-sm font-medium text-primary text-center">
-                🚀 As ideias mais votadas pelo público irão para desenvolvimento e entregue em tempo real!
+                🚀 As ideias viáveis e mais votadas pelo público irão para desenvolvimento em tempo real!
               </p>
             </div>
           </div>
