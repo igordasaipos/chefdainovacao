@@ -21,6 +21,7 @@ export default function Votar() {
   const [recentlyVotedIds, setRecentlyVotedIds] = useState<string[]>([]);
   const [votingIds, setVotingIds] = useState<string[]>([]);
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+  const [localVotedIds, setLocalVotedIds] = useState<string[]>([]);
   
   const { userData } = useUserPersistence();
   const { stableSortedIdeias, updateSortSnapshot } = useStableSort(ideias, filterType);
@@ -56,6 +57,11 @@ export default function Votar() {
   // Função para verificar se o usuário já votou em uma ideia
   const hasUserVoted = (ideiaId: string) => {
     if (!userData.whatsappVotante) return false;
+    
+    // Verifica se votou na sessão atual (estado local)
+    if (localVotedIds.includes(ideiaId)) return true;
+    
+    // Verifica se votou em sessões anteriores (dados remotos)
     return votos.some(voto => 
       voto.ideia_id === ideiaId && 
       voto.whatsapp_votante === userData.whatsappVotante
@@ -84,6 +90,9 @@ export default function Votar() {
   const handleVoteSuccess = (ideaId: string) => {
     setVotingIds(prev => prev.filter(id => id !== ideaId));
     setRecentlyVotedIds(prev => [...prev, ideaId]);
+    
+    // Adiciona ao estado local de votos imediatamente
+    setLocalVotedIds(prev => [...prev, ideaId]);
     
     setTimeout(() => {
       setRecentlyVotedIds(prev => prev.filter(id => id !== ideaId));
