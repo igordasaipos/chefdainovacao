@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
-import { LogOut, Plus, Edit2, Trash2, Download, BarChart } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, Download, BarChart, Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { formatWhatsApp } from '@/lib/utils';
@@ -60,6 +60,7 @@ const Admin = () => {
   const [ideaToDelete, setIdeaToDelete] = useState<string | null>(null);
   const [activeStatusFilter, setActiveStatusFilter] = useState<string>('total');
   const [filters, setFilters] = useState({
+    busca: '',
     complexidade: 'all',
     criador: 'all'
   });
@@ -283,7 +284,10 @@ const Admin = () => {
     const statusMatch = activeStatusFilter === 'total' || ideia.status === activeStatusFilter;
     const complexityMatch = filters.complexidade === 'all' || ideia.complexidade === filters.complexidade;
     const creatorMatch = filters.criador === 'all' || ideia.admin_criador && ideia.admin_criador.includes(filters.criador);
-    return statusMatch && complexityMatch && creatorMatch;
+    const searchMatch = filters.busca === '' || 
+      ideia.titulo.toLowerCase().includes(filters.busca.toLowerCase()) ||
+      (ideia.descricao && ideia.descricao.toLowerCase().includes(filters.busca.toLowerCase()));
+    return statusMatch && complexityMatch && creatorMatch && searchMatch;
   })?.sort((a, b) => {
     if (sortBy === 'votos') {
       return sortOrder === 'asc' ? a.votos - b.votos : b.votos - a.votos;
@@ -408,6 +412,20 @@ const Admin = () => {
         <Card className="bg-white mb-6">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-4 md:items-end">
+              {/* Search Filter */}
+              <div className="space-y-2 flex-1">
+                <Label>Buscar Funcionalidade</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Buscar por título da funcionalidade..."
+                    value={filters.busca}
+                    onChange={(e) => setFilters(prev => ({ ...prev, busca: e.target.value }))}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              
               {/* Complexity Filter */}
               <div className="space-y-2 flex-1">
                 <Label>Filtrar por Complexidade</Label>
@@ -446,7 +464,8 @@ const Admin = () => {
               </div>
 
               {/* Clear Filters */}
-              {(filters.complexidade !== 'all' || filters.criador !== 'all') && <Button variant="outline" onClick={() => setFilters({
+              {(filters.busca !== '' || filters.complexidade !== 'all' || filters.criador !== 'all') && <Button variant="outline" onClick={() => setFilters({
+              busca: '',
               complexidade: 'all',
               criador: 'all'
             })} className="whitespace-nowrap">
@@ -455,10 +474,13 @@ const Admin = () => {
             </div>
             
             {/* Active Filters Display */}
-            {(activeStatusFilter !== 'total' || filters.complexidade !== 'all' || filters.criador !== 'all') && <div className="mt-4 flex flex-wrap gap-2">
+            {(activeStatusFilter !== 'total' || filters.busca !== '' || filters.complexidade !== 'all' || filters.criador !== 'all') && <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-sm text-muted-foreground">Filtros ativos:</span>
                 {activeStatusFilter !== 'total' && <Badge variant="secondary">
                     Status: {activeStatusFilter}
+                  </Badge>}
+                {filters.busca !== '' && <Badge variant="secondary">
+                    Busca: {filters.busca}
                   </Badge>}
                 {filters.complexidade !== 'all' && <Badge variant="secondary">
                     Complexidade: {filters.complexidade}
