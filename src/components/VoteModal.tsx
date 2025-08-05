@@ -74,29 +74,47 @@ export const VoteModal = ({
   const handleSubmit = async () => {
     if (!ideia) return;
 
-    // Verificar se já votou antes de tentar enviar
-    if (hasVoted) {
-      toast({
-        title: "Voto já registrado",
-        description: "Você já votou nesta ideia!",
-        variant: "destructive",
-      });
-      resetForm();
-      onOpenChange(false);
-      return;
-    }
-
     onVoteStart?.(ideia.id);
 
     try {
-      const votoData = {
-        ideia_id: ideia.id,
-        nome_restaurante_votante: ehCliente === "sim" ? nomeRestauranteVotante : "",
-        whatsapp_votante: whatsappVotante,
-        telefone_votante: whatsappVotante,
-        nome_votante: nome,
-        eh_cliente: ehCliente === "sim",
-      };
+      let votoData;
+      
+      if (ehCliente === "rapido") {
+        // Voto rápido - gera dados automáticos
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substr(2, 5);
+        
+        votoData = {
+          ideia_id: ideia.id,
+          nome_restaurante_votante: "",
+          whatsapp_votante: `totem_${timestamp}_${randomId}`,
+          telefone_votante: `totem_${timestamp}_${randomId}`,
+          nome_votante: "Totem - Voto Anônimo",
+          eh_cliente: false,
+        };
+      } else {
+        // Verificar se já votou antes de tentar enviar (apenas para votos normais)
+        if (hasVoted) {
+          toast({
+            title: "Voto já registrado",
+            description: "Você já votou nesta ideia!",
+            variant: "destructive",
+          });
+          resetForm();
+          onOpenChange(false);
+          return;
+        }
+
+        // Voto normal
+        votoData = {
+          ideia_id: ideia.id,
+          nome_restaurante_votante: ehCliente === "sim" ? nomeRestauranteVotante : "",
+          whatsapp_votante: whatsappVotante,
+          telefone_votante: whatsappVotante,
+          nome_votante: nome,
+          eh_cliente: ehCliente === "sim",
+        };
+      }
 
       // Salva dados do usuário se persistência estiver habilitada
       if (persistUserData) {
@@ -117,7 +135,7 @@ export const VoteModal = ({
     }
   };
 
-  const isFormValid = ehCliente && whatsappVotante && isValidWhatsApp(whatsappVotante) && nome && (ehCliente === "nao" || nomeRestauranteVotante);
+  const isFormValid = ehCliente === "rapido" || (ehCliente && whatsappVotante && isValidWhatsApp(whatsappVotante) && nome && (ehCliente === "nao" || nomeRestauranteVotante));
 
   // Verifica se deve mostrar preview ou formulário completo
   const hasUserData = persistUserData && userData.nome && userData.whatsappVotante && 
@@ -191,7 +209,7 @@ export const VoteModal = ({
           <RadioGroup
             value={ehCliente}
             onValueChange={setEhCliente}
-            className="flex flex-row space-x-4"
+            className={persistUserData ? "flex flex-row space-x-4" : "grid grid-cols-1 gap-2"}
             data-qa="vote-modal-radio-cliente"
           >
             <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
@@ -202,61 +220,82 @@ export const VoteModal = ({
               <RadioGroupItem value="nao" id="nao" className="border-2" data-qa="vote-modal-radio-nao" />
               <Label htmlFor="nao" className="text-sm font-medium flex-1 cursor-pointer">Não sou cliente</Label>
             </div>
+            {!persistUserData && (
+              <div className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 hover:from-primary/15 hover:to-accent/15 transition-colors">
+                <RadioGroupItem value="rapido" id="rapido" className="border-2 border-primary" data-qa="vote-modal-radio-rapido" />
+                <Label htmlFor="rapido" className="text-sm font-medium flex-1 cursor-pointer text-primary">🚀 Voto Rápido</Label>
+              </div>
+            )}
           </RadioGroup>
       </div>
 
-      {ehCliente === "sim" && (
-        <div className="space-y-2">
-          <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
-            Nome da loja ou ID Saipos ou CNPJ
-          </Label>
-          <Input
-            id="nome-restaurante"
-            type="text"
-            value={nomeRestauranteVotante}
-            onChange={(e) => setNomeRestauranteVotante(e.target.value)}
-            placeholder="Digite o nome da sua loja, ID Saipos ou CNPJ"
-            className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-            autoFocus={false}
-            tabIndex={-1}
-            data-qa="vote-modal-input-restaurante"
-          />
+      {ehCliente === "rapido" ? (
+        <div className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl border border-primary/10">
+          <div className="text-center space-y-2">
+            <div className="text-2xl">🚀</div>
+            <h3 className="font-medium text-lg text-primary">Voto Rápido</h3>
+            <p className="text-sm text-muted-foreground">
+              Seu voto será registrado anonimamente.<br />
+              Clique em "Confirmar Voto" para finalizar.
+            </p>
+          </div>
         </div>
+      ) : (
+        <>
+          {ehCliente === "sim" && (
+            <div className="space-y-2">
+              <Label htmlFor="nome-restaurante" className="text-base font-medium text-foreground">
+                Nome da loja ou ID Saipos ou CNPJ
+              </Label>
+              <Input
+                id="nome-restaurante"
+                type="text"
+                value={nomeRestauranteVotante}
+                onChange={(e) => setNomeRestauranteVotante(e.target.value)}
+                placeholder="Digite o nome da sua loja, ID Saipos ou CNPJ"
+                className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+                autoFocus={false}
+                tabIndex={-1}
+                data-qa="vote-modal-input-restaurante"
+              />
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="whatsapp" className="text-base font-medium text-foreground">
+              WhatsApp
+            </Label>
+            <Input
+              id="whatsapp"
+              type="tel"
+              value={whatsappVotante}
+              onChange={handleWhatsAppChange}
+              placeholder="(11) 99999-9999"
+              className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+              autoFocus={false}
+              tabIndex={-1}
+              data-qa="vote-modal-input-whatsapp"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nome" className="text-base font-medium text-foreground">
+              Seu Nome
+            </Label>
+            <Input
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              placeholder="Digite seu nome"
+              className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
+              autoFocus={false}
+              tabIndex={-1}
+              data-qa="vote-modal-input-nome"
+            />
+          </div>
+        </>
       )}
-
-      <div className="space-y-2">
-        <Label htmlFor="whatsapp" className="text-base font-medium text-foreground">
-          WhatsApp
-        </Label>
-        <Input
-          id="whatsapp"
-          type="tel"
-          value={whatsappVotante}
-          onChange={handleWhatsAppChange}
-          placeholder="(11) 99999-9999"
-          className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-          autoFocus={false}
-          tabIndex={-1}
-          data-qa="vote-modal-input-whatsapp"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="nome" className="text-base font-medium text-foreground">
-          Seu Nome
-        </Label>
-        <Input
-          id="nome"
-          type="text"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Digite seu nome"
-          className="w-full h-12 text-base rounded-xl border-2 focus:border-primary transition-colors"
-          autoFocus={false}
-          tabIndex={-1}
-          data-qa="vote-modal-input-nome"
-        />
-      </div>
 
       <div className="flex gap-4 pt-4">
         <Button
