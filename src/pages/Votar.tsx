@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useIdeias } from "@/hooks/useIdeias";
+import { useIdeiasVotacao } from "@/hooks/useIdeias";
 import { useVotos } from "@/hooks/useVotos";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
@@ -13,7 +13,7 @@ import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart, Lightbulb } from "lucide-react";
 
 export default function Votar() {
-  const { data: ideias = [], refetch } = useIdeias();
+  const { data: ideias = [], refetch } = useIdeiasVotacao();
   const { data: votos = [] } = useVotos();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);

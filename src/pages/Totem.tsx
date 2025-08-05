@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useIdeias } from "@/hooks/useIdeias";
+import { useIdeiasVotacao } from "@/hooks/useIdeias";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
@@ -9,7 +9,7 @@ import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart } from "lucide-react";
 
 export default function Totem() {
-  const { data: ideias = [], refetch } = useIdeias();
+  const { data: ideias = [], refetch } = useIdeiasVotacao();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
