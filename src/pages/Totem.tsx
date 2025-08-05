@@ -20,6 +20,19 @@ export default function Totem() {
   const { stableSortedIdeias, updateSortSnapshot } = useStableSort(ideias, filterType);
 
   useEffect(() => {
+    let debounceTimer: NodeJS.Timeout;
+    
+    const debouncedRefetch = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        console.log('Executando refetch após debounce...');
+        await Promise.all([
+          queryClient.refetchQueries({ queryKey: ['ideias-votacao'] }),
+          queryClient.refetchQueries({ queryKey: ['votos'] })
+        ]);
+      }, 500);
+    };
+
     const channel = supabase
       .channel('ideias-changes')
       .on('postgres_changes', 
@@ -27,9 +40,8 @@ export default function Totem() {
         (payload) => {
           console.log('Mudança nas ideias:', payload);
           
-          // Invalidate both queries to ensure fresh data
-          queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
-          queryClient.invalidateQueries({ queryKey: ['ideias'] });
+          // Force immediate refetch for better reliability
+          debouncedRefetch();
           
           // Update sort when new ideas are added/removed or status changes
           if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE' || 
@@ -43,14 +55,14 @@ export default function Totem() {
         (payload) => {
           console.log('Mudança nos votos:', payload);
           
-          // Invalidate voting queries to get updated vote counts
-          queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
-          queryClient.invalidateQueries({ queryKey: ['votos'] });
+          // Force immediate refetch for vote updates
+          debouncedRefetch();
         }
       )
       .subscribe();
 
     return () => {
+      clearTimeout(debounceTimer);
       supabase.removeChannel(channel);
     };
   }, [queryClient, updateSortSnapshot]);

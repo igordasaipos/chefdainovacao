@@ -31,6 +31,14 @@ export function useStableSort(ideias: Ideia[], filterType: FilterType) {
     }
   }, [ideias, filterType, shouldUpdateSort]);
 
+  // Force update when number of ideas changes (detect new additions)
+  useEffect(() => {
+    if (ideias?.length !== sortSnapshot.length) {
+      console.log(`Mudança no número de ideias detectada: ${sortSnapshot.length} → ${ideias?.length}`);
+      updateSortSnapshot();
+    }
+  }, [ideias?.length, sortSnapshot.length, updateSortSnapshot]);
+
   // Update sort when filter changes
   useEffect(() => {
     updateSortSnapshot();
