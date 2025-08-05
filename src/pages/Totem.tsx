@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useIdeiasVotacao } from "@/hooks/useIdeias";
+import { useQueryClient } from "@tanstack/react-query";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
@@ -10,6 +11,7 @@ import { Layers, Heart } from "lucide-react";
 
 export default function Totem() {
   const { data: ideias = [], refetch } = useIdeiasVotacao();
+  const queryClient = useQueryClient();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [filterType, setFilterType] = useState<'mais-votadas' | 'recentes'>('mais-votadas');
@@ -24,9 +26,14 @@ export default function Totem() {
         { event: '*', schema: 'public', table: 'ideias' }, 
         (payload) => {
           console.log('Mudança nas ideias:', payload);
-          refetch();
-          // Only update sort when new ideas are added/removed, not for vote updates
-          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE') {
+          
+          // Invalidate both queries to ensure fresh data
+          queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
+          queryClient.invalidateQueries({ queryKey: ['ideias'] });
+          
+          // Update sort when new ideas are added/removed or status changes
+          if (payload.eventType === 'INSERT' || payload.eventType === 'DELETE' || 
+              (payload.eventType === 'UPDATE' && payload.new?.status === 'votacao')) {
             updateSortSnapshot();
           }
         }
@@ -35,7 +42,10 @@ export default function Totem() {
         { event: '*', schema: 'public', table: 'votos' }, 
         (payload) => {
           console.log('Mudança nos votos:', payload);
-          refetch(); // This will update vote counts without reordering
+          
+          // Invalidate voting queries to get updated vote counts
+          queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
+          queryClient.invalidateQueries({ queryKey: ['votos'] });
         }
       )
       .subscribe();
@@ -43,7 +53,7 @@ export default function Totem() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [refetch, updateSortSnapshot]);
+  }, [queryClient, updateSortSnapshot]);
 
   const handleVote = (idea: any) => {
     setSelectedIdea(idea);
