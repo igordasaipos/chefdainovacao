@@ -151,3 +151,29 @@ export const useDeleteIdeia = () => {
     },
   });
 };
+
+export const useTotaisGerais = () => {
+  return useQuery({
+    queryKey: ['totais-gerais'],
+    queryFn: async () => {
+      // Buscar todas as ideias
+      const { data: todasIdeias, error: ideiasError } = await supabase
+        .from('ideias')
+        .select('id, votos');
+      
+      if (ideiasError) throw ideiasError;
+      
+      // Buscar todos os votos
+      const { data: todosVotos, error: votosError } = await supabase
+        .from('votos')
+        .select('id');
+      
+      if (votosError) throw votosError;
+      
+      return {
+        totalIdeias: todasIdeias?.length || 0,
+        totalVotos: todosVotos?.length || 0
+      };
+    },
+  });
+};

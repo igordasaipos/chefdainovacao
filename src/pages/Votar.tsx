@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useIdeiasVotacao } from "@/hooks/useIdeias";
+import { useIdeiasVotacao, useTotaisGerais } from "@/hooks/useIdeias";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVotos } from "@/hooks/useVotos";
 import { IdeaCard } from "@/components/IdeaCard";
@@ -16,6 +16,7 @@ import { Layers, Heart, Lightbulb } from "lucide-react";
 export default function Votar() {
   const { data: ideias = [], refetch } = useIdeiasVotacao();
   const { data: votos = [] } = useVotos();
+  const { data: totaisGerais } = useTotaisGerais();
   const queryClient = useQueryClient();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
@@ -121,8 +122,8 @@ export default function Votar() {
     }, 3000);
   };
 
-  const totalIdeias = ideias?.length || 0;
-  const totalVotos = ideias?.reduce((sum, idea) => sum + idea.votos, 0) || 0;
+  const totalIdeias = totaisGerais?.totalIdeias || 0;
+  const totalVotos = totaisGerais?.totalVotos || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-vote-bg to-background">
