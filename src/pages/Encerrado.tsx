@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useIdeias, useTotaisPorStatus } from "@/hooks/useIdeias"
 import { IdeaCard } from "@/components/IdeaCard"
+import { Navbar } from "@/components/Navbar"
 
 const Encerrado = () => {
   const { data: ideias = [] } = useIdeias()
@@ -68,6 +69,7 @@ const Encerrado = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -150,7 +152,7 @@ const Encerrado = () => {
                   title="Finalizadas" 
                   items={finalizadasItems}
                 />
-              </TabsContent>
+               </TabsContent>
             </Tabs>
           </div>
         </div>
