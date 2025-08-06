@@ -133,7 +133,7 @@ const Encerrado = () => {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Receber atualizações</DialogTitle>
+                    <DialogTitle>Receber os destaques</DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleSubmit} className="space-y-4 mt-4">
                     <div className="space-y-2">
