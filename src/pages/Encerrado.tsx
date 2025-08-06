@@ -3,16 +3,48 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { useIdeias, useTotaisPorStatus } from "@/hooks/useIdeias";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 const Encerrado = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const { toast } = useToast();
+  
   const {
     data: ideias = []
   } = useIdeias();
   const {
     data: totais
   } = useTotaisPorStatus();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nome || !email) {
+      toast({
+        title: "Erro",
+        description: "Por favor, preencha todos os campos",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Aqui você pode implementar a lógica para enviar os dados
+    toast({
+      title: "Sucesso!",
+      description: "Você será notificado sobre as novidades",
+    });
+    
+    setIsModalOpen(false);
+    setNome("");
+    setEmail("");
+  };
   const desenvolvimentoItems = ideias.filter(ideia => ideia.status === 'desenvolvimento').sort((a, b) => b.votos - a.votos);
   const finalizadasItems = ideias.filter(ideia => ideia.status === 'finalizado').sort((a, b) => b.votos - a.votos);
   const StatCard = ({
@@ -87,18 +119,63 @@ const Encerrado = () => {
         {/* CTA Banner */}
         <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-6 md:p-8 mb-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col sm:flex-row gap-4 order-2 md:order-1">
-              <Button variant="default" size="lg">
-                Acompanhar
-              </Button>
-              <Button variant="outline" size="lg">
-                Entrar na comunidade
-              </Button>
-            </div>
-            <div className="text-center md:text-right order-1 md:order-2">
+            <div className="text-center md:text-left order-1">
               <h3 className="text-xl font-semibold text-foreground">
                 Receba um resumo de tudo que rolou
               </h3>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 order-2">
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="default" size="lg">
+                    Acompanhar
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Receber atualizações</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="nome">Nome</Label>
+                      <Input
+                        id="nome"
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        placeholder="Seu nome"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="seu@email.com"
+                        required
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setIsModalOpen(false)}
+                        className="flex-1"
+                      >
+                        Cancelar
+                      </Button>
+                      <Button type="submit" className="flex-1">
+                        Confirmar
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" size="lg">
+                Entrar na comunidade
+              </Button>
             </div>
           </div>
         </div>
