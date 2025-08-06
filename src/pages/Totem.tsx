@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useIdeiasVotacao } from "@/hooks/useIdeias";
+import { useIdeiasVotacao, useTotaisPorStatus } from "@/hooks/useIdeias";
 import { useQueryClient } from "@tanstack/react-query";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
@@ -7,10 +7,11 @@ import { VoteModal } from "@/components/VoteModal";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStableSort } from "@/hooks/useStableSort";
-import { Layers, Heart } from "lucide-react";
+import { Layers, Heart, Settings, CheckCircle } from "lucide-react";
 
 export default function Totem() {
   const { data: ideias = [], refetch } = useIdeiasVotacao();
+  const { data: totais = { votacao: 0, desenvolvimento: 0, finalizado: 0, totalVotos: 0 } } = useTotaisPorStatus();
   const queryClient = useQueryClient();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
@@ -123,14 +124,22 @@ export default function Totem() {
               </SelectContent>
             </Select>
             
-            <div className="flex gap-6 text-sm text-muted-foreground">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-muted-foreground">
               <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
                 <Layers className="h-4 w-4" />
-                <strong className="text-foreground">{totalIdeias}</strong> funcionalidades
+                <strong className="text-foreground">{totais.votacao}</strong> em votação
+              </span>
+              <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                <strong className="text-foreground">{totais.desenvolvimento}</strong> desenvolvimento
+              </span>
+              <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                <strong className="text-foreground">{totais.finalizado}</strong> finalizadas
               </span>
               <span className="bg-muted/50 px-3 py-2 rounded-lg flex items-center gap-2">
                 <Heart className="h-4 w-4" />
-                <strong className="text-foreground">{totalVotos}</strong> votos
+                <strong className="text-foreground">{totais.totalVotos}</strong> votos totais
               </span>
             </div>
           </div>

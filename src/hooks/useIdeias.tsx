@@ -177,3 +177,32 @@ export const useTotaisGerais = () => {
     },
   });
 };
+
+export const useTotaisPorStatus = () => {
+  return useQuery({
+    queryKey: ['totais-por-status'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('ideias')
+        .select('status, votos');
+      
+      if (error) throw error;
+      
+      const totais = {
+        votacao: 0,
+        desenvolvimento: 0,
+        finalizado: 0,
+        totalVotos: 0
+      };
+      
+      data?.forEach(ideia => {
+        totais.totalVotos += ideia.votos;
+        if (ideia.status === 'votacao') totais.votacao++;
+        if (ideia.status === 'desenvolvimento') totais.desenvolvimento++;
+        if (ideia.status === 'finalizado') totais.finalizado++;
+      });
+      
+      return totais;
+    },
+  });
+};
