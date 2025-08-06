@@ -13,6 +13,7 @@ import Totem from "./pages/Totem"
 import Kanban from "./pages/Kanban"
 import Login from "./pages/Login"
 import NotFound from "./pages/NotFound"
+import Encerrado from "./pages/Encerrado"
 
 const queryClient = new QueryClient()
 
@@ -35,12 +36,13 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Navigate to="/votar" replace />} />
+              <Route path="/" element={<Navigate to="/encerrado" replace />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/login" element={<Login />} />
               <Route path="/votar" element={<Votar />} />
               <Route path="/totem" element={<Totem />} />
               <Route path="/kanban" element={<Kanban />} />
+              <Route path="/encerrado" element={<Encerrado />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
