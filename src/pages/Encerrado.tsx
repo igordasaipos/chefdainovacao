@@ -1,6 +1,7 @@
 import { CheckCircle, TrendingUp, Users, Target } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIdeias, useTotaisPorStatus } from "@/hooks/useIdeias";
 import { IdeaCard } from "@/components/IdeaCard";
@@ -81,6 +82,25 @@ const Encerrado = () => {
           <StatCard title="Total de Votos" value={totais?.totalVotos || 0} icon={Users} description="votos recebidos" />
           <StatCard title="Entregues" value={totais?.finalizadas || 0} icon={CheckCircle} description="funcionalidades finalizadas" />
           <StatCard title="Em Desenvolvimento" value={totais?.desenvolvimento || 0} icon={TrendingUp} description="em andamento" />
+        </div>
+
+        {/* CTA Banner */}
+        <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-6 md:p-8 mb-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 order-2 md:order-1">
+              <Button variant="default" size="lg">
+                Acompanhar
+              </Button>
+              <Button variant="outline" size="lg">
+                Entrar na comunidade
+              </Button>
+            </div>
+            <div className="text-center md:text-right order-1 md:order-2">
+              <h3 className="text-xl font-semibold text-foreground">
+                Receba um resumo de tudo que rolou
+              </h3>
+            </div>
+          </div>
         </div>
 
         {/* Funcionalidades List */}
