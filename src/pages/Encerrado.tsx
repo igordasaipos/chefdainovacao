@@ -121,7 +121,7 @@ const Encerrado = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left order-1">
               <h3 className="text-xl font-semibold text-foreground">
-                Receba um resumo de tudo que rolou
+                Ficar por dentro tudo que rolou
               </h3>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 order-2">
