@@ -57,7 +57,7 @@ const Encerrado = () => {
     </div>;
   return <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-16 pb-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           
