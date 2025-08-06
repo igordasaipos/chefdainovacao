@@ -61,22 +61,16 @@ const Encerrado = () => {
         {/* Banner Section with Communication Image */}
         <div className="bg-white py-4 sm:py-8 mb-2 sm:mb-4 relative">
           <div className="max-w-4xl mx-auto relative">
-            <img 
-              src="/lovable-uploads/chefedainovacao.webp"
-              alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução"
-              className="w-full h-auto rounded-lg shadow-sm"
-              loading="eager"
-              decoding="async"
-            />
+            <img src="/lovable-uploads/chefedainovacao.webp" alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução" className="w-full h-auto rounded-lg shadow-sm" loading="eager" decoding="async" />
           </div>
         </div>
 
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="md:text-5xl font-bold mb-4 text-3xl">
             Nosso evento foi finalizado com sucesso
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-base">
             Muito obrigado a todos que colaboraram. Tivemos os seguintes resultados:
           </p>
         </div>
