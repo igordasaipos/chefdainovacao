@@ -128,7 +128,7 @@ const Encerrado = () => {
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button variant="default" size="lg">
-                    Acompanhar
+                    Receber os destaques
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
