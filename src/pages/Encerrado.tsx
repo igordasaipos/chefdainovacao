@@ -59,7 +59,7 @@ const Encerrado = () => {
       <Navbar />
       <div className="container mx-auto px-4 pt-16 pb-8">
         {/* Banner Section with Communication Image */}
-        <div className="bg-white py-4 sm:py-8 mb-6 sm:mb-8 relative">
+        <div className="bg-white py-4 sm:py-8 mb-2 sm:mb-4 relative">
           <div className="max-w-4xl mx-auto relative">
             <img 
               src="/lovable-uploads/chefedainovacao.webp"
