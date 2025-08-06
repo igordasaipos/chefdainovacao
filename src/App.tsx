@@ -40,7 +40,7 @@ const App = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/login" element={<Login />} />
               <Route path="/votar" element={<Navigate to="/encerrado" replace />} />
-              <Route path="/totem" element={<Totem />} />
+              <Route path="/totem" element={<Navigate to="/encerrado" replace />} />
               <Route path="/kanban" element={<Kanban />} />
               <Route path="/encerrado" element={<Encerrado />} />
               <Route path="*" element={<NotFound />} />
