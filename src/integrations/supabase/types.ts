@@ -37,7 +37,7 @@ export type Database = {
           admin_criador: string | null
           complexidade: string
           criado_em: string
-          criado_por: string
+          criado_por: string | null
           descricao: string | null
           desenvolvedor: string | null
           id: string
@@ -50,12 +50,15 @@ export type Database = {
           titulo: string
           votos: number
           whatsapp_criador: string | null
+          whatsapp_desenvolvimento_enviado: boolean
+          whatsapp_finalizado_enviado: boolean
+          whatsapp_votacao_enviado: boolean
         }
         Insert: {
           admin_criador?: string | null
           complexidade: string
           criado_em?: string
-          criado_por: string
+          criado_por?: string | null
           descricao?: string | null
           desenvolvedor?: string | null
           id?: string
@@ -68,12 +71,15 @@ export type Database = {
           titulo: string
           votos?: number
           whatsapp_criador?: string | null
+          whatsapp_desenvolvimento_enviado?: boolean
+          whatsapp_finalizado_enviado?: boolean
+          whatsapp_votacao_enviado?: boolean
         }
         Update: {
           admin_criador?: string | null
           complexidade?: string
           criado_em?: string
-          criado_por?: string
+          criado_por?: string | null
           descricao?: string | null
           desenvolvedor?: string | null
           id?: string
@@ -86,6 +92,30 @@ export type Database = {
           titulo?: string
           votos?: number
           whatsapp_criador?: string | null
+          whatsapp_desenvolvimento_enviado?: boolean
+          whatsapp_finalizado_enviado?: boolean
+          whatsapp_votacao_enviado?: boolean
+        }
+        Relationships: []
+      }
+      inscricoes_newsletter: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          nome?: string
         }
         Relationships: []
       }
@@ -144,6 +174,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      whatsapp_templates: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          status: string
+          template: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          status: string
+          template: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          status?: string
+          template?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {

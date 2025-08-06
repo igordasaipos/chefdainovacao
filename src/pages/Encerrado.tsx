@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { useIdeias, useTotaisPorStatus } from "@/hooks/useIdeias";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
@@ -24,7 +25,7 @@ const Encerrado = () => {
     data: totais
   } = useTotaisPorStatus();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || !email) {
       toast({
@@ -35,15 +36,42 @@ const Encerrado = () => {
       return;
     }
     
-    // Aqui você pode implementar a lógica para enviar os dados
-    toast({
-      title: "Sucesso!",
-      description: "Você será notificado sobre as novidades",
-    });
-    
-    setIsModalOpen(false);
-    setNome("");
-    setEmail("");
+    try {
+      const { error } = await supabase
+        .from('inscricoes_newsletter')
+        .insert([
+          {
+            nome: nome.trim(),
+            email: email.trim().toLowerCase()
+          }
+        ]);
+
+      if (error) {
+        console.error('Erro ao salvar inscrição:', error);
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao salvar sua inscrição. Tente novamente.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Sucesso!",
+        description: "Você será notificado sobre as novidades",
+      });
+      
+      setIsModalOpen(false);
+      setNome("");
+      setEmail("");
+    } catch (error) {
+      console.error('Erro inesperado:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
   const desenvolvimentoItems = ideias.filter(ideia => ideia.status === 'desenvolvimento').sort((a, b) => b.votos - a.votos);
   const finalizadasItems = ideias.filter(ideia => ideia.status === 'finalizado').sort((a, b) => b.votos - a.votos);
