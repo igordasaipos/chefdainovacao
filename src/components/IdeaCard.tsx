@@ -43,7 +43,7 @@ export const IdeaCard = ({
               </h3>
             </div>
             
-            <p className={cn("text-gray-600 text-sm mb-4 line-clamp-3", compact && "text-xs mb-2 line-clamp-2")}>
+            <p className={cn("text-gray-600 text-sm mb-4 line-clamp-3", compact && "text-xs mb-2")}>
               {ideia.descricao}
             </p>
             
