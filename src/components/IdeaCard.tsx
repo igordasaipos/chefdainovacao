@@ -46,18 +46,11 @@ export const IdeaCard = ({
             </p>
             
             <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 sm:mb-3">
-              <ComplexityBadge complexity={ideia.complexidade} />
               {showPosition && position && (
                 <>
-                  <span>|</span>
                   <span className="font-medium">#{position}</span>
                 </>
               )}
-              <span>|</span>
-              <div className="flex items-center gap-1">
-                <Heart className="h-4 w-4" />
-                <span className="font-medium">{ideia.votos}</span>
-              </div>
             </div>
           </div>
           
