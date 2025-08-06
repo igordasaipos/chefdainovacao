@@ -1,54 +1,159 @@
-import { CheckCircle, Clock } from "lucide-react"
+import { CheckCircle, TrendingUp, Users, Target } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useIdeias, useTotaisPorStatus } from "@/hooks/useIdeias"
+import { IdeaCard } from "@/components/IdeaCard"
 
 const Encerrado = () => {
-  const navigate = useNavigate()
+  const { data: ideias = [] } = useIdeias()
+  const { data: totais } = useTotaisPorStatus()
+
+  const desenvolvimentoItems = ideias
+    .filter(ideia => ideia.status === 'desenvolvimento')
+    .sort((a, b) => b.votos - a.votos)
+
+  const finalizadasItems = ideias
+    .filter(ideia => ideia.status === 'finalizado')
+    .sort((a, b) => b.votos - a.votos)
+
+  const StatCard = ({ title, value, icon: Icon, description }: {
+    title: string
+    value: number
+    icon: any
+    description: string
+  }) => (
+    <Card className="text-center">
+      <CardContent className="pt-6">
+        <div className="flex justify-center mb-2">
+          <Icon className="h-8 w-8 text-primary" />
+        </div>
+        <div className="text-3xl font-bold text-primary mb-1">{value}</div>
+        <div className="text-sm font-medium mb-1">{title}</div>
+        <div className="text-xs text-muted-foreground">{description}</div>
+      </CardContent>
+    </Card>
+  )
+
+  const IdeaColumn = ({ title, items, className }: {
+    title: string
+    items: typeof ideias
+    className?: string
+  }) => (
+    <div className={`space-y-4 ${className}`}>
+      <div className="flex items-center space-x-2">
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <Badge variant="outline" className="text-xs">
+          {items.length}
+        </Badge>
+      </div>
+      <div className="space-y-3">
+        {items.length === 0 ? (
+          <Card className="p-8 text-center">
+            <p className="text-muted-foreground">Nenhuma funcionalidade neste status</p>
+          </Card>
+        ) : (
+          items.map((ideia) => (
+            <IdeaCard 
+              key={ideia.id} 
+              ideia={ideia} 
+              showVoteButton={false}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
-      <Card className="w-full max-w-md mx-auto text-center">
-        <CardHeader className="space-y-4">
-          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-8 w-8 text-primary" />
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+      <div className="container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+            <CheckCircle className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold">
-            Votação Encerrada
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <p className="text-muted-foreground">
-              O período de votação foi finalizado.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Obrigado por sua participação!
-            </p>
-          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Nosso evento foi finalizado com sucesso
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Muito obrigado a todos que colaboraram. Tivemos os seguintes resultados:
+          </p>
+        </div>
+
+        {/* Statistics Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <StatCard 
+            title="Total de Ideias"
+            value={totais?.totalIdeias || 0}
+            icon={Target}
+            description="funcionalidades cadastradas"
+          />
+          <StatCard 
+            title="Total de Votos"
+            value={totais?.totalVotos || 0}
+            icon={Users}
+            description="votos recebidos"
+          />
+          <StatCard 
+            title="Entregues"
+            value={totais?.finalizadas || 0}
+            icon={CheckCircle}
+            description="funcionalidades finalizadas"
+          />
+          <StatCard 
+            title="Em Desenvolvimento"
+            value={totais?.desenvolvimento || 0}
+            icon={TrendingUp}
+            description="em andamento"
+          />
+        </div>
+
+        {/* Funcionalidades List */}
+        <div className="space-y-8">
+          <h2 className="text-2xl font-bold text-center">
+            Funcionalidades Implementadas
+          </h2>
           
-          <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>Votação encerrada</span>
+          {/* Desktop View */}
+          <div className="hidden md:grid md:grid-cols-2 gap-8">
+            <IdeaColumn 
+              title="Em Desenvolvimento" 
+              items={desenvolvimentoItems}
+            />
+            <IdeaColumn 
+              title="Finalizadas" 
+              items={finalizadasItems}
+            />
           </div>
 
-          <div className="space-y-3">
-            <Button 
-              onClick={() => navigate('/kanban')} 
-              className="w-full"
-            >
-              Ver Acompanhamento
-            </Button>
-            <Button 
-              onClick={() => navigate('/totem')} 
-              variant="outline" 
-              className="w-full"
-            >
-              Ver Estatísticas
-            </Button>
+          {/* Mobile View */}
+          <div className="md:hidden">
+            <Tabs defaultValue="desenvolvimento" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="desenvolvimento">
+                  Desenvolvimento ({desenvolvimentoItems.length})
+                </TabsTrigger>
+                <TabsTrigger value="finalizadas">
+                  Finalizadas ({finalizadasItems.length})
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="desenvolvimento" className="mt-6">
+                <IdeaColumn 
+                  title="Em Desenvolvimento" 
+                  items={desenvolvimentoItems}
+                />
+              </TabsContent>
+              <TabsContent value="finalizadas" className="mt-6">
+                <IdeaColumn 
+                  title="Finalizadas" 
+                  items={finalizadasItems}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
