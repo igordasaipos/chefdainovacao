@@ -156,53 +156,19 @@ export const useTotaisGerais = () => {
   return useQuery({
     queryKey: ['totais-gerais'],
     queryFn: async () => {
-      // Buscar todas as ideias
-      const { data: todasIdeias, error: ideiasError } = await supabase
-        .from('ideias')
-        .select('id, votos');
-      
-      if (ideiasError) throw ideiasError;
-      
-      // Buscar todos os votos
-      const { data: todosVotos, error: votosError } = await supabase
-        .from('votos')
-        .select('id');
-      
-      if (votosError) throw votosError;
-      
-      return {
-        totalIdeias: todasIdeias?.length || 0,
-        totalVotos: todosVotos?.length || 0
-      };
-    },
-  });
-};
-
-export const useTotaisPorStatus = () => {
-  return useQuery({
-    queryKey: ['totais-por-status'],
-    queryFn: async () => {
       const { data, error } = await supabase
         .from('ideias')
-        .select('status, votos');
+        .select('votos');
       
       if (error) throw error;
       
-      const totais = {
-        votacao: 0,
-        desenvolvimento: 0,
-        finalizado: 0,
-        totalVotos: 0
+      const totalIdeias = data?.length || 0;
+      const totalVotos = data?.reduce((sum, ideia) => sum + (ideia.votos || 0), 0) || 0;
+      
+      return {
+        totalIdeias,
+        totalVotos
       };
-      
-      data?.forEach(ideia => {
-        totais.totalVotos += ideia.votos;
-        if (ideia.status === 'votacao') totais.votacao++;
-        if (ideia.status === 'desenvolvimento') totais.desenvolvimento++;
-        if (ideia.status === 'finalizado') totais.finalizado++;
-      });
-      
-      return totais;
     },
   });
 };
