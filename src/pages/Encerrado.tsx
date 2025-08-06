@@ -119,7 +119,8 @@ const Encerrado = () => {
   return <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <Navbar />
       <div className="container mx-auto px-4 pt-16 pb-8">
-        {/* Banner Section with Communication Image */}
+        <div className="max-w-4xl mx-auto">
+          {/* Banner Section with Communication Image */}
         <div className="bg-white py-4 sm:py-8 mb-2 sm:mb-4 relative">
           <div className="max-w-4xl mx-auto relative">
             <img src="/lovable-uploads/chefedainovacao.webp" alt="Chef da Inovação - Você faz o pedido, a gente desenvolve a solução" className="w-full h-auto rounded-lg shadow-sm" loading="eager" decoding="async" />
@@ -249,6 +250,7 @@ const Encerrado = () => {
                </TabsContent>
             </Tabs>
           </div>
+        </div>
         </div>
       </div>
     </div>;
