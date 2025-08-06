@@ -201,8 +201,18 @@ const Encerrado = () => {
                   </form>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" size="lg">
-                Entrar na comunidade
+              <Button 
+                variant="outline" 
+                size="lg"
+                asChild
+              >
+                <a 
+                  href="https://chat.whatsapp.com/KwqneNRzYFn1BNLZoRmw6O?mode=ac_t"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Entrar na comunidade
+                </a>
               </Button>
             </div>
           </div>
