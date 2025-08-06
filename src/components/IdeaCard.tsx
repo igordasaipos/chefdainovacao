@@ -16,6 +16,7 @@ interface IdeaCardProps {
   hasVotedRecently?: boolean;
   isVoting?: boolean;
   hasVoted?: boolean;
+  compact?: boolean;
   "data-qa"?: string;
 }
 
@@ -28,24 +29,25 @@ export const IdeaCard = ({
   hasVotedRecently = false,
   isVoting = false,
   hasVoted = false,
+  compact = false,
   "data-qa": dataQa
 }: IdeaCardProps) => {
   return (
     <Card className="transition-all duration-200 hover:shadow-md border-l-4 border-l-primary bg-card card-mobile-active" data-qa={dataQa}>
-      <CardContent className="p-4 sm:p-6">
+      <CardContent className={cn("p-4 sm:p-6", compact && "p-3 sm:p-4")}>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div className="flex-1">
-            <div className="mb-3">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
+            <div className={cn("mb-3", compact && "mb-2")}>
+              <h3 className={cn("text-base sm:text-lg font-semibold text-gray-900 leading-tight", compact && "text-sm sm:text-base")}>
                 {ideia.titulo}
               </h3>
             </div>
             
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+            <p className={cn("text-gray-600 text-sm mb-4 line-clamp-3", compact && "text-xs mb-2 line-clamp-2")}>
               {ideia.descricao}
             </p>
             
-            <div className="flex items-center gap-3 text-sm text-gray-500 mb-4 sm:mb-3">
+            <div className={cn("flex items-center gap-3 text-sm text-gray-500 mb-4 sm:mb-3", compact && "mb-2 text-xs")}>
               {showPosition && position && (
                 <>
                   <span className="font-medium">#{position}</span>

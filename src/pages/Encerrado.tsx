@@ -58,6 +58,7 @@ const Encerrado = () => {
               key={ideia.id} 
               ideia={ideia} 
               showVoteButton={false}
+              compact={true}
             />
           ))
         )}
