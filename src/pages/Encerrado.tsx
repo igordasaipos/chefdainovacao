@@ -225,30 +225,9 @@ const Encerrado = () => {
             Funcionalidades Implementadas
           </h2>
           
-          {/* Desktop View */}
-          <div className="hidden md:grid md:grid-cols-2 gap-8">
-            <IdeaColumn title="Em Desenvolvimento" items={desenvolvimentoItems} />
+          {/* Single Column View */}
+          <div className="max-w-2xl mx-auto">
             <IdeaColumn title="Finalizadas" items={finalizadasItems} />
-          </div>
-
-          {/* Mobile View */}
-          <div className="md:hidden">
-            <Tabs defaultValue="desenvolvimento" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="desenvolvimento">
-                  Desenvolvimento ({desenvolvimentoItems.length})
-                </TabsTrigger>
-                <TabsTrigger value="finalizadas">
-                  Finalizadas ({finalizadasItems.length})
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="desenvolvimento" className="mt-6">
-                <IdeaColumn title="Em Desenvolvimento" items={desenvolvimentoItems} />
-              </TabsContent>
-              <TabsContent value="finalizadas" className="mt-6">
-                <IdeaColumn title="Finalizadas" items={finalizadasItems} />
-               </TabsContent>
-            </Tabs>
           </div>
         </div>
         </div>
