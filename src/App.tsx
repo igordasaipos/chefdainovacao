@@ -39,9 +39,9 @@ const App = () => {
               <Route path="/" element={<Navigate to="/encerrado" replace />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/votar" element={<Navigate to="/encerrado" replace />} />
-              <Route path="/totem" element={<Navigate to="/encerrado" replace />} />
-              <Route path="/kanban" element={<Navigate to="/encerrado" replace />} />
+              <Route path="/votar" element={<Votar />} />
+              <Route path="/totem" element={<Totem />} />
+              <Route path="/kanban" element={<Kanban />} />
               <Route path="/encerrado" element={<Encerrado />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
