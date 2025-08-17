@@ -19,18 +19,29 @@ export type Database = {
           created_at: string
           id: string
           nome: string
+          role_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           nome: string
+          role_id: string
         }
         Update: {
           created_at?: string
           id?: string
           nome?: string
+          role_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "admins_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eventos: {
         Row: {
@@ -187,6 +198,87 @@ export type Database = {
         }
         Relationships: []
       }
+      permissions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          permission_id: string | null
+          role_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          permission_id?: string | null
+          role_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          permission_id?: string | null
+          role_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       votos: {
         Row: {
           created_at: string
@@ -263,6 +355,23 @@ export type Database = {
       create_admin_user: {
         Args: { email: string; password: string }
         Returns: string
+      }
+      get_user_permissions: {
+        Args: { user_email: string }
+        Returns: {
+          permission_name: string
+        }[]
+      }
+      get_user_role: {
+        Args: { user_email: string }
+        Returns: {
+          role_description: string
+          role_name: string
+        }[]
+      }
+      user_has_permission: {
+        Args: { permission_name: string; user_email: string }
+        Returns: boolean
       }
     }
     Enums: {

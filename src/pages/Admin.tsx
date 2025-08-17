@@ -19,12 +19,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { formatWhatsApp } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { UserRoleInfo } from '@/components/UserRoleInfo';
 const Admin = () => {
   const {
     adminEmail,
     isAdmin,
     signOut,
-    loading
+    loading,
+    hasPermission,
+    canDeleteIdea,
+    canEditIdea,
+    userRole
   } = useAuth();
   const { eventoSelecionado } = useEventoContext();
   const {
@@ -338,39 +343,58 @@ const Admin = () => {
       <Navbar />
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
+        <div className="flex justify-between items-start mb-6">
+          <div className="flex-1">
             <h1 className="text-2xl font-semibold text-gray-900">Painel Administrativo</h1>
             <p className="text-gray-600">Gerencie as ideias coletadas no evento</p>
-            <p className="text-sm text-gray-500">Logado como: {adminEmail}</p>
+            <div className="flex items-center gap-4 mt-2">
+              <p className="text-sm text-gray-500">Logado como: {adminEmail}</p>
+              {userRole && (
+                <Badge className={
+                  userRole === 'super_admin' ? 'bg-red-100 text-red-800' :
+                  userRole === 'admin' ? 'bg-blue-100 text-blue-800' :
+                  userRole === 'editor' ? 'bg-green-100 text-green-800' :
+                  'bg-gray-100 text-gray-800'
+                }>
+                  {userRole === 'super_admin' ? 'Super Admin' :
+                   userRole === 'admin' ? 'Admin' :
+                   userRole === 'editor' ? 'Editor' :
+                   'Visualizador'}
+                </Badge>
+              )}
+            </div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => {
-            setEditingIdea(null);
-            setIdeaForm({
-              titulo: '',
-              descricao: '',
-              nome_id_saipos_cnpj: '',
-              cliente_tipo: 'cliente',
-              whatsapp: '',
-              nome: '',
-              complexidade: '1h30',
-              status: 'caixinha',
-              observacao: '',
-              jira: ''
-            });
-            setIsFormOpen(true);
-          }} className="bg-black text-white hover:bg-gray-800" data-qa="admin-create-idea-button">
-              <Plus className="h-4 w-4 mr-2" />
-              Nova Ideia
-            </Button>
-            
-            <Link to="/admin/eventos">
-              <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
-                <BarChart className="h-4 w-4 mr-2" />
-                Gerenciar Eventos
+            {hasPermission('create_idea') && (
+              <Button onClick={() => {
+                setEditingIdea(null);
+                setIdeaForm({
+                  titulo: '',
+                  descricao: '',
+                  nome_id_saipos_cnpj: '',
+                  cliente_tipo: 'cliente',
+                  whatsapp: '',
+                  nome: '',
+                  complexidade: '1h30',
+                  status: 'caixinha',
+                  observacao: '',
+                  jira: ''
+                });
+                setIsFormOpen(true);
+              }} className="bg-black text-white hover:bg-gray-800" data-qa="admin-create-idea-button">
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Ideia
               </Button>
-            </Link>
+            )}
+            
+            {hasPermission('manage_events') && (
+              <Link to="/admin/eventos">
+                <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+                  <BarChart className="h-4 w-4 mr-2" />
+                  Gerenciar Eventos
+                </Button>
+              </Link>
+            )}
             
             <Button onClick={signOut} variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
               <LogOut className="h-4 w-4 mr-2" />
@@ -605,12 +629,19 @@ const Admin = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
-                          <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm" data-qa={`admin-edit-${ideia.id}`}>
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button onClick={() => handleDeleteClick(ideia.id)} variant="destructive" size="sm" data-qa={`admin-delete-${ideia.id}`}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          {canEditIdea(ideia.admin_criador) && (
+                            <Button onClick={() => handleEdit(ideia)} variant="outline" size="sm" data-qa={`admin-edit-${ideia.id}`}>
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {canDeleteIdea(ideia.admin_criador) && (
+                            <Button onClick={() => handleDeleteClick(ideia.id)} variant="destructive" size="sm" data-qa={`admin-delete-${ideia.id}`}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {!canEditIdea(ideia.admin_criador) && !canDeleteIdea(ideia.admin_criador) && (
+                            <span className="text-xs text-muted-foreground">Sem permissão</span>
+                          )}
                         </div>
                       </td>
                     </tr>)}
