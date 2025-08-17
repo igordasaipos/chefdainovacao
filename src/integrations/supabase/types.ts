@@ -32,6 +32,45 @@ export type Database = {
         }
         Relationships: []
       }
+      eventos: {
+        Row: {
+          ativo: boolean | null
+          configuracao: Json | null
+          created_at: string | null
+          data_fim: string | null
+          data_inicio: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          configuracao?: Json | null
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          configuracao?: Json | null
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       ideias: {
         Row: {
           admin_criador: string | null
@@ -40,6 +79,7 @@ export type Database = {
           criado_por: string | null
           descricao: string | null
           desenvolvedor: string | null
+          evento_id: string
           id: string
           jira: string | null
           nome_cliente: string | null
@@ -62,6 +102,7 @@ export type Database = {
           criado_por?: string | null
           descricao?: string | null
           desenvolvedor?: string | null
+          evento_id: string
           id?: string
           jira?: string | null
           nome_cliente?: string | null
@@ -84,6 +125,7 @@ export type Database = {
           criado_por?: string | null
           descricao?: string | null
           desenvolvedor?: string | null
+          evento_id?: string
           id?: string
           jira?: string | null
           nome_cliente?: string | null
@@ -99,7 +141,15 @@ export type Database = {
           whatsapp_finalizado_enviado?: boolean
           whatsapp_votacao_enviado?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ideias_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inscricoes_newsletter: {
         Row: {

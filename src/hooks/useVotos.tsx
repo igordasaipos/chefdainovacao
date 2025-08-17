@@ -15,16 +15,25 @@ export interface Voto {
 }
 
 export const useVotos = (ideiaId?: string) => {
-  // Temporarily disable event filtering until migration is run
-  // const { eventoAtivo } = useEventoContext();
+  const { eventoAtivo } = useEventoContext();
 
   return useQuery({
-    queryKey: ['votos', ideiaId], // Temporarily remove event filtering
+    queryKey: ['votos', ideiaId, eventoAtivo?.id],
     queryFn: async () => {
-      let query = supabase.from('votos').select('*');
+      let query = supabase
+        .from('votos')
+        .select(`
+          *,
+          ideias!inner(evento_id)
+        `);
       
       if (ideiaId) {
         query = query.eq('ideia_id', ideiaId);
+      }
+      
+      // Filtrar votos de ideias do evento ativo
+      if (eventoAtivo?.id) {
+        query = query.eq('ideias.evento_id', eventoAtivo.id);
       }
       
       const { data, error } = await query.order('created_at', { ascending: false });

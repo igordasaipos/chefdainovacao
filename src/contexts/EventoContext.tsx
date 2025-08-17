@@ -14,13 +14,12 @@ interface EventoProviderProps {
 }
 
 export const EventoProvider: React.FC<EventoProviderProps> = ({ children }) => {
-  // Temporarily return null for eventoAtivo until migration is run
-  // const { data: eventoAtivo, isLoading, error } = useEventoAtivo();
+  const { data: eventoAtivo, isLoading, error } = useEventoAtivo();
 
   const value: EventoContextType = {
-    eventoAtivo: null, // Temporarily null until migration is run
-    isLoading: false,
-    error: null,
+    eventoAtivo,
+    isLoading,
+    error,
   };
 
   return (

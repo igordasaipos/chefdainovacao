@@ -25,40 +25,48 @@ export interface Ideia {
 }
 
 export const useIdeias = (eventoId?: string) => {
-  // Temporarily disable event filtering until migration is run
-  // const { eventoAtivo } = useEventoContext();
-  // const targetEventoId = eventoId || eventoAtivo?.id;
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['ideias'], // Temporarily remove event filtering
+    queryKey: ['ideias', targetEventoId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('ideias')
-        .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
-        .order('criado_em', { ascending: false });
+        .select('*');
+      
+      if (targetEventoId) {
+        query = query.eq('evento_id', targetEventoId);
+      }
+      
+      const { data, error } = await query.order('criado_em', { ascending: false });
       
       if (error) throw error;
-      return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
+      return data as Ideia[];
     },
   });
 };
 
 export const useIdeiasVotacao = (eventoId?: string) => {
-  // Temporarily disable event filtering until migration is run
-  // const { eventoAtivo } = useEventoContext();
-  // const targetEventoId = eventoId || eventoAtivo?.id;
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['ideias-votacao'], // Temporarily remove event filtering
+    queryKey: ['ideias-votacao', targetEventoId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('ideias')
-        .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
-        .eq('status', 'votacao')
-        .order('votos', { ascending: false });
+        .select('*')
+        .eq('status', 'votacao');
+      
+      if (targetEventoId) {
+        query = query.eq('evento_id', targetEventoId);
+      }
+      
+      const { data, error } = await query.order('votos', { ascending: false });
       
       if (error) throw error;
-      return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
+      return data as Ideia[];
     },
   });
 };
@@ -66,15 +74,20 @@ export const useIdeiasVotacao = (eventoId?: string) => {
 export const useCreateIdeia = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  // Temporarily disable event context until migration is run
-  // const { eventoAtivo } = useEventoContext();
+  const { eventoAtivo } = useEventoContext();
 
   return useMutation({
     mutationFn: async (ideia: Omit<Ideia, 'id' | 'criado_em' | 'votos' | 'evento_id'>) => {
-      // Temporarily create ideias without evento_id until migration is run
+      if (!eventoAtivo?.id) {
+        throw new Error('Nenhum evento ativo encontrado');
+      }
+
       const { data, error } = await supabase
         .from('ideias')
-        .insert([ideia])
+        .insert([{
+          ...ideia,
+          evento_id: eventoAtivo.id
+        }])
         .select()
         .single();
       
@@ -167,16 +180,21 @@ export const useDeleteIdeia = () => {
 };
 
 export const useTotaisGerais = (eventoId?: string) => {
-  // Temporarily disable event filtering until migration is run
-  // const { eventoAtivo } = useEventoContext();
-  // const targetEventoId = eventoId || eventoAtivo?.id;
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['totais-gerais'], // Temporarily remove event filtering
+    queryKey: ['totais-gerais', targetEventoId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('ideias')
         .select('votos');
+      
+      if (targetEventoId) {
+        query = query.eq('evento_id', targetEventoId);
+      }
+      
+      const { data, error } = await query;
       
       if (error) throw error;
       
@@ -192,18 +210,21 @@ export const useTotaisGerais = (eventoId?: string) => {
 };
 
 export const useTotaisPorStatus = (eventoId?: string) => {
-  // Temporarily disable event filtering until migration is run
-  // const { eventoAtivo } = useEventoContext();
-  // const targetEventoId = eventoId || eventoAtivo?.id;
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['totais-por-status'], // Temporarily remove event filtering
+    queryKey: ['totais-por-status', targetEventoId],
     queryFn: async () => {
-      
-      
-      const { data, error } = await supabase
+      let query = supabase
         .from('ideias')
         .select('status, votos');
+      
+      if (targetEventoId) {
+        query = query.eq('evento_id', targetEventoId);
+      }
+      
+      const { data, error } = await query;
       
       if (error) throw error;
       
