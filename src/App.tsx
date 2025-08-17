@@ -10,6 +10,7 @@ import { EventoProvider } from "@/contexts/EventoContext"
 import { LoadingScreen } from "@/components/LoadingScreen"
 import Admin from "./pages/Admin"
 import EventosAdmin from "./pages/EventosAdmin"
+import UserManagement from "./pages/UserManagement"
 import Votar from "./pages/Votar"
 import Totem from "./pages/Totem"
 import Kanban from "./pages/Kanban"
@@ -42,6 +43,7 @@ const App = () => {
                 <Route path="/" element={<Navigate to="/encerrado" replace />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/eventos" element={<EventosAdmin />} />
+                <Route path="/admin/usuarios" element={<UserManagement />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/votar" element={<Votar />} />
                 <Route path="/totem" element={<Totem />} />

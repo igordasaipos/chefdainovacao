@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ComplexityBadge } from '@/components/ComplexityBadge';
-import { LogOut, Plus, Edit2, Trash2, Download, BarChart, Search } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, Download, BarChart, Search, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { formatWhatsApp } from '@/lib/utils';
@@ -392,6 +392,15 @@ const Admin = () => {
                 <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
                   <BarChart className="h-4 w-4 mr-2" />
                   Gerenciar Eventos
+                </Button>
+              </Link>
+            )}
+            
+            {hasPermission('manage_users') && (
+              <Link to="/admin/usuarios">
+                <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+                  <Users className="h-4 w-4 mr-2" />
+                  Gerenciar Usuários
                 </Button>
               </Link>
             )}
