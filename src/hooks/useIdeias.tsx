@@ -25,15 +25,13 @@ export interface Ideia {
 }
 
 export const useIdeias = (eventoId?: string) => {
-  const { eventoAtivo } = useEventoContext();
-  const targetEventoId = eventoId || eventoAtivo?.id;
+  // Temporarily disable event filtering until migration is run
+  // const { eventoAtivo } = useEventoContext();
+  // const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['ideias', targetEventoId],
+    queryKey: ['ideias'], // Temporarily remove event filtering
     queryFn: async () => {
-      if (!targetEventoId) return [];
-      
-      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
@@ -42,20 +40,17 @@ export const useIdeias = (eventoId?: string) => {
       if (error) throw error;
       return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
     },
-    enabled: !!targetEventoId,
   });
 };
 
 export const useIdeiasVotacao = (eventoId?: string) => {
-  const { eventoAtivo } = useEventoContext();
-  const targetEventoId = eventoId || eventoAtivo?.id;
+  // Temporarily disable event filtering until migration is run
+  // const { eventoAtivo } = useEventoContext();
+  // const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['ideias-votacao', targetEventoId],
+    queryKey: ['ideias-votacao'], // Temporarily remove event filtering
     queryFn: async () => {
-      if (!targetEventoId) return [];
-      
-      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
@@ -65,29 +60,21 @@ export const useIdeiasVotacao = (eventoId?: string) => {
       if (error) throw error;
       return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
     },
-    enabled: !!targetEventoId,
   });
 };
 
 export const useCreateIdeia = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { eventoAtivo } = useEventoContext();
+  // Temporarily disable event context until migration is run
+  // const { eventoAtivo } = useEventoContext();
 
   return useMutation({
     mutationFn: async (ideia: Omit<Ideia, 'id' | 'criado_em' | 'votos' | 'evento_id'>) => {
-      if (!eventoAtivo?.id) {
-        throw new Error('Nenhum evento ativo encontrado');
-      }
-
-      const ideiaComEvento = {
-        ...ideia,
-        evento_id: eventoAtivo.id,
-      };
-
+      // Temporarily create ideias without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
-        .insert([ideiaComEvento])
+        .insert([ideia])
         .select()
         .single();
       
@@ -180,15 +167,13 @@ export const useDeleteIdeia = () => {
 };
 
 export const useTotaisGerais = (eventoId?: string) => {
-  const { eventoAtivo } = useEventoContext();
-  const targetEventoId = eventoId || eventoAtivo?.id;
+  // Temporarily disable event filtering until migration is run
+  // const { eventoAtivo } = useEventoContext();
+  // const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['totais-gerais', targetEventoId],
+    queryKey: ['totais-gerais'], // Temporarily remove event filtering
     queryFn: async () => {
-      if (!targetEventoId) return { totalIdeias: 0, totalVotos: 0 };
-      
-      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('votos');
@@ -203,20 +188,19 @@ export const useTotaisGerais = (eventoId?: string) => {
         totalVotos
       };
     },
-    enabled: !!targetEventoId,
   });
 };
 
 export const useTotaisPorStatus = (eventoId?: string) => {
-  const { eventoAtivo } = useEventoContext();
-  const targetEventoId = eventoId || eventoAtivo?.id;
+  // Temporarily disable event filtering until migration is run
+  // const { eventoAtivo } = useEventoContext();
+  // const targetEventoId = eventoId || eventoAtivo?.id;
 
   return useQuery({
-    queryKey: ['totais-por-status', targetEventoId],
+    queryKey: ['totais-por-status'], // Temporarily remove event filtering
     queryFn: async () => {
-      if (!targetEventoId) return { totalIdeias: 0, totalVotos: 0, finalizadas: 0, desenvolvimento: 0 };
       
-      // Temporarily use without evento_id until migration is run
+      
       const { data, error } = await supabase
         .from('ideias')
         .select('status, votos');
@@ -235,6 +219,5 @@ export const useTotaisPorStatus = (eventoId?: string) => {
         desenvolvimento
       };
     },
-    enabled: !!targetEventoId,
   });
 };
