@@ -369,6 +369,10 @@ export type Database = {
           role_name: string
         }[]
       }
+      is_super_admin: {
+        Args: { user_email: string }
+        Returns: boolean
+      }
       user_has_permission: {
         Args: { permission_name: string; user_email: string }
         Returns: boolean
