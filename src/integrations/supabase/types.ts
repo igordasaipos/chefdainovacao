@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -49,6 +49,7 @@ export type Database = {
           tipo_cliente: string | null
           titulo: string
           votos: number
+          whatsapp_caixinha_enviado: boolean
           whatsapp_criador: string | null
           whatsapp_desenvolvimento_enviado: boolean
           whatsapp_finalizado_enviado: boolean
@@ -70,6 +71,7 @@ export type Database = {
           tipo_cliente?: string | null
           titulo: string
           votos?: number
+          whatsapp_caixinha_enviado?: boolean
           whatsapp_criador?: string | null
           whatsapp_desenvolvimento_enviado?: boolean
           whatsapp_finalizado_enviado?: boolean
@@ -91,6 +93,7 @@ export type Database = {
           tipo_cliente?: string | null
           titulo?: string
           votos?: number
+          whatsapp_caixinha_enviado?: boolean
           whatsapp_criador?: string | null
           whatsapp_desenvolvimento_enviado?: boolean
           whatsapp_finalizado_enviado?: boolean
