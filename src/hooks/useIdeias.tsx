@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { sendIdeiaToZapier } from '@/lib/zapier';
+import { useEventoContext } from '@/contexts/EventoContext';
 
 export interface Ideia {
   id: string;
@@ -20,27 +21,41 @@ export interface Ideia {
   nome_cliente: string | null;
   admin_criador: string | null;
   jira: string | null;
+  evento_id: string;
 }
 
-export const useIdeias = () => {
+export const useIdeias = (eventoId?: string) => {
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
+
   return useQuery({
-    queryKey: ['ideias'],
+    queryKey: ['ideias', targetEventoId],
     queryFn: async () => {
+      if (!targetEventoId) return [];
+      
+      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
         .order('criado_em', { ascending: false });
       
       if (error) throw error;
-      return data as Ideia[];
+      return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
     },
+    enabled: !!targetEventoId,
   });
 };
 
-export const useIdeiasVotacao = () => {
+export const useIdeiasVotacao = (eventoId?: string) => {
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
+
   return useQuery({
-    queryKey: ['ideias-votacao'],
+    queryKey: ['ideias-votacao', targetEventoId],
     queryFn: async () => {
+      if (!targetEventoId) return [];
+      
+      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('id, titulo, descricao, complexidade, status, votos, criado_em, criado_por, desenvolvedor, nome_restaurante, whatsapp_criador, observacao, tipo_cliente, nome_cliente, jira, admin_criador')
@@ -48,20 +63,31 @@ export const useIdeiasVotacao = () => {
         .order('votos', { ascending: false });
       
       if (error) throw error;
-      return data as Ideia[];
+      return data.map(item => ({ ...item, evento_id: 'temp' })) as Ideia[];
     },
+    enabled: !!targetEventoId,
   });
 };
 
 export const useCreateIdeia = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { eventoAtivo } = useEventoContext();
 
   return useMutation({
-    mutationFn: async (ideia: Omit<Ideia, 'id' | 'criado_em' | 'votos'>) => {
+    mutationFn: async (ideia: Omit<Ideia, 'id' | 'criado_em' | 'votos' | 'evento_id'>) => {
+      if (!eventoAtivo?.id) {
+        throw new Error('Nenhum evento ativo encontrado');
+      }
+
+      const ideiaComEvento = {
+        ...ideia,
+        evento_id: eventoAtivo.id,
+      };
+
       const { data, error } = await supabase
         .from('ideias')
-        .insert([ideia])
+        .insert([ideiaComEvento])
         .select()
         .single();
       
@@ -70,6 +96,7 @@ export const useCreateIdeia = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['ideias'] });
+      queryClient.invalidateQueries({ queryKey: ['ideias-votacao'] });
       toast({
         title: "Ideia criada",
         description: "A ideia foi criada com sucesso!",
@@ -152,10 +179,16 @@ export const useDeleteIdeia = () => {
   });
 };
 
-export const useTotaisGerais = () => {
+export const useTotaisGerais = (eventoId?: string) => {
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
+
   return useQuery({
-    queryKey: ['totais-gerais'],
+    queryKey: ['totais-gerais', targetEventoId],
     queryFn: async () => {
+      if (!targetEventoId) return { totalIdeias: 0, totalVotos: 0 };
+      
+      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('votos');
@@ -170,13 +203,20 @@ export const useTotaisGerais = () => {
         totalVotos
       };
     },
+    enabled: !!targetEventoId,
   });
 };
 
-export const useTotaisPorStatus = () => {
+export const useTotaisPorStatus = (eventoId?: string) => {
+  const { eventoAtivo } = useEventoContext();
+  const targetEventoId = eventoId || eventoAtivo?.id;
+
   return useQuery({
-    queryKey: ['totais-por-status'],
+    queryKey: ['totais-por-status', targetEventoId],
     queryFn: async () => {
+      if (!targetEventoId) return { totalIdeias: 0, totalVotos: 0, finalizadas: 0, desenvolvimento: 0 };
+      
+      // Temporarily use without evento_id until migration is run
       const { data, error } = await supabase
         .from('ideias')
         .select('status, votos');
@@ -195,5 +235,6 @@ export const useTotaisPorStatus = () => {
         desenvolvimento
       };
     },
+    enabled: !!targetEventoId,
   });
 };

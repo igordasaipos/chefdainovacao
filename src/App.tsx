@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { AuthProvider } from "@/hooks/useAuth"
+import { EventoProvider } from "@/contexts/EventoContext"
 import { LoadingScreen } from "@/components/LoadingScreen"
 import Admin from "./pages/Admin"
 import Votar from "./pages/Votar"
@@ -30,24 +31,26 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate to="/encerrado" replace />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/votar" element={<Votar />} />
-              <Route path="/totem" element={<Totem />} />
-              <Route path="/kanban" element={<Kanban />} />
-              <Route path="/encerrado" element={<Encerrado />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
+      <EventoProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Navigate to="/encerrado" replace />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/votar" element={<Votar />} />
+                <Route path="/totem" element={<Totem />} />
+                <Route path="/kanban" element={<Kanban />} />
+                <Route path="/encerrado" element={<Encerrado />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </EventoProvider>
     </QueryClientProvider>
   )
 }

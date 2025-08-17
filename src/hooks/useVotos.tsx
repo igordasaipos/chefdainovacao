@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEventoContext } from '@/contexts/EventoContext';
 
 export interface Voto {
   id: string;
@@ -14,13 +15,27 @@ export interface Voto {
 }
 
 export const useVotos = (ideiaId?: string) => {
+  const { eventoAtivo } = useEventoContext();
+
   return useQuery({
-    queryKey: ['votos', ideiaId],
+    queryKey: ['votos', ideiaId, eventoAtivo?.id],
     queryFn: async () => {
-      let query = supabase.from('votos').select('*');
+      if (!eventoAtivo?.id) return [];
+      
+      let query = supabase
+        .from('votos')
+        .select(`
+          *,
+          ideias!inner (
+            evento_id
+          )
+        `);
       
       if (ideiaId) {
         query = query.eq('ideia_id', ideiaId);
+      } else {
+        // Filtrar apenas votos de ideias do evento ativo
+        query = query.eq('ideias.evento_id', eventoAtivo.id);
       }
       
       const { data, error } = await query.order('created_at', { ascending: false });
@@ -28,6 +43,7 @@ export const useVotos = (ideiaId?: string) => {
       if (error) throw error;
       return data as Voto[];
     },
+    enabled: !!eventoAtivo?.id,
   });
 };
 
