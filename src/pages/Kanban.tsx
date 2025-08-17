@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useIdeias } from '@/hooks/useIdeias';
+import { useEventoContext } from '@/contexts/EventoContext';
 import { IdeaCard } from '@/components/IdeaCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,10 +10,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { cn } from '@/lib/utils';
 const Kanban = () => {
+  const { eventoSelecionado } = useEventoContext();
   const {
     data: ideias,
     refetch
-  } = useIdeias();
+  } = useIdeias(eventoSelecionado?.id);
   const [activeTab, setActiveTab] = useState(0);
 
   // Real-time subscription for kanban updates

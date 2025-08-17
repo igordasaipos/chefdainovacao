@@ -5,6 +5,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { EventSelector } from "@/components/EventSelector";
 const TOTEM_CONTEXT_KEY = "totem_context";
 export function Navbar() {
   const location = useLocation();
@@ -39,7 +40,59 @@ export function Navbar() {
   };
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   return <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      
+      <div className="container flex h-14 items-center justify-between">
+        {/* Left side - Navigation */}
+        <div className="flex items-center gap-6">
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to={getVotarLink()}
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      isActive("/votar") ? "bg-accent text-accent-foreground" : ""
+                    )}
+                  >
+                    Votar
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link
+                    to={getKanbanLink()}
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      isActive("/kanban") ? "bg-accent text-accent-foreground" : ""
+                    )}
+                  >
+                    Acompanhar
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Right side - Event Selector and Mobile Menu */}
+        <div className="flex items-center gap-4">
+          {/* Event Selector - hidden on mobile */}
+          <div className="hidden md:block">
+            <EventSelector />
+          </div>
+
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={toggleMobileMenu}
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </div>
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && <div className="md:hidden border-t bg-background/95 backdrop-blur">
@@ -50,6 +103,10 @@ export function Navbar() {
             <Link to={getKanbanLink()} onClick={() => setIsMobileMenuOpen(false)} className={cn("block w-full px-4 py-3 text-left font-medium rounded-md transition-colors", "touch-target flex items-center active:bg-accent/70", isActive("/kanban") ? "bg-primary/10 text-primary border-l-4 border-primary" : "hover:bg-accent/50")} data-qa="navbar-mobile-link-acompanhar">
               Acompanhar
             </Link>
+            {/* Event Selector for mobile */}
+            <div className="px-4 py-2">
+              <EventSelector />
+            </div>
           </div>
         </div>}
     </header>;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useIdeias, useCreateIdeia, useUpdateIdeia, useDeleteIdeia, Ideia } from '@/hooks/useIdeias';
+import { useEventoContext } from '@/contexts/EventoContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,6 +18,7 @@ import { LogOut, Plus, Edit2, Trash2, Download, BarChart, Search } from 'lucide-
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { formatWhatsApp } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 const Admin = () => {
   const {
     adminEmail,
@@ -24,10 +26,11 @@ const Admin = () => {
     signOut,
     loading
   } = useAuth();
+  const { eventoSelecionado } = useEventoContext();
   const {
     data: ideias,
     refetch: refetchIdeias
-  } = useIdeias();
+  } = useIdeias(eventoSelecionado?.id);
   const createIdeia = useCreateIdeia();
   const updateIdeia = useUpdateIdeia();
   const deleteIdeia = useDeleteIdeia();
@@ -177,7 +180,8 @@ const Admin = () => {
       tipo_cliente: ideaForm.cliente_tipo,
       nome_cliente: ideaForm.nome,
       admin_criador: adminEmail || "",
-      jira: ideaForm.jira
+      jira: ideaForm.jira,
+      evento_id: eventoSelecionado?.id || ''
     };
     if (editingIdea) {
       await updateIdeia.mutateAsync({
@@ -360,6 +364,13 @@ const Admin = () => {
               <Plus className="h-4 w-4 mr-2" />
               Nova Ideia
             </Button>
+            
+            <Link to="/admin/eventos">
+              <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+                <BarChart className="h-4 w-4 mr-2" />
+                Gerenciar Eventos
+              </Button>
+            </Link>
             
             <Button onClick={signOut} variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
               <LogOut className="h-4 w-4 mr-2" />

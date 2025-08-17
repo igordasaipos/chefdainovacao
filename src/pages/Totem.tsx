@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useIdeiasVotacao, useTotaisGerais } from "@/hooks/useIdeias";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEventoContext } from "@/contexts/EventoContext";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
@@ -10,8 +11,9 @@ import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart } from "lucide-react";
 
 export default function Totem() {
-  const { data: ideias = [], refetch } = useIdeiasVotacao();
-  const { data: totais = { totalIdeias: 0, totalVotos: 0 } } = useTotaisGerais();
+  const { eventoSelecionado } = useEventoContext();
+  const { data: ideias = [], refetch } = useIdeiasVotacao(eventoSelecionado?.id);
+  const { data: totais = { totalIdeias: 0, totalVotos: 0 } } = useTotaisGerais(eventoSelecionado?.id);
   const queryClient = useQueryClient();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);

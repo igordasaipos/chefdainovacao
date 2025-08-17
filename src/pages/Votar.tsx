@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useIdeiasVotacao, useTotaisGerais } from "@/hooks/useIdeias";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVotos } from "@/hooks/useVotos";
+import { useEventoContext } from "@/contexts/EventoContext";
 import { IdeaCard } from "@/components/IdeaCard";
 import { Navbar } from "@/components/Navbar";
 import { VoteModal } from "@/components/VoteModal";
@@ -14,9 +15,10 @@ import { useStableSort } from "@/hooks/useStableSort";
 import { Layers, Heart, Lightbulb } from "lucide-react";
 
 export default function Votar() {
-  const { data: ideias = [], refetch } = useIdeiasVotacao();
+  const { eventoSelecionado } = useEventoContext();
+  const { data: ideias = [], refetch } = useIdeiasVotacao(eventoSelecionado?.id);
   const { data: votos = [] } = useVotos();
-  const { data: totaisGerais } = useTotaisGerais();
+  const { data: totaisGerais } = useTotaisGerais(eventoSelecionado?.id);
   const queryClient = useQueryClient();
   const [selectedIdea, setSelectedIdea] = useState<any>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
