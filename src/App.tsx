@@ -40,7 +40,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Navigate to="/encerrado" replace />} />
+                <Route path="/" element={<Navigate to="/votar" replace />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/admin/eventos" element={<EventosAdmin />} />
                 <Route path="/admin/usuarios" element={<UserManagement />} />
