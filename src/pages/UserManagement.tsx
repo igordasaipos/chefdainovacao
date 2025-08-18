@@ -147,16 +147,24 @@ export default function UserManagement() {
     if (!selectedUser) return;
 
     try {
-      const { error } = await supabase
+      const { data, error, count } = await supabase
         .from('admins')
         .update({ role_id: newUserForm.roleId })
-        .eq('id', selectedUser.id);
+        .eq('id', selectedUser.id)
+        .select();
 
       if (error) throw error;
 
+      // Verificar se alguma linha foi afetada
+      if (!data || data.length === 0) {
+        throw new Error('Nenhuma linha foi atualizada. Verifique as permissões ou se o usuário existe.');
+      }
+
+      console.log('Update successful:', { data, count, affectedRows: data.length });
+
       toast({
-        title: "Sucesso",
-        description: "Role do usuário atualizada com sucesso",
+        title: "Sucesso", 
+        description: `Role do usuário atualizada com sucesso (${data.length} linha(s) afetada(s))`,
       });
 
       setIsEditUserOpen(false);
@@ -166,7 +174,7 @@ export default function UserManagement() {
       console.error('Erro ao atualizar usuário:', error);
       toast({
         title: "Erro",
-        description: "Erro ao atualizar usuário",
+        description: `Erro ao atualizar usuário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         variant: "destructive",
       });
     }
@@ -176,16 +184,24 @@ export default function UserManagement() {
     if (!userToDelete) return;
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('admins')
         .delete()
-        .eq('id', userToDelete.id);
+        .eq('id', userToDelete.id)
+        .select();
 
       if (error) throw error;
 
+      // Verificar se alguma linha foi afetada
+      if (!data || data.length === 0) {
+        throw new Error('Nenhuma linha foi deletada. Verifique as permissões ou se o usuário existe.');
+      }
+
+      console.log('Delete successful:', { data, affectedRows: data.length });
+
       toast({
         title: "Sucesso",
-        description: "Usuário removido com sucesso",
+        description: `Usuário removido com sucesso (${data.length} linha(s) afetada(s))`,
       });
 
       setDeleteDialogOpen(false);
@@ -195,7 +211,7 @@ export default function UserManagement() {
       console.error('Erro ao remover usuário:', error);
       toast({
         title: "Erro",
-        description: "Erro ao remover usuário",
+        description: `Erro ao remover usuário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         variant: "destructive",
       });
     }
