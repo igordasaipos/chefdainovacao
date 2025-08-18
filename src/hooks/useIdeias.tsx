@@ -155,14 +155,31 @@ export const useDeleteIdeia = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      console.log(`[DELETE] Tentando excluir ideia com ID: ${id}`);
+      
+      const { data, error, count } = await supabase
         .from('ideias')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .select()
+        .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('[DELETE] Erro do Supabase:', error);
+        throw error;
+      }
+      
+      console.log('[DELETE] Resultado:', { data, count });
+      
+      if (!data) {
+        console.warn('[DELETE] Nenhuma linha foi afetada - possível problema de permissão');
+        throw new Error('Não foi possível excluir a ideia. Verifique suas permissões.');
+      }
+      
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('[DELETE] Sucesso - Ideia excluída:', data.id);
       queryClient.invalidateQueries({ queryKey: ['ideias'] });
       toast({
         title: "Ideia excluída",
@@ -170,6 +187,7 @@ export const useDeleteIdeia = () => {
       });
     },
     onError: (error) => {
+      console.error('[DELETE] Erro na mutation:', error);
       toast({
         title: "Erro ao excluir ideia",
         description: error.message,
