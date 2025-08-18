@@ -586,7 +586,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredAndSortedIdeias.map(ideia => <tr key={ideia.id} className="hover:bg-accent/50">
+                  {filteredAndSortedIdeias.map(ideia => <tr key={ideia.id}>
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{ideia.titulo}</div>
