@@ -389,7 +389,7 @@ const Admin = () => {
             
             {hasPermission('manage_events') && (
               <Link to="/admin/eventos">
-                <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+                <Button variant="outline">
                   <BarChart className="h-4 w-4 mr-2" />
                   Gerenciar Eventos
                 </Button>
@@ -398,14 +398,14 @@ const Admin = () => {
             
             {hasPermission('manage_users') && (
               <Link to="/admin/usuarios">
-                <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+                <Button variant="outline">
                   <Users className="h-4 w-4 mr-2" />
                   Gerenciar Usuários
                 </Button>
               </Link>
             )}
             
-            <Button onClick={signOut} variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
+            <Button onClick={signOut} variant="outline">
               <LogOut className="h-4 w-4 mr-2" />
               Sair
             </Button>
@@ -414,37 +414,37 @@ const Admin = () => {
 
         {/* Stats Dashboard - Now Clickable Filters */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'total' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('total')} data-qa="admin-filter-total">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'total' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('total')} data-qa="admin-filter-total">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.total}</div>
               <div className="text-sm">Total de Ideias</div>
             </CardContent>
           </Card>
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'caixinha' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('caixinha')} data-qa="admin-filter-caixinha">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'caixinha' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('caixinha')} data-qa="admin-filter-caixinha">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.caixinha}</div>
               <div className="text-sm">Caixinha</div>
             </CardContent>
           </Card>
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'backlog' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('backlog')} data-qa="admin-filter-backlog">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'backlog' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('backlog')} data-qa="admin-filter-backlog">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.backlog}</div>
               <div className="text-sm">Backlog</div>
             </CardContent>
           </Card>
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'votacao' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('votacao')} data-qa="admin-filter-votacao">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'votacao' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('votacao')} data-qa="admin-filter-votacao">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.votacao}</div>
               <div className="text-sm">Votação</div>
             </CardContent>
           </Card>
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'desenvolvimento' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('desenvolvimento')} data-qa="admin-filter-desenvolvimento">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'desenvolvimento' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('desenvolvimento')} data-qa="admin-filter-desenvolvimento">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.desenvolvimento}</div>
               <div className="text-sm">Desenvolvimento</div>
             </CardContent>
           </Card>
-          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'finalizado' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-white hover:bg-gray-50'}`} onClick={() => setActiveStatusFilter('finalizado')} data-qa="admin-filter-finalizado">
+          <Card className={`cursor-pointer transition-all hover:scale-105 ${activeStatusFilter === 'finalizado' ? 'bg-primary text-primary-foreground shadow-lg border-primary' : 'bg-card hover:bg-accent hover:text-accent-foreground'}`} onClick={() => setActiveStatusFilter('finalizado')} data-qa="admin-filter-finalizado">
             <CardContent className="p-6 text-center">
               <div className="text-3xl font-bold mb-1">{stats.finalizado}</div>
               <div className="text-sm">Finalizado</div>
@@ -586,7 +586,7 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredAndSortedIdeias.map(ideia => <tr key={ideia.id} className="hover:bg-gray-50">
+                  {filteredAndSortedIdeias.map(ideia => <tr key={ideia.id} className="hover:bg-accent/50">
                       <td className="px-6 py-4">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{ideia.titulo}</div>
