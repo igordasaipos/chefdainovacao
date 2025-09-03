@@ -10,37 +10,30 @@ import { useEventoContext } from '@/contexts/EventoContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-// Função para capturar metadados do Pendo
-const capturarMetadodosPendo = () => {
+// Função para capturar dados do localStorage
+const capturarDadosUsuario = () => {
   try {
-    // @ts-ignore - Pendo é uma variável global
-    if (typeof window !== 'undefined' && window.pendo && window.pendo.metadata) {
-      // @ts-ignore
-      const metadata = window.pendo.metadata;
-      console.log('Metadados do Pendo capturados:', metadata);
+    const userData = localStorage.getItem('ngStorage-user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      console.log('Dados do usuário capturados do localStorage:', user);
       
-      // Tentar diferentes caminhos para capturar o nome
-      const nome = metadata?.visitor?.name || 
-                   metadata?.visitor?.nome || 
-                   metadata?.agent?.name ||
-                   metadata?.visitor?.id ||
-                   'Cliente';
-      
-      console.log('Nome capturado do Pendo:', nome);
+      const nome = user.full_name || user.first_name || 'Cliente';
+      console.log('Nome capturado:', nome);
       
       return {
         nome,
-        digital_certificate_validity_formatted: metadata?.account?.digital_certificate_validity_formatted,
-        visitor_id: metadata?.visitor?.id,
-        account_id: metadata?.account?.id,
-        full_metadata: metadata
+        id_user: user.id_user,
+        email: user.email || user.login,
+        user_type: user.user_type,
+        full_user_data: user
       };
     }
     
-    console.warn('Pendo não encontrado ou sem metadados');
+    console.warn('ngStorage-user não encontrado no localStorage');
     return null;
   } catch (error) {
-    console.error('Erro ao capturar metadados do Pendo:', error);
+    console.error('Erro ao capturar dados do localStorage:', error);
     return null;
   }
 };
@@ -58,9 +51,9 @@ export const Caixinha = () => {
 
   // Capturar nome do cliente quando a página carregar
   useEffect(() => {
-    const metadata = capturarMetadodosPendo();
-    if (metadata?.nome) {
-      setNomeCliente(metadata.nome);
+    const userData = capturarDadosUsuario();
+    if (userData?.nome) {
+      setNomeCliente(userData.nome);
     }
   }, []);
 
@@ -88,8 +81,8 @@ export const Caixinha = () => {
     setIsSubmitting(true);
 
     try {
-      // Capturar metadados do Pendo
-      const pendoMetadata = capturarMetadodosPendo();
+      // Capturar dados do usuário
+      const userData = capturarDadosUsuario();
       
       // Preparar dados para salvar
       const ideiaData = {
@@ -97,19 +90,19 @@ export const Caixinha = () => {
         descricao: descricao.trim() || null,
         complexidade,
         status: 'caixinha' as const,
-        criado_por: 'pendo_embed',
-        admin_criador: pendoMetadata?.visitor_id || 'pendo_user',
+        criado_por: 'localStorage_embed',
+        admin_criador: userData?.email || 'user_unknown',
         evento_id: eventoSelecionado?.id || '',
-        observacao: pendoMetadata ? JSON.stringify({
-          pendo_metadata: pendoMetadata,
-          nome_capturado: pendoMetadata.nome,
-          origem: 'caixinha_embed',
+        observacao: userData ? JSON.stringify({
+          user_data: userData,
+          nome_capturado: userData.nome,
+          origem: 'caixinha_localStorage',
           timestamp: new Date().toISOString()
         }) : `Nome capturado: ${nomeCliente || 'Não disponível'}`,
         // Campos obrigatórios com valores padrão
         desenvolvedor: null,
         jira: null,
-        nome_cliente: pendoMetadata?.nome || nomeCliente || null,
+        nome_cliente: userData?.nome || nomeCliente || null,
         nome_restaurante: null,
         tipo_cliente: 'cliente' as const,
         whatsapp_criador: null,
