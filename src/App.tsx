@@ -17,6 +17,7 @@ import Kanban from "./pages/Kanban"
 import Login from "./pages/Login"
 import NotFound from "./pages/NotFound"
 import Encerrado from "./pages/Encerrado"
+import { Caixinha } from "./pages/Caixinha"
 
 const queryClient = new QueryClient()
 
@@ -48,6 +49,7 @@ const App = () => {
                 <Route path="/votar" element={<Votar />} />
                 <Route path="/totem" element={<Totem />} />
                 <Route path="/kanban" element={<Kanban />} />
+                <Route path="/caixinha" element={<Caixinha />} />
                 <Route path="/encerrado" element={<Encerrado />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
