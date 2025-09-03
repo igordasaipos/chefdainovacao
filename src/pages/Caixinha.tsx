@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +19,17 @@ const capturarMetadodosPendo = () => {
       const metadata = window.pendo.metadata;
       console.log('Metadados do Pendo capturados:', metadata);
       
+      // Tentar diferentes caminhos para capturar o nome
+      const nome = metadata?.visitor?.name || 
+                   metadata?.visitor?.nome || 
+                   metadata?.agent?.name ||
+                   metadata?.visitor?.id ||
+                   'Cliente';
+      
+      console.log('Nome capturado do Pendo:', nome);
+      
       return {
+        nome,
         digital_certificate_validity_formatted: metadata?.account?.digital_certificate_validity_formatted,
         visitor_id: metadata?.visitor?.id,
         account_id: metadata?.account?.id,
@@ -40,10 +50,19 @@ export const Caixinha = () => {
   const [descricao, setDescricao] = useState('');
   const [complexidade, setComplexidade] = useState<'1h30' | '3h' | '1turno' | 'complexa' | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nomeCliente, setNomeCliente] = useState<string>('');
   
   const { eventoSelecionado } = useEventoContext();
   const createIdeia = useCreateIdeia();
   const { toast } = useToast();
+
+  // Capturar nome do cliente quando a página carregar
+  useEffect(() => {
+    const metadata = capturarMetadodosPendo();
+    if (metadata?.nome) {
+      setNomeCliente(metadata.nome);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,13 +102,14 @@ export const Caixinha = () => {
         evento_id: eventoSelecionado?.id || '',
         observacao: pendoMetadata ? JSON.stringify({
           pendo_metadata: pendoMetadata,
+          nome_capturado: pendoMetadata.nome,
           origem: 'caixinha_embed',
           timestamp: new Date().toISOString()
-        }) : 'Sem metadados do Pendo disponíveis',
+        }) : `Nome capturado: ${nomeCliente || 'Não disponível'}`,
         // Campos obrigatórios com valores padrão
         desenvolvedor: null,
         jira: null,
-        nome_cliente: pendoMetadata?.visitor_id || null,
+        nome_cliente: pendoMetadata?.nome || nomeCliente || null,
         nome_restaurante: null,
         tipo_cliente: 'cliente' as const,
         whatsapp_criador: null,
@@ -133,7 +153,13 @@ export const Caixinha = () => {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               Chef da Inovação
             </CardTitle>
+            {/* Teste h2 para verificar captura do nome */}
+            <h2 className="text-lg font-semibold text-foreground mt-2">
+              Nome capturado: {nomeCliente || 'Não encontrado'}
+            </h2>
+            {/* Saudação personalizada */}
             <p className="text-muted-foreground mt-2">
+              {nomeCliente ? `Olá ${nomeCliente}! ` : 'Olá! '}
               Compartilhe sua ideia para melhorar nosso produto
             </p>
           </CardHeader>
