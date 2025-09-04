@@ -64,6 +64,28 @@ const capturarDadosLoja = () => {
   }
 };
 
+// Função para capturar dados do Pendo
+const capturarDadosPendo = () => {
+  try {
+    if (typeof window !== 'undefined' && (window as any).pendo) {
+      const pendo = (window as any).pendo;
+      const pendoData = {
+        visitorId: pendo.visitorId || pendo.getVisitorId?.(),
+        appName: pendo.app_name,
+        accountId: pendo.accountId,
+        pendoAvailable: true
+      };
+      console.log('Dados do Pendo capturados:', pendoData);
+      return pendoData;
+    }
+    console.warn('Pendo não disponível');
+    return { pendoAvailable: false };
+  } catch (error) {
+    console.error('Erro ao capturar dados do Pendo:', error);
+    return { pendoAvailable: false };
+  }
+};
+
 export const Caixinha = () => {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -129,9 +151,10 @@ export const Caixinha = () => {
     setIsSubmitting(true);
 
     try {
-      // Capturar dados do usuário e loja
+      // Capturar dados do usuário, loja e Pendo
       const userData = capturarDadosUsuario();
       const storeData = capturarDadosLoja();
+      const pendoData = capturarDadosPendo();
       
       // Preparar dados para salvar
       const ideiaData = {
@@ -145,10 +168,11 @@ export const Caixinha = () => {
         observacao: JSON.stringify({
           user_data: userData,
           store_data: storeData,
+          pendo_data: pendoData,
           nome_capturado: userData?.nome || nomeCliente,
           store_id: storeData?.id_store,
           store_name: storeData?.store_name,
-          origem: 'caixinha_localStorage',
+          origem: 'caixinha_localStorage_pendo',
           timestamp: new Date().toISOString()
         }),
         // Campos obrigatórios com valores padrão
