@@ -10,7 +10,7 @@ import { useEventoContext } from '@/contexts/EventoContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
-// Função para capturar dados do localStorage
+// Função para capturar dados do usuário do localStorage
 const capturarDadosUsuario = () => {
   try {
     const userData = localStorage.getItem('ngStorage-user');
@@ -38,23 +38,71 @@ const capturarDadosUsuario = () => {
   }
 };
 
+// Função para capturar dados da loja atual do localStorage
+const capturarDadosLoja = () => {
+  try {
+    const storeData = localStorage.getItem('ngStorage-currentStore');
+    if (storeData) {
+      const store = JSON.parse(storeData);
+      console.log('Dados da loja capturados do localStorage:', store);
+      
+      const storeId = parseInt(store.id_store, 10);
+      const storeName = store.store_name || store.nome || `Loja ${storeId}`;
+      
+      return {
+        id_store: isNaN(storeId) ? null : storeId,
+        store_name: storeName,
+        full_store_data: store
+      };
+    }
+    
+    console.warn('ngStorage-currentStore não encontrado no localStorage');
+    return null;
+  } catch (error) {
+    console.error('Erro ao capturar dados da loja:', error);
+    return null;
+  }
+};
+
 export const Caixinha = () => {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [complexidade, setComplexidade] = useState<'1h30' | '3h' | '1turno' | 'complexa' | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nomeCliente, setNomeCliente] = useState<string>('');
+  const [storeId, setStoreId] = useState<number | null>(null);
+  const [storeName, setStoreName] = useState<string>('');
   
   const { eventoSelecionado } = useEventoContext();
   const createIdeia = useCreateIdeia();
   const { toast } = useToast();
 
-  // Capturar nome do cliente quando a página carregar
+  // Capturar dados do cliente e loja quando a página carregar
   useEffect(() => {
-    const userData = capturarDadosUsuario();
-    if (userData?.nome) {
-      setNomeCliente(userData.nome);
-    }
+    const capturarDados = () => {
+      const userData = capturarDadosUsuario();
+      if (userData?.nome) {
+        setNomeCliente(userData.nome);
+      }
+      
+      const storeData = capturarDadosLoja();
+      if (storeData) {
+        setStoreId(storeData.id_store);
+        setStoreName(storeData.store_name);
+      }
+    };
+
+    capturarDados();
+
+    // Monitorar mudanças no localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'ngStorage-currentStore' || e.key === 'ngStorage-user') {
+        capturarDados();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,8 +129,9 @@ export const Caixinha = () => {
     setIsSubmitting(true);
 
     try {
-      // Capturar dados do usuário
+      // Capturar dados do usuário e loja
       const userData = capturarDadosUsuario();
+      const storeData = capturarDadosLoja();
       
       // Preparar dados para salvar
       const ideiaData = {
@@ -93,17 +142,20 @@ export const Caixinha = () => {
         criado_por: 'localStorage_embed',
         admin_criador: userData?.email || 'user_unknown',
         evento_id: eventoSelecionado?.id || '',
-        observacao: userData ? JSON.stringify({
+        observacao: JSON.stringify({
           user_data: userData,
-          nome_capturado: userData.nome,
+          store_data: storeData,
+          nome_capturado: userData?.nome || nomeCliente,
+          store_id: storeData?.id_store,
+          store_name: storeData?.store_name,
           origem: 'caixinha_localStorage',
           timestamp: new Date().toISOString()
-        }) : `Nome capturado: ${nomeCliente || 'Não disponível'}`,
+        }),
         // Campos obrigatórios com valores padrão
         desenvolvedor: null,
         jira: null,
         nome_cliente: userData?.nome || nomeCliente || null,
-        nome_restaurante: null,
+        nome_restaurante: storeData?.store_name || storeName || null,
         tipo_cliente: 'cliente' as const,
         whatsapp_criador: null,
         whatsapp_votacao_enviado: false,
@@ -185,6 +237,18 @@ export const Caixinha = () => {
                   disabled={isSubmitting}
                   rows={4}
                   className="transition-all duration-200 focus:ring-2 focus:ring-primary/20 resize-none"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="loja" className="text-sm font-medium">
+                  Loja Atual
+                </Label>
+                <Input
+                  id="loja"
+                  value={storeId ? `Loja ${storeId}${storeName ? ` - ${storeName}` : ''}` : 'Loja não identificada'}
+                  disabled
+                  className="bg-muted/50 text-muted-foreground cursor-not-allowed"
                 />
               </div>
 
